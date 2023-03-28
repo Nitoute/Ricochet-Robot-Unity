@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -11,7 +13,14 @@ public class Game : MonoBehaviour
     private GameObject[,] positions = new GameObject[16,16];
     
     private GameObject[] robots = new GameObject[4];
+    Stack<GameObject> pileGoals = new Stack<GameObject>();
     private GameObject[] goals = new GameObject[4];
+
+    private int nbrCoups;
+    public Text coupText;
+    public Text currentGoalText;
+    public GameObject gameOverScreen;
+    public GameObject UIScreen;
 
     private GameObject currentGoal;
 
@@ -23,11 +32,14 @@ public class Game : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UIScreen.SetActive(true);
+
         //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
         addWall(5,0,1,0,true);
         addWall(11,0,1,0,true);
         addWall(2,0,0,1,true);
         addWall(1,1,1,0,true);
+        addWall(14,1,0,1,true);
         addWall(14,1,1,0,true);
         addWall(9,1,0,1,true);
         addWall(6,2,0,1,true);
@@ -71,7 +83,7 @@ public class Game : MonoBehaviour
         addWall(5,14,1,0,true);
         addWall(5,14,0,1,true);
         addWall(11,14,1,0,true);
-        addWall(11,14,0,1,true);
+        addWall(12,14,0,1,true);
         addWall(3,15,1,0,true);
         addWall(10,15,1,0,true);
         
@@ -88,13 +100,15 @@ public class Game : MonoBehaviour
         }
 
         //Goals
-        
+    
         goals = new GameObject[]{
-            InstantiateGoal("goal_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), InstantiateGoal("goal_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), InstantiateGoal("goal_vert",rnd.Next(0, 16),rnd.Next(0, 16)), InstantiateGoal("goal_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
+            InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
         };
 
-        currentGoal = goals[0];
-        //CreateGoal(currentGoal);
+        pileGoals = new Stack<GameObject>(goals);
+
+        currentGoal = pileGoals.Pop();
+        currentGoalText.text = currentGoal.name;
         
     }
 
@@ -105,6 +119,8 @@ public class Game : MonoBehaviour
         rm.name = name;
         rm.SetXBoard(x);
         rm.SetYBoard(y);
+        rm.SetXInit(x);
+        rm.SetYInit(y);
         rm.Activate();
         return obj;
         
@@ -117,14 +133,6 @@ public class Game : MonoBehaviour
         gm.name = name;
         gm.SetXBoard(x);
         gm.SetYBoard(y);
-        gm.Activate();
-        return obj;
-        
-    }
-
-    public GameObject CreateGoal(GameObject obj)
-    {
-        GoalMan gm = obj.GetComponent<GoalMan>();
         gm.Activate();
         return obj;
         
@@ -180,7 +188,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void addWall(int x, int y, int dirX,int dirY,bool newWall)
+    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
         if (myDictionary.ContainsKey((x,y)))
         {
@@ -200,10 +208,103 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void updateGoal()
+    public void addCoups()
     {
-        //SetPositionEmpty(currentGoal.GetComponent<GoalMan>().GetXBoard(),currentGoal.GetComponent<GoalMan>().GetYBoard());
-        //Destroy(currentGoal);
+        nbrCoups = nbrCoups +1;
+        coupText.text = nbrCoups.ToString();
+    }
+
+    private void updateGoal()
+    {
+        if (pileGoals.Count!=0)
+        {
+            Destroy(currentGoal);
+            currentGoal = pileGoals.Pop();
+            currentGoalText.text = currentGoal.name;
+            nbrCoups = 0;
+            coupText.text = nbrCoups.ToString();
+        }
+        else
+        {
+            gameOver = true;
+            UIScreen.SetActive(false);
+            gameOverScreen.SetActive(true);
+        }
+    }
+
+    public void restartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void restartPosition()
+    {
+        for(int i = 0; i < robots.Length;i++){
+            SetPositionDefaultRobot(robots[i]);
+        }
+
+        nbrCoups = 0;
+        coupText.text = nbrCoups.ToString();
+    }
+
+    public void SetPositionDefaultRobot(GameObject obj)
+    {
+        RobotMan rm = obj.GetComponent<RobotMan>();
+
+        SetPositionEmpty(rm.GetXBoard(),rm.GetYBoard());
+        rm.SetXBoard(rm.GetXInit());
+        rm.SetYBoard(rm.GetYInit());
+        rm.SetCoords();
+
+        SetPositionRobot(obj);        
+    }
+
+    public void hasWin(GameObject rob)
+    {
+        int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
+        int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
+
+        int Yrob = rob.GetComponent<RobotMan>().GetYBoard();
+        int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
+        switch (rob.name)
+        {
+            case "robot_bleue": 
+                if (currentGoal.name == "goal_bleue")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        updateGoal();
+                    }
+                } 
+                break;
+            case "robot_jaune": 
+                if (currentGoal.name == "goal_jaune")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        updateGoal();
+                    }
+                } 
+                break;
+            case "robot_rouge": 
+                if (currentGoal.name == "goal_rouge")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        updateGoal();
+                    }
+                } 
+                break;
+            case "robot_vert": 
+               if (currentGoal.name == "goal_vert")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        updateGoal();
+                    }
+                } 
+                break;
+        }
     }
 
 }

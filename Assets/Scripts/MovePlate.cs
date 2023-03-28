@@ -29,6 +29,9 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<RobotMan>().SetCoords();
 
         controller.GetComponent<Game>().SetPositionRobot(reference);
+        controller.GetComponent<Game>().addCoups();
+        controller.GetComponent<Game>().hasWin(reference);
+
 
         reference.GetComponent<RobotMan>().DestroyMovePlates();
     }

@@ -11,6 +11,10 @@ public class RobotMan : MonoBehaviour
     private int xBoard = -1;
     private int yBoard = -1;
 
+    //Position initial (pour reset)
+    private int xInit = -1;
+    private int yInit = -1;
+
     //Sprite de tout les robots
     public Sprite robot_bleue, robot_jaune, robot_rouge, robot_vert;
 
@@ -51,12 +55,28 @@ public class RobotMan : MonoBehaviour
         return yBoard;
     }
 
+    public int GetXInit(){
+        return xInit;
+    }
+
+    public int GetYInit(){
+        return yInit;
+    }
+
     public void SetXBoard(int x){
         xBoard = x;
     }
 
     public void SetYBoard(int y){
         yBoard = y;
+    }
+
+    public void SetXInit(int x){
+        xInit = x;
+    }
+
+    public void SetYInit(int y){
+        yInit = y;
     }
 
     private void OnMouseUp()

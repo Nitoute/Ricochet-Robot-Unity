@@ -5,6 +5,10 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - robot: {fileID: 1276312879026374994, guid: fbcfeacfe48616c749c082c92d3e5a21, type: 3}
+  - goal: {instanceID: 0}
+  - coupText: {instanceID: 0}
+  - currentGoalText: {instanceID: 0}
+  - gameOverScreen: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
