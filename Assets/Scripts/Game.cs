@@ -109,6 +109,12 @@ public class Game : MonoBehaviour
 
         currentGoal = pileGoals.Pop();
         currentGoalText.text = currentGoal.name;
+
+        // Pour VINCENT : Un exemple de comment bouger le robot[0] (bleu) le "vecteur" en paramètre représente la direction selon l'axe
+        // x et l'axe y, (1,0) : droite | (-1,0) : gauche | (0,1) : haut | (0,-1) : bas
+
+        robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
+        robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
         
     }
 

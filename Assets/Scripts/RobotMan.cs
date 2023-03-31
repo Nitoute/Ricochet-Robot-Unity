@@ -222,4 +222,53 @@ public class RobotMan : MonoBehaviour
         mpScipt.SetReference(gameObject);
         mpScipt.SetCoords(matrixX,matrixY);
     }
+
+    //Pour VINCENT : Les fonctions suivantes permettent de bouger le robot dans une direction donné par ligne de commande !
+    // Tu n'a théoriquement rien à changé pour les déplacer mais si tu voit des bugs ou quoi envoi un message sur discord
+
+    public void MoveRobot(int xIncrement, int yIncrement)
+    {
+        Game sc = controller.GetComponent<Game>();
+        int oldx = xBoard;
+        int oldy = yBoard;
+
+        int x = oldx;
+        int y = oldy;
+        bool mur=false;
+        //Si il y a un mur directement dans notre case + direction on ne bouge pas !
+        if (!sc.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
+            x = xBoard + xIncrement;
+            y = yBoard + yIncrement;
+
+            while (sc.PositionOnBoard(x,y) && sc.GetPosition(x,y) == null)
+            {
+                if (sc.isWallInDir(x,y,xIncrement,yIncrement)){
+                    mur = true;
+                    break;
+                }
+                x += xIncrement;
+                y += yIncrement;
+
+                
+            }
+            if(!mur){
+                x-=xIncrement;
+                y-=yIncrement;
+            }
+        }
+        if (x!=oldx || y!=oldy)Teleport(x,y);
+    }
+
+    public void Teleport(int x,int y)
+    {
+        controller.GetComponent<Game>().SetPositionEmpty(this.GetXBoard(),this.GetYBoard());
+        
+        this.SetXBoard(x);
+        this.SetYBoard(y);
+        this.SetCoords();
+
+        controller.GetComponent<Game>().SetPositionRobot(gameObject);
+        controller.GetComponent<Game>().addCoups();
+        controller.GetComponent<Game>().hasWin(gameObject);
+    }
 }
