@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
 
     private GameObject currentGoal;
 
-    Dictionary<(int, int), (int, int)[]> myDictionary = new Dictionary<(int, int), (int, int)[]>();
+    Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     private bool gameOver = false;
 
@@ -178,7 +178,7 @@ public class Game : MonoBehaviour
     {
         try
         {
-            (int,int)[] li = myDictionary[(x,y)];
+            (int,int)[] li = walls[(x,y)];
             
             foreach ((int,int) item in li)
             {
@@ -196,20 +196,20 @@ public class Game : MonoBehaviour
 
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
-        if (myDictionary.ContainsKey((x,y)))
+        if (walls.ContainsKey((x,y)))
         {
-            (int,int)[] newListe = new (int,int)[myDictionary[(x,y)].Length + 1];
+            (int,int)[] newListe = new (int,int)[walls[(x,y)].Length + 1];
             for (int i = 0; i<newListe.Length-1; i++)
             {
-                newListe[i] = myDictionary[(x,y)][i];
+                newListe[i] = walls[(x,y)][i];
             }
             newListe[newListe.Length -1] = (dirX,dirY);
-            myDictionary[(x,y)] = newListe;
+            walls[(x,y)] = newListe;
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
         else
         {
-            myDictionary.Add((x, y), new (int, int)[] {(dirX, dirY)});
+            walls.Add((x, y), new (int, int)[] {(dirX, dirY)});
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
     }
