@@ -9,6 +9,9 @@ public class Game : MonoBehaviour
 {
     public GameObject robot;
     public GameObject goal;
+    public GameObject solver;
+    
+    private Solver solverScript;
 
     private GameObject[,] positions = new GameObject[16,16];
     
@@ -23,16 +26,23 @@ public class Game : MonoBehaviour
     public GameObject UIScreen;
 
     private GameObject currentGoal;
+    private GameObject currentRobotGoal;
 
     Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     private bool gameOver = false;
-
+    private bool solverRunning = false;
+    private bool continueSolveV1 = false;
 
     // Start is called before the first frame update
     void Start()
     {
         UIScreen.SetActive(true);
+        //Recupération de l'objet Solver + script
+        solver = GameObject.FindGameObjectWithTag("SolverObject");
+        solverScript = solver.GetComponent<Solver>();
+
+        
 
         //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
         addWall(5,0,1,0,true);
@@ -109,14 +119,44 @@ public class Game : MonoBehaviour
 
         currentGoal = pileGoals.Pop();
         currentGoalText.text = currentGoal.name;
+        currentRobotGoal = GetCurrentRobotGoal();
 
         // Pour VINCENT : Un exemple de comment bouger le robot[0] (bleu) le "vecteur" en paramètre représente la direction selon l'axe
         // x et l'axe y, (1,0) : droite | (-1,0) : gauche | (0,1) : haut | (0,-1) : bas
 
-        robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
-        robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
+        // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
+        // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
+
         
     }
+
+    public GameObject getRobot(int p){
+        return robots[p];
+    }
+
+    public List<(int,int)> getPositionRobot(){
+        List<(int,int)> pos=new List<(int,int)>();
+        for (int i=0;i<4;i++){
+            pos.Add((robots[i].GetComponent<RobotMan>().GetXBoard(),robots[i].GetComponent<RobotMan>().GetYBoard()));
+        } 
+        return pos;
+    }    
+    
+    public List<(int,int)> getPositionInitRobot(){
+        List<(int,int)> pos=new List<(int,int)>();
+        for (int i=0;i<4;i++){
+            pos.Add((robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit()));
+        } 
+        return pos;
+    }
+
+    public void setPositionRobot( List<(int,int)> pos){
+        for (int i=0;i<4;i++){
+            (int x,int y)=pos[i];
+            robots[i].GetComponent<RobotMan>().SetXBoard(x);
+            robots[i].GetComponent<RobotMan>().SetYBoard(y);
+        }
+    }    
 
     public GameObject CreateRobot(string name, int x, int y)
     {
@@ -166,6 +206,46 @@ public class Game : MonoBehaviour
     public GameObject GetPosition(int x, int y)
     {
         return positions[x,y];
+    }
+
+    public void SetSolverRunning(bool cond)
+    {
+        solverRunning = cond;
+    }
+
+    public GameObject GetCurrentGoal()
+    {
+        return currentGoal;
+    }
+
+    public GameObject GetActiveRobot()
+    {
+        return currentRobotGoal;
+    }
+
+    public GameObject GetCurrentRobotGoal()
+    {
+        switch (currentGoal.name)
+        {
+            case "goal_bleue": 
+                return robots[0];
+            case "goal_rouge": 
+                return robots[1];
+            case "goal_vert": 
+                return robots[2];
+            case "goal_jaune": 
+                return robots[3];
+        }
+        return null;
+    }
+
+    public void switchContinueSolveV1(){
+        continueSolveV1=!continueSolveV1;
+        solverRunning=!solverRunning;
+    }
+
+    public bool getContinueSolveV1(){
+        return continueSolveV1;
     }
 
     public bool PositionOnBoard(int x, int y)
@@ -229,6 +309,7 @@ public class Game : MonoBehaviour
             currentGoalText.text = currentGoal.name;
             nbrCoups = 0;
             coupText.text = nbrCoups.ToString();
+            currentRobotGoal = GetCurrentRobotGoal();
         }
         else
         {
@@ -265,7 +346,7 @@ public class Game : MonoBehaviour
         SetPositionRobot(obj);        
     }
 
-    public void hasWin(GameObject rob)
+    public bool hasWin(GameObject rob)
     {
         int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
         int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
@@ -279,7 +360,10 @@ public class Game : MonoBehaviour
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
-                        updateGoal();
+                        if (!solverRunning){
+                            updateGoal();
+                        }
+                        return true;
                     }
                 } 
                 break;
@@ -288,7 +372,10 @@ public class Game : MonoBehaviour
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
-                        updateGoal();
+                        if (!solverRunning){
+                            updateGoal();
+                        }
+                        return true;
                     }
                 } 
                 break;
@@ -297,7 +384,10 @@ public class Game : MonoBehaviour
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
-                        updateGoal();
+                        if (!solverRunning){
+                            updateGoal();
+                        }
+                        return true;
                     }
                 } 
                 break;
@@ -306,11 +396,68 @@ public class Game : MonoBehaviour
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
-                        updateGoal();
+                        if (!solverRunning){
+                            updateGoal();
+                        }
+                        return true;
                     }
                 } 
                 break;
         }
+        return false;
     }
+
+    //SOLVER V1 (VINCENT)
+
+    public bool touchGoal(GameObject rob)
+    {
+        int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
+        int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
+
+        int Yrob = rob.GetComponent<RobotMan>().GetYBoard();
+        int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
+        switch (rob.name)
+        {
+            case "robot_bleue": 
+                if (currentGoal.name == "goal_bleue")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        return true;
+                    }
+                } 
+                break;
+            case "robot_jaune": 
+                if (currentGoal.name == "goal_jaune")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        return true;
+                    }
+                } 
+                break;
+            case "robot_rouge": 
+                if (currentGoal.name == "goal_rouge")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        return true;
+                    }
+                } 
+                break;
+            case "robot_vert": 
+               if (currentGoal.name == "goal_vert")
+                {
+                    if (Yrob==Yobj && Xrob==Xobj)
+                    {
+                        return true;
+                    }
+                } 
+                break;
+        }
+
+        return false;
+    }
+
 
 }

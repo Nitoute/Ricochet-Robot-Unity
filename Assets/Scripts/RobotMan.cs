@@ -5,6 +5,7 @@ using UnityEngine;
 public class RobotMan : MonoBehaviour
 {
     public GameObject controller;
+    public Game game;
     public GameObject movePlate;
 
     //Position du tableau
@@ -21,6 +22,7 @@ public class RobotMan : MonoBehaviour
     public void Activate()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
+        game = controller.GetComponent<Game>();
 
         SetCoords();
 
@@ -228,7 +230,7 @@ public class RobotMan : MonoBehaviour
 
     public void MoveRobot(int xIncrement, int yIncrement)
     {
-        Game sc = controller.GetComponent<Game>();
+        //Game sc = controller.GetComponent<Game>();
         int oldx = xBoard;
         int oldy = yBoard;
 
@@ -236,13 +238,13 @@ public class RobotMan : MonoBehaviour
         int y = oldy;
         bool mur=false;
         //Si il y a un mur directement dans notre case + direction on ne bouge pas !
-        if (!sc.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
+        if (!game.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
             x = xBoard + xIncrement;
             y = yBoard + yIncrement;
 
-            while (sc.PositionOnBoard(x,y) && sc.GetPosition(x,y) == null)
+            while (game.PositionOnBoard(x,y) && game.GetPosition(x,y) == null)
             {
-                if (sc.isWallInDir(x,y,xIncrement,yIncrement)){
+                if (game.isWallInDir(x,y,xIncrement,yIncrement)){
                     mur = true;
                     break;
                 }
@@ -261,14 +263,14 @@ public class RobotMan : MonoBehaviour
 
     public void Teleport(int x,int y)
     {
-        controller.GetComponent<Game>().SetPositionEmpty(this.GetXBoard(),this.GetYBoard());
+        game.SetPositionEmpty(this.GetXBoard(),this.GetYBoard());
         
         this.SetXBoard(x);
         this.SetYBoard(y);
         this.SetCoords();
 
-        controller.GetComponent<Game>().SetPositionRobot(gameObject);
-        controller.GetComponent<Game>().addCoups();
-        controller.GetComponent<Game>().hasWin(gameObject);
+        game.SetPositionRobot(gameObject);
+        game.addCoups();
+        game.hasWin(gameObject);
     }
 }
