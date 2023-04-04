@@ -33,6 +33,7 @@ public class Game : MonoBehaviour
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
+    private bool continueSolveV2 = false;
 
     // Start is called before the first frame update
     void Start()
@@ -244,8 +245,17 @@ public class Game : MonoBehaviour
         solverRunning=!solverRunning;
     }
 
+    public void switchContinueSolveV2(){
+        continueSolveV2=!continueSolveV2;
+        solverRunning=!solverRunning;
+    }
+
     public bool getContinueSolveV1(){
         return continueSolveV1;
+    }
+
+    public bool getContinueSolveV2(){
+        return continueSolveV2;
     }
 
     public bool PositionOnBoard(int x, int y)
