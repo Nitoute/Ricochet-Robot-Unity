@@ -6,35 +6,41 @@ using System.IO;
 
 
 public class Board : MonoBehaviour{
+    private wall_list;
+    private IDictionary<int, string> numberNames = new Dictionary<int, string>();
     public Board(){
-        //creates random board.
+        assembleBoards();
     }
     public Board(int seed){
         //creates board with seed.
     }
-    ///random assembly of boards.
+    ///assembly of boards if seed = 0, then random, else follow seed.
     private Board assembleBoards(){
         //reads from files
         //assembles boards
-        string path = Application.persistentDataPath + "boards/";
-        string topLeftStr = "board3";
-        string topRightStr = "board4_flip";
-        string bottomLeftStr = "board1";
-        string bottomRightStr = "board2_flip";
+        string path = "boards/";
+        string topLeftFileName = "top_left/board3";
+        string topRightFileName = "top_right/board4_flip";
+        string bottomLeftFileName = "bottom_left/board1";
+        string bottomRightFileName = "bottom_right/board2_flip";
         StreamReader topLeftRdr = new StreamReader(path + topLeftStr);
         StreamReader topRightRdr = new StreamReader(path + topRightStr);
         StreamReader bottomLeftRdr = new StreamReader(path + bottomLeftStr);
         StreamReader bottomRightRdr = new StreamReader(path + bottomRightStr);
-        /*turns board into two arrays : vertical_walls and horizontal_walls,
-        * which help add unity wall GameObjects*, Same loop twice except
-        * it adds in either verticalWalls array or HorizontalWalls*/
-        //WALLS :
-            //for loop, reads from j < 8 top, AND i < 8 left or 8 <= i < 16  right
-            //     from j >= 8 bottom, AND i < 8 left or 8 <= i < 16  right
-
-            //Reader : reads separated by space, does not look into goals yet.
-
+        StreamReader sr = new StreamReader(dlg.FileName); 
+        string[] topLeft = File.ReadAllText(topLeftFileName).Split(' ');
+        printf("%s", topLeft);
     }
+
+    /*readWalls reads at corresponding i,j coordinates of files and returns
+    * corresponding walls.
+    */
+    private (int, int) readWalls(int i, int j, int position){
+        //Updates
+        if(i>=8){i-=8;}
+        if(j>=8){j-=8;}
+
+    };
 
     static void ReadString()
     {
