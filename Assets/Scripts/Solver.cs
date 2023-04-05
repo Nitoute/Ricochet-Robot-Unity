@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Solver : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Solver : MonoBehaviour
 
     int seq=0;
     int len=0;
+    IDictionary<(int,int), List<(int,int)>> posMap =
+            new Dictionary<(int,int), List<(int,int)>>();
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +24,6 @@ public class Solver : MonoBehaviour
     public void makeMove1(int val) {
         int pion=val/4;
         int dir=val%4;
-        print("pion="+pion+"  dir="+dir);
         switch (dir){
             case 0:
                 game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(1,0);
@@ -44,13 +46,11 @@ public class Solver : MonoBehaviour
             seq = seq % (int)Math.Pow(16, i);
             makeMove1(a);
         }
-        print ("\n\n\n");
     }
 
     public int makeSeq2(int seq, int len){
         int prec=-1;
         int tmp=seq;
-        print(seq);
         for (int i=len-1;i>=0;i--){
             int a = tmp/ (int)Math.Pow(16, i);
             tmp = tmp % (int)Math.Pow(16, i);
@@ -62,12 +62,45 @@ public class Solver : MonoBehaviour
             makeMove1(a);
         }
         return seq;
-        print ("\n\n\n");
+    }
+
+
+    public void makeSeq3(int seq, int len){
+        int tmp=seq;
+        if (len==1){
+            makeMove1(tmp%16);
+            posMap[(seq,len)]=game.getPositionRobot();
+        }
+        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
+            try {
+                game.setPositionRobot(posMap[(tmp/16,len-1)]);
+                makeMove1(tmp%16);
+                posMap[(seq,len)]=game.getPositionRobot();
+            }
+            catch (KeyNotFoundException){}
+        }
     }
 
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
+            return (0,len+1);            
+        }
+        return (seq+1,len);
+    }
+
+    public (int,int) nextSeq2(int seq,int len ){
+        if (seq>=Math.Pow(16,len)-1){
+        List<(int,int)> tmp=new List<(int,int)>();
+            foreach (KeyValuePair<(int,int), List<(int,int)>> kvp in posMap){
+                (int a,int b)=kvp.Key;
+                if (a==len){
+                    tmp.Add(kvp.Key);
+                }
+            }
+            foreach ((int,int) a in tmp){
+                posMap.Remove(a);
+            }
             return (0,len+1);            
         }
         return (seq+1,len);
@@ -171,9 +204,25 @@ public class Solver : MonoBehaviour
             (seq,len)=nextSeq(seq,len);
             game.restartPosition();
         }
+        else if(game.getContinueSolveV3()){
+            currentRobot = game.GetActiveRobot();
+            game.restartPosition();
+            makeSeq3(seq,len);
+            if(game.hasWin(currentRobot)){
+                printSeq(seq,len);
+                print(len);
+                game.restartPosition();
+                game.switchContinueSolveV3();
+                //return (seq,len);
+            }
+            //yield return null;
+            (seq,len)=nextSeq(seq,len);
+            game.restartPosition();
+        }
         else{
             seq=0;
             len=0;
+            posMap.Clear();
         }
     }
 }
