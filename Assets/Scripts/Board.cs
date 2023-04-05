@@ -23,22 +23,65 @@ public class Board : MonoBehaviour{
         string topRightFileName = "top_right/board4_flip";
         string bottomLeftFileName = "bottom_left/board1";
         string bottomRightFileName = "bottom_right/board2_flip";
-        StreamReader topLeftRdr = new StreamReader(path + topLeftStr);
-        StreamReader topRightRdr = new StreamReader(path + topRightStr);
-        StreamReader bottomLeftRdr = new StreamReader(path + bottomLeftStr);
-        StreamReader bottomRightRdr = new StreamReader(path + bottomRightStr);
-        StreamReader sr = new StreamReader(dlg.FileName); 
         string[] topLeft = File.ReadAllText(topLeftFileName).Split(' ');
-        printf("%s", topLeft);
+        string[] topRight = File.ReadAllText(topRightFileName).Split(' ');
+        string[] bottomLeft = File.ReadAllText(bottomLeftFileName).Split(' ');
+        string[] bottomRight = File.ReadAllText(bottomRightFileName).Split(' ');
+
+        //Reads files.
+        int i, j;
+        for(j = 0; j<16; j++){
+            for(i=0; i<16; i++){
+                if(i<8){
+                    if(j<8){
+                        //topleft
+                    }else{
+                        //bottomleft
+                    }
+                }else{
+                    if(j<8){
+                        //topright
+                    }else{
+                        //bottomright
+                    }
+                }
+            }
+        }
     }
 
     /*readWalls reads at corresponding i,j coordinates of files and returns
     * corresponding walls.
+    * Walls are defined as following (Horizontal, Vertical)
+        O -> None
+        1 -> Top or Right
+        -1 -> Bottom or Left
+    * This function only reads top and left walls.
+    * Returns None if there is No Wall top and left. There could be a right or bottom wall.
+    * This function goes in pair with function that draws all right and all bottom walls of board.
     */
-    private (int, int) readWalls(int i, int j, int position){
-        //Updates
-        if(i>=8){i-=8;}
-        if(j>=8){j-=8;}
+    private (int, int) readWalls(int i, int j, string[] file_str){
+    //Updates
+        if(i>=8){int x=i-8;} else{x=i;}
+        if(j>=8){int y =j-8;} else{y=j;}
+        int position = i+8*j;
+    //prends la première et dernière valeur de file_str[i+8*j(checker dans cahier)], transforme en int
+        if (file_str[i+8*j].StartsWith("1")) // mur en haut : (,1)
+        {
+            if (file_str[i+8*j].EndsWith("1")) // mur à gauche : (-1,)
+            {
+                return (-1,1);
+            }
+            else{
+                return (0,1);
+            }
+        }
+        else{
+        if (file_str[i+8*j].EndsWith("1")) // mur à gauche : (-1,)
+            {
+                return (-1,0);
+            }
+        }
+        return None;
 
     };
 
