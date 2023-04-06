@@ -23,7 +23,7 @@ public class Board : MonoBehaviour{
     }
     ///assembly of boards if seed = 0, then random, else follow seed.
     private Board assembleBoards(int topleft, int topright, int bottomleft, int bottomright){
-        string path = "walls/";
+        string path = "walls_only/";
         string topLeftFileName;
         string topRightFileName;
         string bottomLeftFileName;

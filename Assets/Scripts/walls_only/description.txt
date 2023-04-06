@@ -1,0 +1,9 @@
+Description :
+SIZE = length * width
+CX avant un chiffre signifie que c'est une case spéciale, de couleur C
+R, G, B, Y, S(= silver)
+
+rotation/ décalage =  bin(0b1100 >> 1)
+
+Murs en bord à reconstruire : tableau 3 cases spéciales
+3 -> AX
