@@ -6,43 +6,62 @@ using System.IO;
 
 
 public class Board : MonoBehaviour{
-    private wall_list;
-    private IDictionary<int, string> numberNames = new Dictionary<int, string>();
+    //Init of Wall Dictionary(Key, value) -> key should be transformed into Position instance in
+    // later implementation.
+    private IDictionary<(int i, int j),(int right, int top)> wallsDict
+                = new Dictionary<(int i, int j),(int right, int top)>();
     public Board(){
-        assembleBoards();
+        //creates random board.
+        assembleBoards(0,0,0,0);
     }
-    public Board(int seed){
+    /* Seeding works as following : corresponding number for whichever board it is affiliated to,
+    * and for the flipped version, number+4. If 0, means it generates random.
+    */
+    public Board(int topleft, int topright, int bottomleft, int bottomright){
         //creates board with seed.
+        assembleBoards(topleft,topright,bottomleft,bottomright);
     }
     ///assembly of boards if seed = 0, then random, else follow seed.
-    private Board assembleBoards(){
-        //reads from files
-        //assembles boards
-        string path = "boards/";
-        string topLeftFileName = "top_left/board3";
-        string topRightFileName = "top_right/board4_flip";
-        string bottomLeftFileName = "bottom_left/board1";
-        string bottomRightFileName = "bottom_right/board2_flip";
+    private Board assembleBoards(int topleft, int topright, int bottomleft, int bottomright){
+        string path = "walls/";
+        string topLeftFileName;
+        string topRightFileName;
+        string bottomLeftFileName;
+        string bottomRightFileName;
+        if(topleft ==0 || topright == 0 || bottomleft ==0 || bottomright ==0){
+            //generates random files
+        }
+        else{
+            if(topleft>4){topLeftFileName = "top_left/board"+ (topleft-4).ToString()+"_flip";}
+            else{topLeftFileName = "top_left/board"+ topleft.ToString();}
+            if(topright>4){topRightFileName = "top_right/board"+ (topright-4).ToString()+"_flip";}
+            else{topRightFileName = "top_right/board"+ topleft.ToString();}
+            if(bottomleft>4){bottomLeftFileName = "bottom_left/board"+ (bottomleft-4).ToString()+"_flip";}
+            else{bottomLeftFileName = "bottom_left/board"+ bottomleft.ToString();}
+            if(bottomright>4){bottomRightFileName = "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
+            else{bottomRightFileName = "bottom_right/board"+ bottomleft.ToString();}
+        }
+        //turns files into 1D String arrays, that are in order of position.
         string[] topLeft = File.ReadAllText(topLeftFileName).Split(' ');
         string[] topRight = File.ReadAllText(topRightFileName).Split(' ');
         string[] bottomLeft = File.ReadAllText(bottomLeftFileName).Split(' ');
         string[] bottomRight = File.ReadAllText(bottomRightFileName).Split(' ');
 
-        //Reads files.
+        //Adds walls to dictionary.
         int i, j;
         for(j = 0; j<16; j++){
             for(i=0; i<16; i++){
                 if(i<8){
                     if(j<8){
-                        //topleft
+                        addToWallDict((i,j), readWalls(i, j, topLeft));
                     }else{
-                        //bottomleft
+                        addToWallDict((i,j), readWalls(i, j, bottomLeft));
                     }
                 }else{
                     if(j<8){
-                        //topright
+                        addToWallDict((i,j), readWalls(i, j, topRight));
                     }else{
-                        //bottomright
+                        addToWallDict((i,j), readWalls(i, j, bottomRight));
                     }
                 }
             }
@@ -64,10 +83,10 @@ public class Board : MonoBehaviour{
         if(i>=8){int x=i-8;} else{x=i;}
         if(j>=8){int y =j-8;} else{y=j;}
         int position = i+8*j;
-    //prends la première et dernière valeur de file_str[i+8*j(checker dans cahier)], transforme en int
-        if (file_str[i+8*j].StartsWith("1")) // mur en haut : (,1)
+    //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
+        if (file_str[x+8*y].StartsWith("1")) // top wall : (,1)
         {
-            if (file_str[i+8*j].EndsWith("1")) // mur à gauche : (-1,)
+            if (file_str[x+8*y].EndsWith("1")) // left wall : (-1,) -> TODO delete goals from files
             {
                 return (-1,1);
             }
@@ -84,12 +103,13 @@ public class Board : MonoBehaviour{
         return None;
 
     };
-
-    static void ReadString()
-    {
-        //Read the text from directly from the test.txt file
-        StreamReader reader = new StreamReader(path);
-        Debug.Log(reader.ReadToEnd());
-        reader.Close();
+    //TODO replace tuple (i,j) with class position
+    private void addToWallDict((int i, int j), (int sideWall, int topWall)){
+        wallsDict.Add((i,j),(sideWall, topWall));
     }
+
+    public getWallDict(){
+        return wallsDict;
+    }
+
 }
