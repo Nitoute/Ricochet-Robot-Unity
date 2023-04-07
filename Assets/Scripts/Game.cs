@@ -27,8 +27,8 @@ public class Game : MonoBehaviour
     private GameObject currentRobotGoal;
     
     /*initializing board*/
-    private Board board = new Board(1,2,3,4);
-    private IDictionary<(int i, int j),(int right, int top)> walls = board.getWallDict;
+    /**private Board board = new Board(1,2,3,4);
+    private IDictionary<(int i, int j),(int right, int top)> walls = board.getWallDict;*//
 
     private bool gameOver = false;
     private bool solverRunning = false;
@@ -78,11 +78,11 @@ public class Game : MonoBehaviour
 
     }
 
-    private void addWalls(){
+    /**private void addWalls(){
         foreach(wall in walls){
             addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
         }
-    };
+    };*/
 
     public GameObject getRobot(int p){
         return robots[p];
