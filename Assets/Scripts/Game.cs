@@ -10,11 +10,9 @@ public class Game : MonoBehaviour
     public GameObject robot;
     public GameObject goal;
     public GameObject solver;
-    
     private Solver solverScript;
 
     private GameObject[,] positions = new GameObject[16,16];
-    
     private GameObject[] robots = new GameObject[4];
     Stack<GameObject> pileGoals = new Stack<GameObject>();
     private GameObject[] goals = new GameObject[4];
@@ -27,8 +25,10 @@ public class Game : MonoBehaviour
 
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
-
-    Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
+    
+    /*initializing board*/
+    private Board board = new Board(1,2,3,4);
+    private IDictionary<(int i, int j),(int right, int top)> walls = board.getWallDict;
 
     private bool gameOver = false;
     private bool solverRunning = false;
@@ -279,7 +279,7 @@ public class Game : MonoBehaviour
         try
         {
             (int,int)[] li = walls[(x,y)];
-            
+
             foreach ((int,int) item in li)
             {
                 if (item==(dirX,dirY)){
@@ -293,6 +293,8 @@ public class Game : MonoBehaviour
             return false;
         }
     }
+
+    
 
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
