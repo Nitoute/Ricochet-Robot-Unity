@@ -104,6 +104,8 @@ public class Board : MonoBehaviour{
 
     };
     //TODO replace tuple (i,j) with class position
+        //euh private void addToWallDict((int, int) pos , (int, int) walls){
+        //wallsDict.Add((pos.Item1,j),(sideWall, topWall));
     private void addToWallDict((int i, int j), (int sideWall, int topWall)){
         wallsDict.Add((i,j),(sideWall, topWall));
     }

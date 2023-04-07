@@ -44,62 +44,9 @@ public class Game : MonoBehaviour
         solver = GameObject.FindGameObjectWithTag("SolverObject");
         solverScript = solver.GetComponent<Solver>();
 
-        
+        //murs
+        addWalls();
 
-        //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
-        addWall(5,0,1,0,true);
-        addWall(11,0,1,0,true);
-        addWall(2,0,0,1,true);
-        addWall(1,1,1,0,true);
-        addWall(14,1,0,1,true);
-        addWall(14,1,1,0,true);
-        addWall(9,1,0,1,true);
-        addWall(6,2,0,1,true);
-        addWall(8,2,1,0,true);
-        addWall(6,3,1,0,true);
-        addWall(0,4,0,1,true);
-        addWall(8,4,0,1,true);
-        addWall(12,4,1,0,true);
-        addWall(13,4,0,1,true);
-        addWall(8,5,1,0,true);
-        addWall(15,5,0,1,true);
-        addWall(1,6,1,0,true);
-        addWall(1,6,0,1,true);
-        addWall(4,6,1,0,true);
-        addWall(5,6,0,1,true);
-        addWall(7,6,0,1,true);
-        addWall(8,6,0,1,true);
-        addWall(15,6,0,-1,true);
-        addWall(6,7,1,0,true);
-        addWall(9,7,-1,0,true);
-        addWall(2,8,0,1,true);
-        addWall(6,8,1,0,true);
-        addWall(9,8,-1,0,true);
-        addWall(2,9,1,0,true);
-        addWall(7,9,0,-1,true);
-        addWall(8,9,0,-1,true);
-        addWall(9,9,0,1,true);
-        addWall(11,9,0,1,true);
-        addWall(11,9,1,0,true);
-        addWall(6,10,0,1,true);
-        addWall(9,10,1,0,true);
-        addWall(15,10,0,1,true);
-        addWall(0,11,0,1,true);
-        addWall(6,11,1,0,true);
-        addWall(8,11,0,1,true);
-        addWall(1,12,0,1,true);
-        addWall(7,12,1,0,true);
-        addWall(14,12,0,1,true);
-        addWall(0,13,1,0,true);
-        addWall(13,13,1,0,true);
-        addWall(5,14,1,0,true);
-        addWall(5,14,0,1,true);
-        addWall(11,14,1,0,true);
-        addWall(12,14,0,1,true);
-        addWall(3,15,1,0,true);
-        addWall(10,15,1,0,true);
-        
-        
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
@@ -112,7 +59,7 @@ public class Game : MonoBehaviour
         }
 
         //Goals
-    
+
         goals = new GameObject[]{
             InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
         };
@@ -129,8 +76,13 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
 
-        
     }
+
+    private void addWalls(){
+        foreach(wall in walls){
+            addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
+        }
+    };
 
     public GameObject getRobot(int p){
         return robots[p];
