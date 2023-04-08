@@ -133,7 +133,7 @@ public class Game : MonoBehaviour
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
-            addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
+            //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
         }
     }
 
@@ -299,8 +299,7 @@ public class Game : MonoBehaviour
     }
 
     
-    /*Pour Moad : 
-    * pour obtenir la valeur (dirX, dirY) d'un mur à une certaine position i,j : board.getWallDict()[(i,j)]*/
+    
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
         if ((board.getWallDict()).ContainsKey((x,y)))

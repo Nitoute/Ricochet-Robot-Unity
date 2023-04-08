@@ -5,14 +5,18 @@ using UnityEngine;
 using System.IO;
 
 
-public class Board : MonoBehaviour{
+public class Board{
     //Init of Wall Dictionary(Key, value) -> key should be transformed into Position instance in
     // later implementation.
     private IDictionary<(int i, int j),(int right, int top)> wallsDict
                 = new Dictionary<(int i, int j),(int right, int top)>();
+
+    private IDictionary<(int i, int j), string color> goalsDict
+                = new Dictionary<(int i, int j),string color>();
+
     public Board(){
         //creates random board.
-        assembleBoards(0,0,0,0);
+        assembleBoards(2,7,1,8);
     }
     /* Seeding works as following : corresponding number for whichever board it is affiliated to,
     * and for the flipped version, number+4. If 0, means it generates random.
@@ -21,28 +25,34 @@ public class Board : MonoBehaviour{
         //creates board with seed.
         assembleBoards(topleft,topright,bottomleft,bottomright);
     }
+    /*Adds goals into board.*/
+    private void findGoals(){
+        string path = "walls";
+    }
+
     ///assembly of boards if seed = 0, then random, else follow seed.
     private void assembleBoards(int topleft, int topright, int bottomleft, int bottomright){
-        string path = "walls_only/";
+        string wall_path = "walls_only/";
+        string goal_path = "goals/";
         string topLeftFileName;
         string topRightFileName;
         string bottomLeftFileName;
         string bottomRightFileName;
         if(topleft ==0 || topright == 0 || bottomleft ==0 || bottomright ==0){
-            topLeftFileName = path + "top_left/board4_flip";
-            topRightFileName = path + "top_right/board3_flip";
-            bottomLeftFileName = path + "bottom_left/board1_flip";
-            bottomRightFileName = path + "bottom_right/board2_flip";
+            topLeftFileName = wall_path + "top_left/board4_flip";
+            topRightFileName = wall_path + "top_right/board3_flip";
+            bottomLeftFileName = wall_path + "bottom_left/board1_flip";
+            bottomRightFileName = wall_path + "bottom_right/board2_flip";
         }
         else{
-            if(topleft>4){topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
-            else{topLeftFileName = path + "top_left/board"+ topleft.ToString();}
-            if(topright>4){topRightFileName = path + "top_right/board"+ (topright-4).ToString()+"_flip";}
-            else{topRightFileName = path + "top_right/board"+ topleft.ToString();}
-            if(bottomleft>4){bottomLeftFileName = path + "bottom_left/board"+ (bottomleft-4).ToString()+"_flip";}
-            else{bottomLeftFileName = path + "bottom_left/board"+ bottomleft.ToString();}
-            if(bottomright>4){bottomRightFileName = path + "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
-            else{bottomRightFileName = path + "bottom_right/board"+ bottomleft.ToString();}
+            if(topleft>4){topLeftFileName = wall_path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
+            else{topLeftFileName = wall_path + "top_left/board"+ topleft.ToString();}
+            if(topright>4){topRightFileName = wall_path + "top_right/board"+ (topright-4).ToString()+"_flip";}
+            else{topRightFileName = wall_path + "top_right/board"+ topleft.ToString();}
+            if(bottomleft>4){bottomLeftFileName = wall_path + "bottom_left/board"+ (bottomleft-4).ToString()+"_flip";}
+            else{bottomLeftFileName = wall_path + "bottom_left/board"+ bottomleft.ToString();}
+            if(bottomright>4){bottomRightFileName = wall_path + "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
+            else{bottomRightFileName = wall_path + "bottom_right/board"+ bottomleft.ToString();}
         }
         //turns files into 1D String arrays, that are in order of position.
         string[] topLeft = File.ReadAllText(topLeftFileName).Split(' ');
