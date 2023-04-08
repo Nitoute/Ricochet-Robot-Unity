@@ -28,7 +28,6 @@ public class Game : MonoBehaviour
     
     /*initializing board*/
     private Board board = new Board(1,2,3,4);
-    private IDictionary<(int i, int j),(int right, int top)> walls = board.getWallDict;
 
     private bool gameOver = false;
     private bool solverRunning = false;
@@ -278,7 +277,7 @@ public class Game : MonoBehaviour
     {
         try
         {
-            (int,int)[] li = walls[(x,y)];
+            (int,int)[] li =  board.getWallDict[(x,y)];
 
             foreach ((int,int) item in li)
             {
@@ -298,20 +297,20 @@ public class Game : MonoBehaviour
 
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
-        if (walls.ContainsKey((x,y)))
+        if (board.getWallDict.ContainsKey((x,y)))
         {
-            (int,int)[] newListe = new (int,int)[walls[(x,y)].Length + 1];
+            (int,int)[] newListe = new (int,int)[ board.getWallDict[(x,y)].Length + 1];
             for (int i = 0; i<newListe.Length-1; i++)
             {
-                newListe[i] = walls[(x,y)][i];
+                newListe[i] = board.getWallDict[(x,y)][i];
             }
             newListe[newListe.Length -1] = (dirX,dirY);
-            walls[(x,y)] = newListe;
+            board.getWallDict[(x,y)] = newListe;
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
         else
         {
-            walls.Add((x, y), new (int, int)[] {(dirX, dirY)});
+             board.getWallDict.Add((x, y), new (int, int)[] {(dirX, dirY)});
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
     }
