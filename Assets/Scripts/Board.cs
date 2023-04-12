@@ -30,7 +30,7 @@ public class Board{
 
     ///assembly of boards if seed = 0, then random, else follow seed.
     private void assembleBoards(int topleft, int topright, int bottomleft, int bottomright){
-        string wall_path = "/Assets/Scripts/walls_only/";
+        string wall_path = "Assets/Scripts/walls_only/";
         string goal_path = "goals/";
         string topLeftFileName;
         string topRightFileName;
