@@ -127,8 +127,6 @@ public class Game : MonoBehaviour
 
         // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
-
-        
     }
 
     private void addWalls(){
@@ -279,7 +277,8 @@ public class Game : MonoBehaviour
         return true;
     }
 
-    public bool isWallInDir(int x, int y,int dirX, int dirY)
+    //Utiliser isWallInDir depuis classe board.
+    /**public bool isWallInDir(int x, int y,int dirX, int dirY)
     {
         try
         {
@@ -296,7 +295,7 @@ public class Game : MonoBehaviour
         {
             return false;
         }
-    }
+    }*/
 
     
     
@@ -369,7 +368,7 @@ public class Game : MonoBehaviour
         rm.SetYBoard(rm.GetYInit());
         rm.SetCoords();
 
-        SetPositionRobot(obj);        
+        SetPositionRobot(obj);
     }
 
     public bool hasWin(GameObject rob)

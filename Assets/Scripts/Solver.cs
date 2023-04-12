@@ -26,16 +26,16 @@ public class Solver : MonoBehaviour
         int dir=val%4;
         switch (dir){
             case 0:
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,1);
+                break;
+            case 1:
                 game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(1,0);
                 break;
             case 2:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(-1,0);
-                break;
-            case 1:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,1);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,-1);
                 break;
             case 3:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,-1);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(-1,0);
                 break;
         }
     }
