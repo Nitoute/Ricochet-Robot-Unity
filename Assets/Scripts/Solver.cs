@@ -84,7 +84,7 @@ public class Solver : MonoBehaviour
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
-            return (0,len+1);            
+            return (0,len+1);
         }
         return (seq+1,len);
     }
@@ -101,7 +101,7 @@ public class Solver : MonoBehaviour
             foreach ((int,int) a in tmp){
                 posMap.Remove(a);
             }
-            return (0,len+1);            
+            return (0,len+1);
         }
         return (seq+1,len);
     }

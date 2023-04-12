@@ -131,28 +131,29 @@ public class Board{
         return wallsDict;
     }
 
+
     /**
     * For a position, returns if there is a wall in corresponding direction (0->3 : top,right,bottom,left)
     */
     public bool isWallInDir(int x, int y, int dir)
     {
         switch (dir){
-            case 0: 
-            if (wallsDict[(x,y)].Item2==1){
-                return true
-            }
-            case 1: 
-            if (wallsDict[(x,y)].Item1==1){
-                return true
-            }
-            case 2: 
-            if (wallsDict[(x,y)].Item2==-1){
-                return true
-            }
-            case 3: 
-            if (wallsDict[(x,y)].Item1==-1){
-                return true
-            }
+            case 0:
+                if (wallsDict[(x,y)].Item2==1){
+                    return true
+                }
+            case 1:
+                if (wallsDict[(x+1,y)].Item1==-1){
+                    return true
+                }
+            case 2:
+                if (wallsDict[(x,y+1)].Item2==1){
+                    return true
+                }
+            case 3:
+                if (wallsDict[(x,y)].Item1==-1){
+                    return true
+                }
         }
         return false;
     }
