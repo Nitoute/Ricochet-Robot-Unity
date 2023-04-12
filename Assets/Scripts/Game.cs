@@ -28,7 +28,6 @@ public class Game : MonoBehaviour
     
     /*initializing board*/
     private Board board = new Board(1,2,3,4);
-    private IDictionary<(int i, int j),(int right, int top)> walls = board.getWallDict;
 
     private bool gameOver = false;
     private bool solverRunning = false;
@@ -44,10 +43,10 @@ public class Game : MonoBehaviour
         solver = GameObject.FindGameObjectWithTag("SolverObject");
         solverScript = solver.GetComponent<Solver>();
 
-        
+        addWalls();
 
         //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
-        addWall(5,0,1,0,true);
+        /*addWall(5,0,1,0,true);
         addWall(11,0,1,0,true);
         addWall(2,0,0,1,true);
         addWall(1,1,1,0,true);
@@ -98,7 +97,7 @@ public class Game : MonoBehaviour
         addWall(12,14,0,1,true);
         addWall(3,15,1,0,true);
         addWall(10,15,1,0,true);
-        
+        */
         
         //Robots
         System.Random rnd = new System.Random();
@@ -130,6 +129,12 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
 
         
+    }
+
+    private void addWalls(){
+        foreach (var wall in board.getWallDict()){
+            //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
+        }
     }
 
     public GameObject getRobot(int p){
@@ -278,11 +283,10 @@ public class Game : MonoBehaviour
     {
         try
         {
-            (int,int)[] li = walls[(x,y)];
-
-            foreach ((int,int) item in li)
+            IDictionary<(int i, int j),(int right, int top)> li = board.getWallDict();
+            foreach (var item in li)
             {
-                if (item==(dirX,dirY)){
+                if (item.Key==(dirX,dirY)){
                     return true;
                 }
             }
@@ -295,23 +299,23 @@ public class Game : MonoBehaviour
     }
 
     
-
+    
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
-        if (walls.ContainsKey((x,y)))
+        if ((board.getWallDict()).ContainsKey((x,y)))
         {
-            (int,int)[] newListe = new (int,int)[walls[(x,y)].Length + 1];
+            (int,int)[] newListe = new (int,int)[board.getWallDict()[(x,y)].Length + 1];
             for (int i = 0; i<newListe.Length-1; i++)
             {
-                newListe[i] = walls[(x,y)][i];
+                newListe[i] = board.getWallDict()[(x,y)][i];
             }
             newListe[newListe.Length -1] = (dirX,dirY);
-            walls[(x,y)] = newListe;
+            board.getWallDict()[(x,y)] = newListe;
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
         else
         {
-            walls.Add((x, y), new (int, int)[] {(dirX, dirY)});
+            board.getWallDict().Add((x, y), new (int, int)[] {(dirX, dirY)});
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
     }
