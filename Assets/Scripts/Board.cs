@@ -8,11 +8,9 @@ using System.IO;
 public class Board{
     //Init of Wall Dictionary(Key, value) -> key should be transformed into Position instance in
     // later implementation.
-    private IDictionary<(int i, int j),(int right, int top)> wallsDict
-                = new Dictionary<(int i, int j),(int right, int top)>();
+    private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
 
-    private IDictionary<(int i, int j), string color> goalsDict
-                = new Dictionary<(int i, int j),string color>();
+    //private IDictionary<(int i, int j), string color> goalsDict = new Dictionary<(int i, int j), string color>();
 
     public Board(){
         //creates random board.
@@ -137,22 +135,24 @@ public class Board{
     */
     public bool isWallInDir(int x, int y, int dir)
     {
-        switch (dir){
-            case 0:
+        if(dir==0){
                 if (wallsDict[(x,y)].Item2==1){
-                    return true
+                    return true;
                 }
-            case 1:
+        }
+        if(dir==1){
                 if (wallsDict[(x+1,y)].Item1==-1){
-                    return true
+                    return true;
                 }
-            case 2:
+        }
+        if(dir==2){
                 if (wallsDict[(x,y+1)].Item2==1){
-                    return true
+                    return true;
                 }
-            case 3:
+        }
+        if(dir==3){
                 if (wallsDict[(x,y)].Item1==-1){
-                    return true
+                    return true;
                 }
         }
         return false;

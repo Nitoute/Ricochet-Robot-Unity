@@ -25,9 +25,8 @@ public class Game : MonoBehaviour
 
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
-    
     /*initializing board*/
-    private Board board = new Board(1,2,3,4);
+    public Board board = new Board(1,2,3,4);
 
     private bool gameOver = false;
     private bool solverRunning = false;
@@ -277,8 +276,8 @@ public class Game : MonoBehaviour
         return true;
     }
 
-    //Utiliser isWallInDir depuis classe board.
-    /**public bool isWallInDir(int x, int y,int dirX, int dirY)
+    //Privilégier isWallInDir depuis classe board.
+    public bool isWallInDir(int x, int y,int dirX, int dirY)
     {
         try
         {
@@ -295,11 +294,10 @@ public class Game : MonoBehaviour
         {
             return false;
         }
-    }*/
+    }
 
-    
-    
-    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
+
+    /*private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
         if ((board.getWallDict()).ContainsKey((x,y)))
         {
@@ -317,7 +315,7 @@ public class Game : MonoBehaviour
             board.getWallDict().Add((x, y), new (int, int)[] {(dirX, dirY)});
             if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
         }
-    }
+    }*/
 
     public void addCoups()
     {
