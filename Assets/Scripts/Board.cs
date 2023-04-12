@@ -101,9 +101,9 @@ public class Board{
         if(j>=8){y =j-8;} else{y=j;}
         int position = x+8*y;
     //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
-        if (file_str[x+8*y].StartsWith("1")) // top wall : (,1)
+        if (file_str[position].StartsWith("1")) // top wall : (,1)
         {
-            if (file_str[x+8*y].EndsWith("1")) // left wall : (-1,) -> TODO delete goals from files
+            if (file_str[position].EndsWith("1")) // left wall : (-1,) -> TODO delete goals from files
             {
                 return (-1,1);
             }
@@ -112,7 +112,7 @@ public class Board{
             }
         }
         else{
-        if (file_str[i+8*j].EndsWith("1")) // mur à gauche : (-1,)
+        if (file_str[position].EndsWith("1")) // mur à gauche : (-1,)
             {
                 return (-1,0);
             }
