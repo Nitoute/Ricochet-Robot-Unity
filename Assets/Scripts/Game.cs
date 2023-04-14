@@ -26,7 +26,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(1,1,1,1);
+    public Board board = new Board(1,2,3,4);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -151,7 +151,7 @@ public class Game : MonoBehaviour
     private void addGoals(){
         foreach (var goal in board.getGoalDict()){
             //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
-            Debug.Log("at position " + goal.Key + " walls " + goal.Value);
+            Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
     }
 

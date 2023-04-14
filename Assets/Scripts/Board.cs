@@ -135,29 +135,47 @@ public class Board{
     */
     private (int, int) readWalls(int i, int j, string[] file_str){
     //Updates
+        string which_board ="";
         int x, y;
-        if(i>=8){x=i-8;} else{x=i;}
-        if(j>=8){y =j-8;} else{y=j;}
-        int position = x+8*y;
+        if(i>=8){
+            x=i-8;
+            which_board += "right ";
+            }
+            else{
+                x=i;
+            which_board += "left ";
+            }
+        if(j>=8){
+            y =j-8;
+            which_board += "bottom";
+            }
+            else{
+                y=j;
+            which_board += "top";
+            }
+        int position = x+(8*y);
     //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
+        //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
         if (file_str[position].StartsWith("1")) // top wall : (,1)
         {
-            if (file_str[position].EndsWith("1")) // left wall : (-1,) -> TODO delete goals from files
+            if (file_str[position].EndsWith("1")) // left wall : (-1,)
             {
+                Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,1);
             }
             else{
+                Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (0,1);
             }
         }
         else{
         if (file_str[position].EndsWith("1")) // mur à gauche : (-1,)
             {
+                Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,0);
             }
         }
         return (0,0);
-
     }
 
     private int readGoals(int i, int j, string[] file_str){
