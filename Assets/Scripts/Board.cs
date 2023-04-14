@@ -236,29 +236,35 @@ public class Board{
     /**
     * For a position, returns if there is a wall in corresponding direction (0->3 : top,right,bottom,left)
     */
-    public bool isWallInDir(int x, int y, int dir)
+    public bool isWallInPos(int x, int y, int dir)
     {
-        if(dir==0){
-                if (wallsDict[(x,y)].Item2==1){
-                    return true;
-                }
+        try{
+            if(dir==0){
+                    if (wallsDict[(x,y)].Item2==1){
+                        return true;
+                    }
+            }
+            if(dir==1){
+                    if (wallsDict[(x+1,y)].Item1==-1){
+                        return true;
+                    }
+            }
+            if(dir==2){
+                    if (wallsDict[(x,y+1)].Item2==1){
+                        return true;
+                    }
+            }
+            if(dir==3){
+                    if (wallsDict[(x,y)].Item1==-1){
+                        return true;
+                    }
+            }
+            return false;
         }
-        if(dir==1){
-                if (wallsDict[(x+1,y)].Item1==-1){
-                    return true;
-                }
+        catch (KeyNotFoundException)
+        {
+            return false;
         }
-        if(dir==2){
-                if (wallsDict[(x,y+1)].Item2==1){
-                    return true;
-                }
-        }
-        if(dir==3){
-                if (wallsDict[(x,y)].Item1==-1){
-                    return true;
-                }
-        }
-        return false;
     }
 
 }
