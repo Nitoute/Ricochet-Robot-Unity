@@ -741,7 +741,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b07824fdc7936c199b2de054ee1ff144, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2caa623c7f7623b6db4573241a4a1505, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1864,6 +1864,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   robot: {fileID: 1276312879026374994, guid: fbcfeacfe48616c749c082c92d3e5a21, type: 3}
+  wallPhys: {fileID: 2763758752044587051, guid: 09224fe7fe1510cedb82317811b7a867,
+    type: 3}
   goal: {fileID: 2085272381616997087, guid: cd3a650575ab016a9908e773779f091a, type: 3}
   solver: {fileID: 0}
   coupText: {fileID: 1832528992}

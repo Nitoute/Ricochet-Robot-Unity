@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class Game : MonoBehaviour
 {
     public GameObject robot;
+    public GameObject wallPhys;
     public GameObject goal;
     public GameObject solver;
     private Solver solverScript;
@@ -34,6 +35,8 @@ public class Game : MonoBehaviour
     private bool continueSolveV2 = false;
     private bool continueSolveV3 = false;
 
+    Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +48,7 @@ public class Game : MonoBehaviour
         addWalls();
 
         //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
-        /*addWall(5,0,1,0,true);
+        addWall(5,0,1,0,true);
         addWall(11,0,1,0,true);
         addWall(2,0,0,1,true);
         addWall(1,1,1,0,true);
@@ -96,7 +99,8 @@ public class Game : MonoBehaviour
         addWall(12,14,0,1,true);
         addWall(3,15,1,0,true);
         addWall(10,15,1,0,true);
-        */
+        
+        
         
         //Robots
         System.Random rnd = new System.Random();
@@ -172,6 +176,19 @@ public class Game : MonoBehaviour
         rm.SetXInit(x);
         rm.SetYInit(y);
         rm.Activate();
+        return obj;
+        
+    }
+
+    public GameObject CreateWall(int xPos,int yPos, int xDir, int yDir)
+    {
+        GameObject obj = Instantiate(wallPhys, new Vector3(0,0,-1),Quaternion.identity);
+        WallMan wm = obj.GetComponent<WallMan>();
+        wm.SetXBoard(xPos);
+        wm.SetYBoard(yPos);
+        wm.SetxDir(xDir);
+        wm.SetyDir(yDir);
+        wm.Activate();
         return obj;
         
     }
@@ -281,10 +298,11 @@ public class Game : MonoBehaviour
     {
         try
         {
-            IDictionary<(int i, int j),(int right, int top)> li = board.getWallDict();
-            foreach (var item in li)
+            (int,int)[] li = walls[(x,y)];
+            //IDictionary<(int i, int j),(int right, int top)> li = board.getWallDict();
+            foreach ((int,int) item in li)
             {
-                if (item.Key==(dirX,dirY)){
+                if (item==(dirX,dirY)){
                     return true;
                 }
             }
@@ -297,25 +315,33 @@ public class Game : MonoBehaviour
     }
 
 
-    /*private void addWall(int x, int y, int dirX,int dirY,bool newWall)
+    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
-        if ((board.getWallDict()).ContainsKey((x,y)))
+        if (walls.ContainsKey((x,y)))
         {
-            (int,int)[] newListe = new (int,int)[board.getWallDict()[(x,y)].Length + 1];
+            (int,int)[] newListe = new (int,int)[walls[(x,y)].Length + 1];
             for (int i = 0; i<newListe.Length-1; i++)
             {
-                newListe[i] = board.getWallDict()[(x,y)][i];
+                newListe[i] = walls[(x,y)][i];
             }
             newListe[newListe.Length -1] = (dirX,dirY);
-            board.getWallDict()[(x,y)] = newListe;
-            if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            walls[(x,y)] = newListe;
+            if (newWall)
+            { 
+                CreateWall(x, y, dirX,dirY);
+                addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            }
         }
         else
         {
-            board.getWallDict().Add((x, y), new (int, int)[] {(dirX, dirY)});
-            if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            walls.Add((x, y), new (int, int)[] {(dirX, dirY)});
+            if (newWall)
+            {
+                CreateWall(x, y, dirX,dirY);
+                addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            }
         }
-    }*/
+    }
 
     public void addCoups()
     {

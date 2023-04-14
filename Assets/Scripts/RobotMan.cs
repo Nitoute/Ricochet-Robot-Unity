@@ -100,42 +100,43 @@ public class RobotMan : MonoBehaviour
 
     public void InitiateMovePlates()
     {
+        //Pour la nouvelle version : 0->3 : top,right,bottom,left
         switch (this.name)
         {
             case "robot_bleue": 
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
+                LineMovePlate(1,1, 0);
+                LineMovePlate(0,0, 1);
 
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
+                LineMovePlate(3 ,-1, 0);
+                LineMovePlate(2 ,0, -1);
                 break;
             case "robot_jaune": 
-                LineMovePlate(1, 0); //Droite
-                LineMovePlate(0, 1); //Haut
+                LineMovePlate(1 ,1, 0); //Droite
+                LineMovePlate(0 ,0, 1); //Haut
 
-                LineMovePlate(-1, 0); //Gauche
-                LineMovePlate(0, -1); //Bas
+                LineMovePlate(3 ,-1, 0); //Gauche
+                LineMovePlate(2 ,0, -1); //Bas
                 break;
             case "robot_rouge": 
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
+                LineMovePlate(1 ,1, 0);
+                LineMovePlate(0 ,0, 1);
 
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
+                LineMovePlate(3 ,-1, 0);
+                LineMovePlate(2 ,0, -1);
                 break;
             case "robot_vert": 
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
+                LineMovePlate(1 ,1, 0);
+                LineMovePlate(0 ,0, 1);
                 
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
+                LineMovePlate(3 ,-1, 0);
+                LineMovePlate(2 ,0, -1);
                
                 break;
         }
     }
 
     //Déplace le pions sur la ligne + colonne
-    public void LineMovePlate(int xIncrement, int yIncrement)
+    public void LineMovePlate(int dir,int xIncrement, int yIncrement)
     {
         Game sc = controller.GetComponent<Game>();
         int oldx = xBoard;
@@ -144,6 +145,7 @@ public class RobotMan : MonoBehaviour
         int x = oldx;
         int y = oldy;
         bool mur=false;
+
         //Si il y a un mur directement dans notre case + direction on ne bouge pas !
         if (!sc.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
             x = xBoard + xIncrement;
