@@ -27,7 +27,6 @@ public class Game : MonoBehaviour
     private GameObject currentRobotGoal;
     /*initializing board*/
     public Board board = new Board(1,2,3,4);
-
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -97,7 +96,7 @@ public class Game : MonoBehaviour
         addWall(3,15,1,0,true);
         addWall(10,15,1,0,true);
         */
-        
+
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
@@ -110,7 +109,6 @@ public class Game : MonoBehaviour
         }
 
         //Goals
-    
         goals = new GameObject[]{
             InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
         };
@@ -131,6 +129,22 @@ public class Game : MonoBehaviour
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
             //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
+            //Debug.Log("at position " + wall.Key + " walls " + wall.Value);
+        }
+        int i, j;
+        //Ajouter des murs physiques à droite si la position x==15 et ou en bas si y==15
+        for(j = 0; j<16; j++){
+            for(i=0; i<16; i++){
+                if(i==15 && j==15){
+                    //addWall(i, j, 1, -1, true);
+                }
+                else if(i==15){
+                    //addWall(i, j, 1, 0, true);
+                }
+                else if(j==15){
+                    //addWall(i, j, 0, -1, true);
+                }
+            }
         }
     }
 
@@ -142,15 +156,15 @@ public class Game : MonoBehaviour
         List<(int,int)> pos=new List<(int,int)>();
         for (int i=0;i<4;i++){
             pos.Add((robots[i].GetComponent<RobotMan>().GetXBoard(),robots[i].GetComponent<RobotMan>().GetYBoard()));
-        } 
+        }
         return pos;
-    }    
-    
+    }
+
     public List<(int,int)> getPositionInitRobot(){
         List<(int,int)> pos=new List<(int,int)>();
         for (int i=0;i<4;i++){
             pos.Add((robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit()));
-        } 
+        }
         return pos;
     }
 
@@ -173,7 +187,7 @@ public class Game : MonoBehaviour
         rm.SetYInit(y);
         rm.Activate();
         return obj;
-        
+
     }
 
     public GameObject InstantiateGoal(string name, int x, int y)
@@ -185,7 +199,6 @@ public class Game : MonoBehaviour
         gm.SetYBoard(y);
         gm.Activate();
         return obj;
-        
     }
 
     public void SetPositionRobot(GameObject obj)
@@ -231,13 +244,13 @@ public class Game : MonoBehaviour
     {
         switch (currentGoal.name)
         {
-            case "goal_bleue": 
+            case "goal_bleue":
                 return robots[0];
-            case "goal_rouge": 
+            case "goal_rouge":
                 return robots[1];
-            case "goal_vert": 
+            case "goal_vert":
                 return robots[2];
-            case "goal_jaune": 
+            case "goal_jaune":
                 return robots[3];
         }
         return null;
@@ -252,7 +265,7 @@ public class Game : MonoBehaviour
         continueSolveV2=!continueSolveV2;
         solverRunning=!solverRunning;
     }
-    
+
     public void switchContinueSolveV3(){
         continueSolveV3=!continueSolveV3;
         solverRunning=!solverRunning;
@@ -378,7 +391,7 @@ public class Game : MonoBehaviour
         int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
         switch (rob.name)
         {
-            case "robot_bleue": 
+            case "robot_bleue":
                 if (currentGoal.name == "goal_bleue")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
@@ -388,9 +401,9 @@ public class Game : MonoBehaviour
                         }
                         return true;
                     }
-                } 
+                }
                 break;
-            case "robot_jaune": 
+            case "robot_jaune":
                 if (currentGoal.name == "goal_jaune")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
@@ -400,9 +413,9 @@ public class Game : MonoBehaviour
                         }
                         return true;
                     }
-                } 
+                }
                 break;
-            case "robot_rouge": 
+            case "robot_rouge":
                 if (currentGoal.name == "goal_rouge")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
@@ -412,9 +425,9 @@ public class Game : MonoBehaviour
                         }
                         return true;
                     }
-                } 
+                }
                 break;
-            case "robot_vert": 
+            case "robot_vert":
                if (currentGoal.name == "goal_vert")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
@@ -424,7 +437,7 @@ public class Game : MonoBehaviour
                         }
                         return true;
                     }
-                } 
+                }
                 break;
         }
         return false;
@@ -441,41 +454,41 @@ public class Game : MonoBehaviour
         int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
         switch (rob.name)
         {
-            case "robot_bleue": 
+            case "robot_bleue":
                 if (currentGoal.name == "goal_bleue")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
                         return true;
                     }
-                } 
+                }
                 break;
-            case "robot_jaune": 
+            case "robot_jaune":
                 if (currentGoal.name == "goal_jaune")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
                         return true;
                     }
-                } 
+                }
                 break;
-            case "robot_rouge": 
+            case "robot_rouge":
                 if (currentGoal.name == "goal_rouge")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
                         return true;
                     }
-                } 
+                }
                 break;
-            case "robot_vert": 
+            case "robot_vert":
                if (currentGoal.name == "goal_vert")
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
                         return true;
                     }
-                } 
+                }
                 break;
         }
 
