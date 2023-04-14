@@ -81,6 +81,37 @@ public class Solver : MonoBehaviour
         }
     }
 
+    public int makeSeq31(int seq, int len){
+        int tmp=seq;
+        if (len==1){
+            makeMove1(tmp%16);
+            posMap[(seq,len)]=game.getPositionRobot();
+            return seq;
+        }
+        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
+            try {
+                game.setPositionRobot(posMap[(tmp/16,len-1)]);
+                makeMove1(tmp%16);
+                posMap[(seq,len)]=game.getPositionRobot();
+                return seq;
+            }
+            catch (KeyNotFoundException){
+                int i=2;
+                tmp=seq/16;
+                while (true){
+                    tmp=tmp/16;
+                    if (posMap.Contains((tmp,len-i))){
+                        return seq+(int)Math.Pow(16, i-1)-1;
+                    }
+                    i++;
+                    if (i>len){
+                        print("houla");
+                    }
+                } 
+            }
+        }
+    }
+
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
@@ -91,7 +122,7 @@ public class Solver : MonoBehaviour
 
     public (int,int) nextSeq2(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
-        List<(int,int)> tmp=new List<(int,int)>();
+            List<(int,int)> tmp=new List<(int,int)>();
             foreach (KeyValuePair<(int,int), List<(int,int)>> kvp in posMap){
                 (int a,int b)=kvp.Key;
                 if (a==len){
@@ -208,6 +239,21 @@ public class Solver : MonoBehaviour
             currentRobot = game.GetActiveRobot();
             game.restartPosition();
             makeSeq3(seq,len);
+            if(game.hasWin(currentRobot)){
+                printSeq(seq,len);
+                print(len);
+                game.restartPosition();
+                game.switchContinueSolveV3();
+                //return (seq,len);
+            }
+            //yield return null;
+            (seq,len)=nextSeq(seq,len);
+            game.restartPosition();
+        }
+        else if(game.getContinueSolveV31()){
+            currentRobot = game.GetActiveRobot();
+            game.restartPosition();
+            seq=makeSeq31(seq,len);
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
