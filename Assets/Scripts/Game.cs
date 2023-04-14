@@ -26,7 +26,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(1,2,3,4);
+    public Board board = new Board(1,1,1,1);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -42,6 +42,7 @@ public class Game : MonoBehaviour
         solverScript = solver.GetComponent<Solver>();
 
         addWalls();
+        addGoals();
 
         //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
         /*addWall(5,0,1,0,true);
@@ -145,6 +146,12 @@ public class Game : MonoBehaviour
                     //addWall(i, j, 0, -1, true);
                 }
             }
+        }
+    }
+    private void addGoals(){
+        foreach (var goal in board.getGoalDict()){
+            //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
+            Debug.Log("at position " + goal.Key + " walls " + goal.Value);
         }
     }
 

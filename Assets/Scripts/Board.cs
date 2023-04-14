@@ -63,6 +63,29 @@ public class Board{
         string[] bottomLeft = File.ReadAllText(boardList[2]).Split(' ');
         string[] bottomRight = File.ReadAllText(boardList[3]).Split(' ');
         //Adds goals to dictionary.
+        int i, j;
+        int temp_goal;
+        for(j = 0; j<16; j++){
+            for(i=0; i<16; i++){
+                if(i<8){
+                    if(j<8){
+                        temp_goal = readGoals(i, j, topLeft);
+                        if(temp_goal!=-1){addToGoalDict((i,j), temp_goal);}
+                    }else{
+                        temp_goal = readGoals(i, j, bottomLeft);
+                        if(temp_goal!=-1){addToGoalDict((i,j), temp_goal);}
+                    }
+                }else{
+                    if(j<8){
+                        temp_goal = readGoals(i, j, topRight);
+                        if(temp_goal!=-1){addToGoalDict((i,j), temp_goal);}
+                    }else{
+                        temp_goal = readGoals(i, j, bottomRight);
+                        if(temp_goal!=-1){addToGoalDict((i,j), temp_goal);}
+                    }
+                }
+            }
+        }
     }
 
     ///assembly of boards if seed = 0, then random, else follow seed.
@@ -107,7 +130,8 @@ public class Board{
         -1 -> Bottom or Left
     * This function only reads top and left walls.
     * Returns None if there is No Wall top and left. There could be a right or bottom wall.
-    * This function goes in pair with function that draws all right and all bottom walls of board.
+    * This function goes in pair with function that draws all right and all bottom walls of board,
+    * called in Game.
     */
     private (int, int) readWalls(int i, int j, string[] file_str){
     //Updates
@@ -215,21 +239,5 @@ public class Board{
         }
         return false;
     }
-        /*
-        try
-        {
-            foreach (var item in wallsDict)
-            {
-                if (item.Key==(dirX,dirY)){
-                    return true;
-                }
-            }
-            return false;
-        }
-        catch (KeyNotFoundException)
-        {
-            return false;
-        }
-    }*/
 
 }
