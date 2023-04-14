@@ -26,16 +26,16 @@ public class Solver : MonoBehaviour
         int dir=val%4;
         switch (dir){
             case 0:
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,1);
+                break;
+            case 1:
                 game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(1,0);
                 break;
             case 2:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(-1,0);
-                break;
-            case 1:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,1);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,-1);
                 break;
             case 3:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,-1);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(-1,0);
                 break;
         }
     }
@@ -115,7 +115,7 @@ public class Solver : MonoBehaviour
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
-            return (0,len+1);            
+            return (0,len+1);
         }
         return (seq+1,len);
     }
@@ -132,7 +132,7 @@ public class Solver : MonoBehaviour
             foreach ((int,int) a in tmp){
                 posMap.Remove(a);
             }
-            return (0,len+1);            
+            return (0,len+1);
         }
         return (seq+1,len);
     }
