@@ -27,7 +27,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(5,2,3,4);
+    public Board board = new Board(1,2,6,4);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -99,9 +99,7 @@ public class Game : MonoBehaviour
         addWall(12,14,0,1,true);
         addWall(3,15,1,0,true);
         addWall(10,15,1,0,true);*/
-        
-        
-        
+
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
@@ -133,21 +131,21 @@ public class Game : MonoBehaviour
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
-            addWall(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
-            //Debug.Log("at position " + wall.Key + " walls " + wall.Value);
+            addWallBis(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
+            Debug.Log("at position " + wall.Key + " walls " + wall.Value);
         }
         int i, j;
         //Ajouter des murs physiques à droite si la position x==15 et ou en bas si y==15
         for(j = 0; j<16; j++){
             for(i=0; i<16; i++){
                 if(i==15 && j==15){
-                    //addWall(i, j, 1, -1, true);
+                    addWallBis(i, 15-j, 1, -1, true);
                 }
                 else if(i==15){
-                    //addWall(i, j, 1, 0, true);
+                    addWallBis(i, 15-j, 1, 0, true);
                 }
                 else if(j==15){
-                    //addWall(i, j, 0, -1, true);
+                    addWallBis(i, 15-j, 0, -1, true);
                 }
             }
         }
@@ -185,7 +183,7 @@ public class Game : MonoBehaviour
             robots[i].GetComponent<RobotMan>().SetXBoard(x);
             robots[i].GetComponent<RobotMan>().SetYBoard(y);
         }
-    }    
+    }
 
     public GameObject CreateRobot(string name, int x, int y)
     {
@@ -335,7 +333,7 @@ public class Game : MonoBehaviour
     }
 
 
-    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
+    /*private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
         if (walls.ContainsKey((x,y)))
         {
@@ -347,7 +345,7 @@ public class Game : MonoBehaviour
             newListe[newListe.Length -1] = (dirX,dirY);
             walls[(x,y)] = newListe;
             if (newWall)
-            { 
+            {
                 CreateWall(x, y, dirX,dirY);
                 addWall(x+dirX,y+dirY,-dirX,-dirY,false);
             }
@@ -361,7 +359,27 @@ public class Game : MonoBehaviour
                 addWall(x+dirX,y+dirY,-dirX,-dirY,false);
             }
         }
+    }*/
+
+    private void addWallBis(int x, int y){
+        if(board.isWallInDir(x,y,3)){
+            CreateWall(x, y, -1, 0);
+        }
+        if(board.isWallInDir(x,y,0)){
+            CreateWall(x, y, 0, 1);
+        }
     }
+
+    private void addWallBis(int x, int y, int dirX,int dirY,bool newWall){
+        if(dirX==0 || dirY==0){
+            CreateWall(x, y, dirX, dirY);
+        }
+        else{
+            CreateWall(x, y, dirX, 0);
+            CreateWall(x, y, 0, dirY);
+        }
+    }
+
 
     public void addCoups()
     {

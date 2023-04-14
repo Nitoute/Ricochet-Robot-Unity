@@ -39,14 +39,16 @@ public class Board{
             bottomRightFileName = path + "bottom_right/board2_flip";
         }
         else{
-            if(topleft>4){topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
+            if(topleft>4){
+                Debug.Log("position TROUVZZZE");
+                topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
             else{topLeftFileName = path + "top_left/board"+ topleft.ToString();}
             if(topright>4){topRightFileName = path + "top_right/board"+ (topright-4).ToString()+"_flip";}
-            else{topRightFileName = path + "top_right/board"+ topleft.ToString();}
+            else{topRightFileName = path + "top_right/board"+ topright.ToString();}
             if(bottomleft>4){bottomLeftFileName = path + "bottom_left/board"+ (bottomleft-4).ToString()+"_flip";}
             else{bottomLeftFileName = path + "bottom_left/board"+ bottomleft.ToString();}
             if(bottomright>4){bottomRightFileName = path + "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
-            else{bottomRightFileName = path + "bottom_right/board"+ bottomleft.ToString();}
+            else{bottomRightFileName = path + "bottom_right/board"+ bottomright.ToString();}
         }
         boardList.Add(topLeftFileName);
         boardList.Add(topRightFileName);
@@ -160,18 +162,18 @@ public class Board{
         {
             if (file_str[position].EndsWith("1")) // left wall : (-1,)
             {
-                Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
+                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,1);
             }
             else{
-                Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
+                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (0,1);
             }
         }
         else{
         if (file_str[position].EndsWith("1")) // mur à gauche : (-1,)
             {
-                Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
+                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,0);
             }
         }
@@ -220,6 +222,7 @@ public class Board{
     public IDictionary<(int i, int j),(int right, int top)> getWallDict(){
         return wallsDict;
     }
+
 
     private void addToGoalDict((int, int) pos, int color){
         goalsDict.Add((pos.Item1,pos.Item2), color);
