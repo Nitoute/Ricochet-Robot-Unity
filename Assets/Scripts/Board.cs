@@ -12,6 +12,7 @@ public class Board{
     // later implementation.
     private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
     private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int >();
+    //private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int, int >();
 
     public Board(){
         //creates random board.
@@ -236,6 +237,11 @@ public class Board{
         goalsDict.Add((pos.Item1,pos.Item2), color);
     }
 
+    /* Surchage temp
+     * private void addToGoalDict((int, int) pos, int color, int shape){
+        goalsDict.Add((pos.Item1,pos.Item2), color, shape);
+    }
+    */
     public IDictionary<(int i, int j), int> getGoalDict(){
         return goalsDict;
     }

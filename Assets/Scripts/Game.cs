@@ -361,6 +361,13 @@ public class Game : MonoBehaviour
             Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
             currentGoalText.text = currentGoal.name;
+            /*switch(currentGoal.name){
+                case "goal_bleue": currentGoalText.color = Color.blue; break;
+                case "goal_jaune": currentGoalText.color = Color.yellow; break;
+                case "goal_vert": currentGoalText.color = Color.green; break;
+                case "goal_rouge": currentGoalText.color = Color.red; break;
+
+            }*/
             nbrCoups = 0;
             coupText.text = nbrCoups.ToString();
             currentRobotGoal = GetCurrentRobotGoal();
