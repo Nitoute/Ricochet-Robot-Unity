@@ -16,7 +16,7 @@ public class Game : MonoBehaviour
     private GameObject[,] positions = new GameObject[16,16];
     private GameObject[] robots = new GameObject[4];
     Stack<GameObject> pileGoals = new Stack<GameObject>();
-    private GameObject[] goals = new GameObject[4];
+    private GameObject[] goals = new GameObject[0];
 
     private int nbrCoups;
     public Text coupText;
@@ -47,59 +47,6 @@ public class Game : MonoBehaviour
         addWalls();
         addGoals();
 
-        //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
-        /*addWall(5,0,1,0,true);
-        addWall(11,0,1,0,true);
-        addWall(2,0,0,1,true);
-        addWall(1,1,1,0,true);
-        addWall(14,1,0,1,true);
-        addWall(14,1,1,0,true);
-        addWall(9,1,0,1,true);
-        addWall(6,2,0,1,true);
-        addWall(8,2,1,0,true);
-        addWall(6,3,1,0,true);
-        addWall(0,4,0,1,true);
-        addWall(8,4,0,1,true);
-        addWall(12,4,1,0,true);
-        addWall(13,4,0,1,true);
-        addWall(8,5,1,0,true);
-        addWall(15,5,0,1,true);
-        addWall(1,6,1,0,true);
-        addWall(1,6,0,1,true);
-        addWall(4,6,1,0,true);
-        addWall(5,6,0,1,true);
-        addWall(7,6,0,1,true);
-        addWall(8,6,0,1,true);
-        addWall(15,6,0,-1,true);
-        addWall(6,7,1,0,true);
-        addWall(9,7,-1,0,true);
-        addWall(2,8,0,1,true);
-        addWall(6,8,1,0,true);
-        addWall(9,8,-1,0,true);
-        addWall(2,9,1,0,true);
-        addWall(7,9,0,-1,true);
-        addWall(8,9,0,-1,true);
-        addWall(9,9,0,1,true);
-        addWall(11,9,0,1,true);
-        addWall(11,9,1,0,true);
-        addWall(6,10,0,1,true);
-        addWall(9,10,1,0,true);
-        addWall(15,10,0,1,true);
-        addWall(0,11,0,1,true);
-        addWall(6,11,1,0,true);
-        addWall(8,11,0,1,true);
-        addWall(1,12,0,1,true);
-        addWall(7,12,1,0,true);
-        addWall(14,12,0,1,true);
-        addWall(0,13,1,0,true);
-        addWall(13,13,1,0,true);
-        addWall(5,14,1,0,true);
-        addWall(5,14,0,1,true);
-        addWall(11,14,1,0,true);
-        addWall(12,14,0,1,true);
-        addWall(3,15,1,0,true);
-        addWall(10,15,1,0,true);*/
-
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
@@ -117,8 +64,8 @@ public class Game : MonoBehaviour
         // };
 
         pileGoals = new Stack<GameObject>(goals);
-
         currentGoal = pileGoals.Pop();
+        //print("goal init = "+ currentGoal);
         currentGoalText.text = currentGoal.name;
         currentRobotGoal = GetCurrentRobotGoal();
 
@@ -128,6 +75,7 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
     }
+
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
@@ -165,12 +113,14 @@ public class Game : MonoBehaviour
     }
 
     private void addGoal(string name, int x, int y){
-        GameObject[] newListe = new GameObject[goals.Length];
-        for (int i = 0 ; i<goals.Length-1;i++)
+        GameObject[] newListe = new GameObject[goals.Length+1];
+        
+        for (int i = 0 ; i<=goals.Length-1;i++)
         {
             newListe[i] = goals[i];
+
         }
-        newListe[newListe.Length -1] = InstantiateGoal(name,x,y);
+        newListe[newListe.Length-1] = InstantiateGoal(name,x,y);
         goals=newListe;
     }
 
@@ -408,7 +358,6 @@ public class Game : MonoBehaviour
     {
         if (pileGoals.Count!=0)
         {
-            Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
             currentGoalText.text = currentGoal.name;
             nbrCoups = 0;
@@ -476,8 +425,11 @@ public class Game : MonoBehaviour
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
+                        print("gagné 1!");
                         if (!solverRunning){
+                            print("gagné 2!");
                             updateGoal();
+
                         }
                         return true;
                     }
