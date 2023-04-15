@@ -358,6 +358,7 @@ public class Game : MonoBehaviour
     {
         if (pileGoals.Count!=0)
         {
+            Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
             currentGoalText.text = currentGoal.name;
             nbrCoups = 0;
