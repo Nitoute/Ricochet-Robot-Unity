@@ -103,34 +103,34 @@ public class RobotMan : MonoBehaviour
         //Pour la nouvelle version : 0->3 : top,right,bottom,left
         switch (this.name)
         {
-            case "robot_bleue": 
+            case "robot_bleue":
                 LineMovePlate(1,1, 0);
                 LineMovePlate(0,0, 1);
 
                 LineMovePlate(3 ,-1, 0);
                 LineMovePlate(2 ,0, -1);
                 break;
-            case "robot_jaune": 
+            case "robot_jaune":
                 LineMovePlate(1 ,1, 0); //Droite
                 LineMovePlate(0 ,0, 1); //Haut
 
                 LineMovePlate(3 ,-1, 0); //Gauche
                 LineMovePlate(2 ,0, -1); //Bas
                 break;
-            case "robot_rouge": 
+            case "robot_rouge":
                 LineMovePlate(1 ,1, 0);
                 LineMovePlate(0 ,0, 1);
 
                 LineMovePlate(3 ,-1, 0);
                 LineMovePlate(2 ,0, -1);
                 break;
-            case "robot_vert": 
+            case "robot_vert":
                 LineMovePlate(1 ,1, 0);
                 LineMovePlate(0 ,0, 1);
-                
+
                 LineMovePlate(3 ,-1, 0);
                 LineMovePlate(2 ,0, -1);
-               
+
                 break;
         }
     }
@@ -147,20 +147,19 @@ public class RobotMan : MonoBehaviour
         bool mur=false;
 
         //Si il y a un mur directement dans notre case + direction on ne bouge pas !
-        if (!sc.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
+        if (!sc.board.isWallInPos(oldx,15-oldy,dir)){
             x = xBoard + xIncrement;
             y = yBoard + yIncrement;
 
             while (sc.PositionOnBoard(x,y) && sc.GetPosition(x,y) == null)
             {
-                if (sc.isWallInDir(x,y,xIncrement,yIncrement)){
+                if (sc.board.isWallInPos(x,15-y,dir)){
                     mur = true;
                     break;
                 }
                 x += xIncrement;
                 y += yIncrement;
 
-                
             }
             if(!mur){
                 x-=xIncrement;
@@ -181,7 +180,7 @@ public class RobotMan : MonoBehaviour
         PointMovePlate(xBoard - 1, yBoard -2);
         PointMovePlate(xBoard - 2, yBoard +1);
         PointMovePlate(xBoard - 2, yBoard -1);
-    }    
+    }
 
     //Déplace le pions tout autour de lui (roi aux échec)
     public void SurroundMovePlate()
