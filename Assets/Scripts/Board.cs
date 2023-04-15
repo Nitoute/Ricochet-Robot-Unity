@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Random=System.Random;
+using System.Linq;
 
 
 public class Board{
@@ -33,15 +35,20 @@ public class Board{
         string bottomRightFileName;
         /*randomize*/
         if(topleft ==0 || topright == 0 || bottomleft ==0 || bottomright ==0){
-            topLeftFileName = path + "top_left/board4_flip";
-            topRightFileName = path + "top_right/board3_flip";
-            bottomLeftFileName = path + "bottom_left/board1_flip";
-            bottomRightFileName = path + "bottom_right/board2_flip";
+            string flip;
+            int[] numberBoards = new int[]{1,2,3,4};
+            Random random = new Random();
+            numberBoards = numberBoards.OrderBy(x => random.Next()).ToArray();
+            Random rand = new Random();
+            if(rand.Next(0, 2) == 0){flip = "_flip";}
+            else{ flip= "";}
+            topLeftFileName = path + "top_left/board" + numberBoards[0] + flip;
+            topRightFileName = path + "top_right/board" + numberBoards[1] + flip;
+            bottomLeftFileName = path + "bottom_left/board" + numberBoards[2] + flip;
+            bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
         }
         else{
-            if(topleft>4){
-                Debug.Log("position TROUVZZZE");
-                topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
+            if(topleft>4){topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
             else{topLeftFileName = path + "top_left/board"+ topleft.ToString();}
             if(topright>4){topRightFileName = path + "top_right/board"+ (topright-4).ToString()+"_flip";}
             else{topRightFileName = path + "top_right/board"+ topright.ToString();}
@@ -56,6 +63,7 @@ public class Board{
         boardList.Add(bottomRightFileName);
         return boardList;
     }
+
 
     private void assembleGoalsBoards(int topleft, int topright, int bottomleft, int bottomright){
         string path = "Assets/Scripts/goals/";
