@@ -27,7 +27,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(1,2,6,4);
+    public Board board = new Board(1,2,3,4);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -112,9 +112,9 @@ public class Game : MonoBehaviour
         }
 
         //Goals
-        goals = new GameObject[]{
-            InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
-        };
+        // goals = new GameObject[]{
+        //     InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
+        // };
 
         pileGoals = new Stack<GameObject>(goals);
 
@@ -132,7 +132,7 @@ public class Game : MonoBehaviour
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
             addWallBis(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
-            Debug.Log("at position " + wall.Key + " walls " + wall.Value);
+            //Debug.Log("at position " + wall.Key + " walls " + wall.Value);
         }
         int i, j;
         //Ajouter des murs physiques à droite si la position x==15 et ou en bas si y==15
@@ -153,8 +153,25 @@ public class Game : MonoBehaviour
     private void addGoals(){
         foreach (var goal in board.getGoalDict()){
             //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
-            Debug.Log("at position " + goal.Key + " goal " + goal.Value);
+            switch (goal.Value)
+            {
+                case 1 : addGoal("goal_bleue", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 2 : addGoal("goal_vert", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 3 : addGoal("goal_rouge", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 4 : addGoal("goal_jaune", goal.Key.Item1, 15-goal.Key.Item2);break;
+            }
+            //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
+    }
+
+    private void addGoal(string name, int x, int y){
+        GameObject[] newListe = new GameObject[goals.Length];
+        for (int i = 0 ; i<goals.Length-1;i++)
+        {
+            newListe[i] = goals[i];
+        }
+        newListe[newListe.Length -1] = InstantiateGoal(name,x,y);
+        goals=newListe;
     }
 
     public GameObject getRobot(int p){
