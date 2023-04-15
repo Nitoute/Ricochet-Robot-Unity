@@ -224,6 +224,15 @@ public class RobotMan : MonoBehaviour
         MovePlate mpScipt = mp.GetComponent<MovePlate>();
         mpScipt.SetReference(gameObject);
         mpScipt.SetCoords(matrixX,matrixY);
+        SpriteRenderer mpSprite = mp.GetComponent<SpriteRenderer>();
+        switch (this.name)
+        {
+            case "robot_bleue": mpSprite.color = Color.blue; break;
+            case "robot_jaune": mpSprite.color = Color.yellow; break;
+            case "robot_rouge": mpSprite.color = Color.red; break;
+            case "robot_vert": mpSprite.color = Color.green;break;
+        }
+
     }
 
     //Pour VINCENT : Les fonctions suivantes permettent de bouger le robot dans une direction donné par ligne de commande !
