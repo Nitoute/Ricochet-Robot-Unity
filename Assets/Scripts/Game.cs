@@ -362,10 +362,10 @@ public class Game : MonoBehaviour
     }*/
 
     private void addWallBis(int x, int y){
-        if(board.isWallInDir(x,y,3)){
+        if(board.isWallInPos(x,y,3)){
             CreateWall(x, y, -1, 0);
         }
-        if(board.isWallInDir(x,y,0)){
+        if(board.isWallInPos(x,y,0)){
             CreateWall(x, y, 0, 1);
         }
     }
