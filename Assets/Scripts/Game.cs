@@ -27,7 +27,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(1,2,3,4);
+    public Board board = new Board(2,1,7,4);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -99,6 +99,23 @@ public class Game : MonoBehaviour
                     addWallBis(i, 15-j, 0, -1, true);
                 }
             }
+        }
+        (int,int) wallsToComplete = board.wallsToComplete();
+        if(wallsToComplete.Item1 == 0){
+            if(wallsToComplete.Item2==0){
+                addWallBis(8, 10, -1, 0, true);
+            }
+            else{
+                addWallBis(3, 8, 0, -1, true);
+            }
+        }
+        else if(wallsToComplete.Item1 == 1){
+            //Debug.Log("true for item 1 = 1");
+            addWallBis(10, 7, 0, 1, true);
+        }
+        else if(wallsToComplete.Item1 == 2){
+            //Debug.Log("true for item 1 = 2");
+            addWallBis(8, 3, -1, 0, true);
         }
     }
     private void addGoals(){
