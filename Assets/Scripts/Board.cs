@@ -12,7 +12,6 @@ public class Board{
     // later implementation.
     private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
     private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int >();
-    //private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int, int >();
 
     public Board(){
         //creates random board.
@@ -199,25 +198,83 @@ public class Board{
         /**Takes last value of file_str[i+8*j(checker dans cahier)], translates it to int color.
         * respective colors correspondance : 0->4 : aleatoire (spirale de la grille 3), blue, green, red, yellow
         */
-        if (file_str[position].EndsWith("X")) // top wall : (,1)
+        if (file_str[position].EndsWith("M")) // top wall : (,1)
         {
             color_c = file_str[position][4];
             switch(color_c){
-                case 'A':
-                    color = 0;
-                break;
                 case 'B':
-                    color = 1;
+                    color = 11;
                 break;
                 case 'G':
-                    color = 2;
+                    color = 12;
                 break;
                 case 'R':
-                    color = 3;
+                    color = 13;  
                 break;
                 case 'Y':
-                    color = 4;
+                    color = 14;  
                 break;
+            }
+        }
+        else if (file_str[position].EndsWith("P")) // top wall : (,1)
+        {
+            color_c = file_str[position][4];
+            switch (color_c)
+            {
+                case 'B':
+                    color = 21;
+                    break;
+                case 'G':
+                    color = 22;
+                    break;
+                case 'R':
+                    color = 23;
+                    break;
+                case 'Y':
+                    color = 24;
+                    break;
+            }
+        }
+        else if (file_str[position].EndsWith("C")) // top wall : (,1)
+        {
+            color_c = file_str[position][4];
+            switch (color_c)
+            {
+                case 'B':
+                    color = 31;
+                    break;
+                case 'G':
+                    color = 32;
+                    break;
+                case 'R':
+                    color = 33;
+                    break;
+                case 'Y':
+                    color = 34;
+                    break;
+            }
+        }
+
+        else if (file_str[position].EndsWith("X")) // top wall : (,1)
+        {
+            color_c = file_str[position][4];
+            switch (color_c)
+            {
+                case 'A':
+                    color = -1;
+                    break;
+                case 'B':
+                    color = 41;
+                    break;
+                case 'G':
+                    color = 42;
+                    break;
+                case 'R':
+                    color = 43;  
+                    break;
+                case 'Y':
+                    color = 44; 
+                    break;
             }
         }
         return color;
@@ -236,12 +293,6 @@ public class Board{
     private void addToGoalDict((int, int) pos, int color){
         goalsDict.Add((pos.Item1,pos.Item2), color);
     }
-
-    /* Surchage temp
-     * private void addToGoalDict((int, int) pos, int color, int shape){
-        goalsDict.Add((pos.Item1,pos.Item2), color, shape);
-    }
-    */
     public IDictionary<(int i, int j), int> getGoalDict(){
         return goalsDict;
     }

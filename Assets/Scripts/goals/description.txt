@@ -1,6 +1,8 @@
 Description :
 SIZE = length * width
-CX avant un chiffre signifie que c'est une case spéciale, de couleur C
+CF avant un chiffre signifie que c'est une case spéciale, de couleur C, de forme F
 R, G, B, Y, S(= silver)
+
+C (Circle), M (Moon), P (Pentagon), X (Star)
 
 rotation/ décalage =  bin(0b1100 >> 1)
