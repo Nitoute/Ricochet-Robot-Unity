@@ -247,15 +247,15 @@ public class Game : MonoBehaviour
 
     public GameObject GetCurrentRobotGoal()
     {
-        switch (currentGoal.name)
+        switch (currentGoal.GetComponent<GoalMan>().getColor())
         {
-            case "goal_bleue":
+            case 0:
                 return robots[0];
-            case "goal_rouge":
+            case 1:
                 return robots[1];
-            case "goal_vert":
+            case 2:
                 return robots[2];
-            case "goal_jaune":
+            case 3:
                 return robots[3];
         }
         return null;
