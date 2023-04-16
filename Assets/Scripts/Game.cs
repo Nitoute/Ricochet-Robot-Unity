@@ -177,6 +177,7 @@ public class Game : MonoBehaviour
         rm.SetXInit(x);
         rm.SetYInit(y);
         rm.Activate();
+        //hasWin(obj);
         return obj;
 
     }
