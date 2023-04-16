@@ -10,21 +10,24 @@ using System.Linq;
 public class Board{
     //Init of Wall Dictionary(Key, value) -> key should be transformed into Position instance in
     // later implementation.
+    private List<string> boardList;
     private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
     private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int >();
 
     public Board(){
         //creates random board.
-        assembleWallsBoards(0,0,0,0);
-        assembleGoalsBoards(0,0,0,0);
+        boardList = assembleBoards(0,0,0,0,"Assets/Scripts/goals/");
+        assembleWallsBoards(0,0,0,0, boardList);
+        assembleGoalsBoards(0,0,0,0, boardList);
     }
     /* Seeding works as following : corresponding number for whichever board it is affiliated to,
     * and for the flipped version, number+4. If 0, means it generates random.
     */
     public Board(int topleft, int topright, int bottomleft, int bottomright){
         //creates board with seed.
-        assembleWallsBoards(topleft,topright,bottomleft,bottomright);
-        assembleGoalsBoards(topleft,topright,bottomleft,bottomright);
+        boardList = assembleBoards(topleft,topright,bottomleft,bottomright,"Assets/Scripts/goals/");
+        assembleWallsBoards(topleft,topright,bottomleft,bottomright, boardList);
+        assembleGoalsBoards(topleft,topright,bottomleft,bottomright, boardList);
     }
     /*Adds goals into board.*/
     private List<string> assembleBoards(int topleft, int topright, int bottomleft, int bottomright, string path){
@@ -43,9 +46,18 @@ public class Board{
             if(rand.Next(0, 2) == 0){flip = "_flip";}
             else{ flip= "";}
             topLeftFileName = path + "top_left/board" + numberBoards[0] + flip;
+            if(rand.Next(0, 2) == 0){flip = "_flip";}
+            else{ flip= "";}
             topRightFileName = path + "top_right/board" + numberBoards[1] + flip;
+            if(rand.Next(0, 2) == 0){flip = "_flip";}
+            else{ flip= "";}
             bottomLeftFileName = path + "bottom_left/board" + numberBoards[2] + flip;
+            if(rand.Next(0, 2) == 0){flip = "_flip";}
+            else{ flip= "";}
             bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
+            for(int i=0; i<4; i++){
+                Debug.Log("board " + numberBoards[i] + " at position " + i );
+            }
         }
         else{
             if(topleft>4){topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
@@ -65,9 +77,9 @@ public class Board{
     }
 
 
-    private void assembleGoalsBoards(int topleft, int topright, int bottomleft, int bottomright){
+    private void assembleGoalsBoards(int topleft, int topright, int bottomleft, int bottomright, List<string> boardListe){
         string path = "Assets/Scripts/goals/";
-        List <string> boardList = assembleBoards(topleft, topright, bottomleft, bottomright, path);
+        List <string> boardList = boardListe;
         string[] topLeft = File.ReadAllText(boardList[0]).Split(' ');
         string[] topRight = File.ReadAllText(boardList[1]).Split(' ');
         string[] bottomLeft = File.ReadAllText(boardList[2]).Split(' ');
@@ -99,9 +111,9 @@ public class Board{
     }
 
     ///assembly of boards if seed = 0, then random, else follow seed.
-    private void assembleWallsBoards(int topleft, int topright, int bottomleft, int bottomright){
+    private void assembleWallsBoards(int topleft, int topright, int bottomleft, int bottomright, List<string> boardListe){
         string path = "Assets/Scripts/walls_only/";
-        List <string> boardList = assembleBoards(topleft, topright, bottomleft, bottomright, path);
+        List <string> boardList = boardListe;
         string[] topLeft = File.ReadAllText(boardList[0]).Split(' ');
         string[] topRight = File.ReadAllText(boardList[1]).Split(' ');
         string[] bottomLeft = File.ReadAllText(boardList[2]).Split(' ');
@@ -164,11 +176,16 @@ public class Board{
             which_board += "top";
             }
         int position = x+(8*y);
+        string wall= file_str[position];
     //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
         //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
-        if (file_str[position].StartsWith("1")) // top wall : (,1)
+        if (wall.EndsWith("X")){
+            wall = wall.Remove(wall.Length-2);
+            Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
+        }
+        if (wall.StartsWith("1")) // top wall : (,1)
         {
-            if (file_str[position].EndsWith("1")) // left wall : (-1,)
+            if (wall.EndsWith("1")) // left wall : (-1,)
             {
                 //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,1);
@@ -178,16 +195,14 @@ public class Board{
                 return (0,1);
             }
         }
-        else{
-        if (file_str[position].EndsWith("1")) // mur à gauche : (-1,)
-            {
-                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
-                return (-1,0);
-            }
-        }
+        else if (wall.EndsWith("1")) // mur à gauche : (-1,)
+                {
+                    //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
+                    return (-1,0);
+                }
         return (0,0);
-    }
 
+    }
     private int readGoals(int i, int j, string[] file_str){
         int x, y;
         int color = -1;
@@ -289,10 +304,10 @@ public class Board{
         return wallsDict;
     }
 
-
     private void addToGoalDict((int, int) pos, int color){
         goalsDict.Add((pos.Item1,pos.Item2), color);
     }
+
     public IDictionary<(int i, int j), int> getGoalDict(){
         return goalsDict;
     }
