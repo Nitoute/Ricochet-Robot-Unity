@@ -106,10 +106,22 @@ public class Game : MonoBehaviour
             //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
             switch (goal.Value)
             {
-                case 1 : addGoal("goal_bleue", goal.Key.Item1, 15-goal.Key.Item2);break;
-                case 2 : addGoal("goal_vert", goal.Key.Item1, 15-goal.Key.Item2);break;
-                case 3 : addGoal("goal_rouge", goal.Key.Item1, 15-goal.Key.Item2);break;
-                case 4 : addGoal("goal_jaune", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 11: addGoal("goal_moon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 12: addGoal("goal_moon_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 13: addGoal("goal_moon_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 14: addGoal("goal_moon_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 21: addGoal("goal_pentagon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 22: addGoal("goal_pentagon_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 23: addGoal("goal_pentagon_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 24: addGoal("goal_pentagon_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 31: addGoal("goal_circle_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 32: addGoal("goal_circle_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 33: addGoal("goal_circle_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 34: addGoal("goal_circle_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 41: addGoal("goal_star_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 42: addGoal("goal_star_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 43: addGoal("goal_star_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 44: addGoal("goal_star_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
             }
             //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
@@ -388,13 +400,14 @@ public class Game : MonoBehaviour
             Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
             currentGoalText.text = currentGoal.name;
-            /*switch(currentGoal.name){
-                case "goal_bleue": currentGoalText.color = Color.blue; break;
-                case "goal_jaune": currentGoalText.color = Color.yellow; break;
-                case "goal_vert": currentGoalText.color = Color.green; break;
-                case "goal_rouge": currentGoalText.color = Color.red; break;
+            switch(currentGoal.GetComponent<GoalMan>().getColor())
+            {
+                case 0: currentGoalText.color = Color.blue; break;
+                case 3: currentGoalText.color = Color.yellow; break;
+                case 2: currentGoalText.color = Color.green; break;
+                case 1: currentGoalText.color = Color.red; break;
 
-            }*/
+            }
             nbrCoups = 0;
             coupText.text = nbrCoups.ToString();
             currentRobotGoal = GetCurrentRobotGoal();
@@ -444,7 +457,7 @@ public class Game : MonoBehaviour
         switch (rob.name)
         {
             case "robot_bleue":
-                if (currentGoal.name == "goal_bleue")
+                if (currentGoal.GetComponent<GoalMan>().getColor() == 0)
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
@@ -456,7 +469,7 @@ public class Game : MonoBehaviour
                 }
                 break;
             case "robot_jaune":
-                if (currentGoal.name == "goal_jaune")
+                if (currentGoal.GetComponent<GoalMan>().getColor() == 3)
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
@@ -471,7 +484,7 @@ public class Game : MonoBehaviour
                 }
                 break;
             case "robot_rouge":
-                if (currentGoal.name == "goal_rouge")
+                if (currentGoal.GetComponent<GoalMan>().getColor() == 1)
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
@@ -483,7 +496,7 @@ public class Game : MonoBehaviour
                 }
                 break;
             case "robot_vert":
-               if (currentGoal.name == "goal_vert")
+               if (currentGoal.GetComponent<GoalMan>().getColor() == 2)
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
@@ -500,7 +513,7 @@ public class Game : MonoBehaviour
 
     //SOLVER V1 (VINCENT)
 
-    public bool touchGoal(GameObject rob)
+    /*public bool touchGoal(GameObject rob)
     {
         int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
         int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
@@ -548,7 +561,7 @@ public class Game : MonoBehaviour
         }
 
         return false;
-    }
+    }*/
 
 
 }

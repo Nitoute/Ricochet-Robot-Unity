@@ -95,8 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  goal_moon: {fileID: 21300000, guid: d61e40aa58455b1429be33a8ecddf5e8, type: 3}
+  goal_pentagon: {fileID: 21300000, guid: 1a0f78c1b28408f4a91bb3ba8e9f0b28, type: 3}
+  goal_circle: {fileID: 21300000, guid: 346c0bb4504dbe24abcc23aaa08ed90a, type: 3}
   goal_star: {fileID: 21300000, guid: d944abba3261e47d0b45267f44311aa1, type: 3}
-  goal_bleue: {fileID: 21300000, guid: 1f9ed9c091d3d9d8b8021f80c1242aee, type: 3}
-  goal_jaune: {fileID: 21300000, guid: 85ce39d060d62896589e2f8e5e4ecb41, type: 3}
-  goal_rouge: {fileID: 21300000, guid: 60b3fd6868c9f4cfb8af88383ddb0e07, type: 3}
-  goal_vert: {fileID: 21300000, guid: 2cfb89f0b19b3bf84865b2b4754705e3, type: 3}
