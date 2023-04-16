@@ -32,6 +32,9 @@ public class Game : MonoBehaviour
     private bool continueSolveV1 = false;
     private bool continueSolveV2 = false;
     private bool continueSolveV3 = false;
+    private bool continueSolveV31 = false;
+    private bool continueSolveV4 = false;
+    private bool continueSolveV5 = false;
 
     // Start is called before the first frame update
     void Start()
@@ -159,7 +162,7 @@ public class Game : MonoBehaviour
         return robots[p];
     }
 
-    public List<(int,int)> getPositionRobot(){
+    public List<(int,int)> getPositionRobots(){
         List<(int,int)> pos=new List<(int,int)>();
         for (int i=0;i<4;i++){
             pos.Add((robots[i].GetComponent<RobotMan>().GetXBoard(),robots[i].GetComponent<RobotMan>().GetYBoard()));
@@ -247,6 +250,7 @@ public class Game : MonoBehaviour
         return currentRobotGoal;
     }
 
+
     public GameObject GetCurrentRobotGoal()
     {
         switch (currentGoal.name)
@@ -278,6 +282,20 @@ public class Game : MonoBehaviour
         solverRunning=!solverRunning;
     }
 
+    public void switchContinueSolveV31(){
+        continueSolveV3=!continueSolveV31;
+        solverRunning=!solverRunning;
+    }
+
+    public void switchContinueSolveV4(){
+        continueSolveV3=!continueSolveV4;
+        solverRunning=!solverRunning;
+    }
+    public void switchContinueSolveV5(){
+        continueSolveV3=!continueSolveV5;
+        solverRunning=!solverRunning;
+    }
+
     public bool getContinueSolveV1(){
         return continueSolveV1;
     }
@@ -288,6 +306,15 @@ public class Game : MonoBehaviour
 
     public bool getContinueSolveV3(){
         return continueSolveV3;
+    }
+    public bool getContinueSolveV31(){
+        return continueSolveV31;
+    }
+    public bool getContinueSolveV4(){
+        return continueSolveV4;
+    }
+    public bool getContinueSolveV5(){
+        return continueSolveV5;
     }
 
     public bool PositionOnBoard(int x, int y)

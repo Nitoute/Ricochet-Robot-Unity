@@ -56,4 +56,15 @@ public class GoalMan : MonoBehaviour
     public void SetYBoard(int y){
         yBoard = y;
     }
+    public int getColor()
+    {
+        switch (this.name)
+        {
+            case "goal_bleue": return 0; break;
+            case "goal_jaune": return 3; break;
+            case "goal_rouge": return 1; break;
+            case "goal_vert": return 2; break;
+        }
+        return -1;
+    }
 }

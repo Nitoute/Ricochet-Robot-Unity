@@ -13,6 +13,7 @@ public class Solver : MonoBehaviour
     int len=0;
     IDictionary<(int,int), List<(int,int)>> posMap =
             new Dictionary<(int,int), List<(int,int)>>();
+    List<int> finishMove = new List<int>();
 
     // Start is called before the first frame update
     void Start()
@@ -69,13 +70,13 @@ public class Solver : MonoBehaviour
         int tmp=seq;
         if (len==1){
             makeMove1(tmp%16);
-            posMap[(seq,len)]=game.getPositionRobot();
+            posMap[(seq,len)]=game.getPositionRobots();
         }
         else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
             try {
                 game.setPositionRobot(posMap[(tmp/16,len-1)]);
                 makeMove1(tmp%16);
-                posMap[(seq,len)]=game.getPositionRobot();
+                posMap[(seq,len)]=game.getPositionRobots();
             }
             catch (KeyNotFoundException){}
         }
@@ -85,14 +86,14 @@ public class Solver : MonoBehaviour
         int tmp=seq;
         if (len==1){
             makeMove1(tmp%16);
-            posMap[(seq,len)]=game.getPositionRobot();
+            posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
+        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
                 game.setPositionRobot(posMap[(tmp/16,len-1)]);
                 makeMove1(tmp%16);
-                posMap[(seq,len)]=game.getPositionRobot();
+                posMap[(seq,len)]=game.getPositionRobots();
                 return seq;
             }
             catch (KeyNotFoundException){
@@ -100,7 +101,7 @@ public class Solver : MonoBehaviour
                 tmp=seq/16;
                 while (true){
                     tmp=tmp/16;
-                    if (posMap.Contains((tmp,len-i))){
+                    if (posMap.ContainsKey((tmp,len-i))){
                         return seq+(int)Math.Pow(16, i-1)-1;
                     }
                     i++;
@@ -110,6 +111,42 @@ public class Solver : MonoBehaviour
                 } 
             }
         }
+        return seq;
+    }
+
+     public int makeSeq4(int seq, int len){
+        int tmp=seq;
+        int pion=tmp/4;
+        int dir= tmp%4;
+        if (len==1){
+            makeMove1(tmp%16);
+            posMap[(seq,len)]=game.getPositionRobots();
+            return seq;
+        }
+
+        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))&& !(game.board.isWallInDir(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),dir))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+            try {
+                game.setPositionRobot(posMap[(tmp/16,len-1)]);
+                makeMove1(tmp%16);
+                posMap[(seq,len)]=game.getPositionRobots();
+                return seq;
+            }
+            catch (KeyNotFoundException){
+                int i=2;
+                tmp=seq/16;
+                while (true){
+                    tmp=tmp/16;
+                    if (posMap.ContainsKey((tmp,len-i))){
+                        return seq+(int)Math.Pow(16, i-1)-1;
+                    }
+                    i++;
+                    if (i>len){
+                        print("houla");
+                    }
+                } 
+            }
+        }
+        return seq;
     }
 
     public (int,int) nextSeq(int seq,int len ){
@@ -136,29 +173,6 @@ public class Solver : MonoBehaviour
         }
         return (seq+1,len);
     }
-
-    // public void v1(){
-    //     game.SetSolverRunning(true);
-    //     GameObject currentRobot = game.GetCurrentRobotGoal();
-    //     int seq=0;
-    //     int len=0;
-    //     while(game.getContinueSolve()){//faire detection win or not
-    //         game.restartPosition();
-    //         makeSeq(seq,len);
-    //         if(game.hasWin(currentRobot)){
-    //             print(seq);
-    //             print(len);
-    //             game.restartPosition();
-    //             game.SetSolverRunning(false);
-    //             //return (seq,len);
-    //         }
-    //         //yield return null;
-    //         (seq,len)=nextSeq(seq,len);
-    //     }
-    //     game.restartPosition();
-    //     game.SetSolverRunning(false);
-    //     game.switchContinueSolve();
-    // }
 
     public void printSeq(int seq,int len){
         String result = "";
@@ -258,7 +272,46 @@ public class Solver : MonoBehaviour
                 printSeq(seq,len);
                 print(len);
                 game.restartPosition();
-                game.switchContinueSolveV3();
+                game.switchContinueSolveV31();
+                //return (seq,len);
+            }
+            //yield return null;
+            (seq,len)=nextSeq(seq,len);
+            game.restartPosition();
+        }
+        else if(game.getContinueSolveV4()){
+            currentRobot = game.GetActiveRobot();
+            game.restartPosition();
+            seq=makeSeq4(seq,len);
+            if(game.hasWin(currentRobot)){
+                printSeq(seq,len);
+                print(len);
+                game.restartPosition();
+                game.switchContinueSolveV4();
+                //return (seq,len);
+            }
+            //yield return null;
+            (seq,len)=nextSeq(seq,len);
+            game.restartPosition();
+        }
+        else if(game.getContinueSolveV5()){
+            if (finishMove.Count==0){
+// faire le calcul des dernier move
+                for (int i=0;i<4;i++){
+                    if (!(game.board.isWallInDir(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard(),game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard(),i))){
+                        finishMove.Add(game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+i);
+                    }
+                }
+            }
+            currentRobot = game.GetActiveRobot();
+            game.restartPosition();
+            seq=makeSeq4(seq,len);
+            //ajouté les mouv finaux a la fin
+            if(game.hasWin(currentRobot)){
+                printSeq(seq,len);
+                print(len);
+                game.restartPosition();
+                game.switchContinueSolveV5();
                 //return (seq,len);
             }
             //yield return null;
@@ -269,6 +322,7 @@ public class Solver : MonoBehaviour
             seq=0;
             len=0;
             posMap.Clear();
+            finishMove.Clear();
         }
     }
 }
