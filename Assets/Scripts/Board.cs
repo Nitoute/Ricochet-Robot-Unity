@@ -56,7 +56,7 @@ public class Board{
             else{ flip= "";}
             bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
             for(int i=0; i<4; i++){
-                Debug.Log("board " + numberBoards[i] + " at position " + i );
+                //Debug.Log("board " + numberBoards[i] + " at position " + i );
             }
         }
         else{
@@ -181,7 +181,7 @@ public class Board{
         //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
         if (wall.EndsWith("M") || wall.EndsWith("P")|| wall.EndsWith("C") || wall.EndsWith("X") ){
             wall = wall.Remove(wall.Length-2);
-            Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
+            //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
         }
         if (wall.StartsWith("1")) // top wall : (,1)
         {
