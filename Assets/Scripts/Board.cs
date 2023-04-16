@@ -11,6 +11,7 @@ public class Board{
     //Init of Wall Dictionary(Key, value) -> key should be transformed into Position instance in
     // later implementation.
     private List<string> boardList;
+    private (int pos, int isFlipped) board3;
     private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
     private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int >();
 
@@ -45,21 +46,49 @@ public class Board{
             Random rand = new Random();
             if(rand.Next(0, 2) == 0){flip = "_flip";}
             else{ flip= "";}
+            if(numberBoards[0]==3){
+                if(flip==""){
+                    board3 = (0, 0); //soucis -> mur droite
+                }
+                else{
+                    board3 = (0, 1); //soucis -> mur bas
+                }
+            }
             topLeftFileName = path + "top_left/board" + numberBoards[0] + flip;
             if(rand.Next(0, 2) == 0){flip = "_flip";}
             else{ flip= "";}
+            if(numberBoards[1]==3 && flip==""){
+                    board3 = (1, 0); // soucis -> mur bas
+                }
             topRightFileName = path + "top_right/board" + numberBoards[1] + flip;
             if(rand.Next(0, 2) == 0){flip = "_flip";}
             else{ flip= "";}
+            if(numberBoards[2]==3 && flip=="_flip") {
+                board3 = (2, 1); //soucis -> mur droite
+                }
             bottomLeftFileName = path + "bottom_left/board" + numberBoards[2] + flip;
             if(rand.Next(0, 2) == 0){flip = "_flip";}
             else{ flip= "";}
+
             bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
-            for(int i=0; i<4; i++){
+            /*for(int i=0; i<4; i++){
                 Debug.Log("board " + numberBoards[i] + " at position " + i );
+            }*/
+            
             }
-        }
         else{
+            if(topleft==3){
+                board3 = (0, 0);
+            }
+            else if(topleft==7){
+                board3 = (0, 1);
+            }
+            else if(topright==3){
+                board3 = (1, 0);
+            }
+            else if(bottomleft==7){
+                board3 = (2, 1);
+            }
             if(topleft>4){topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
             else{topLeftFileName = path + "top_left/board"+ topleft.ToString();}
             if(topright>4){topRightFileName = path + "top_right/board"+ (topright-4).ToString()+"_flip";}
@@ -68,12 +97,14 @@ public class Board{
             else{bottomLeftFileName = path + "bottom_left/board"+ bottomleft.ToString();}
             if(bottomright>4){bottomRightFileName = path + "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
             else{bottomRightFileName = path + "bottom_right/board"+ bottomright.ToString();}
-        }
+        } 
+        
         boardList.Add(topLeftFileName);
         boardList.Add(topRightFileName);
         boardList.Add(bottomLeftFileName);
         boardList.Add(bottomRightFileName);
         return boardList;
+       
     }
 
 
@@ -181,7 +212,7 @@ public class Board{
         //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
         if (wall.EndsWith("M") || wall.EndsWith("P")|| wall.EndsWith("C") || wall.EndsWith("X") ){
             wall = wall.Remove(wall.Length-2);
-            Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
+            //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
         }
         if (wall.StartsWith("1")) // top wall : (,1)
         {
@@ -313,6 +344,9 @@ public class Board{
     }
 
 
+    public (int pos, int isFlipped) wallsToComplete(){
+        return board3;
+    }
     /**
     * For a position, returns if there is a wall in corresponding direction (0->3 : top,right,bottom,left)
     */
