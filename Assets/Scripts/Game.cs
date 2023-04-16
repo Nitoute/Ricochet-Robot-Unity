@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class Game : MonoBehaviour
 {
     public GameObject robot;
+    public GameObject wallPhys;
     public GameObject goal;
     public GameObject solver;
     private Solver solverScript;
@@ -15,7 +16,7 @@ public class Game : MonoBehaviour
     private GameObject[,] positions = new GameObject[16,16];
     private GameObject[] robots = new GameObject[4];
     Stack<GameObject> pileGoals = new Stack<GameObject>();
-    private GameObject[] goals = new GameObject[4];
+    private GameObject[] goals = new GameObject[0];
 
     private int nbrCoups;
     public Text coupText;
@@ -26,7 +27,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(1,1,1,1);
+    public Board board = new Board(1,2,3,4);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -35,6 +36,8 @@ public class Game : MonoBehaviour
     private bool continueSolveV31 = false;
     private bool continueSolveV4 = false;
     private bool continueSolveV5 = false;
+
+    Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     // Start is called before the first frame update
     void Start()
@@ -46,60 +49,6 @@ public class Game : MonoBehaviour
 
         addWalls();
         addGoals();
-
-        //Walls légende : (0,1) haut | (0,-1) bas | (1,0) droite | (-1,0) gauche;
-        /*addWall(5,0,1,0,true);
-        addWall(11,0,1,0,true);
-        addWall(2,0,0,1,true);
-        addWall(1,1,1,0,true);
-        addWall(14,1,0,1,true);
-        addWall(14,1,1,0,true);
-        addWall(9,1,0,1,true);
-        addWall(6,2,0,1,true);
-        addWall(8,2,1,0,true);
-        addWall(6,3,1,0,true);
-        addWall(0,4,0,1,true);
-        addWall(8,4,0,1,true);
-        addWall(12,4,1,0,true);
-        addWall(13,4,0,1,true);
-        addWall(8,5,1,0,true);
-        addWall(15,5,0,1,true);
-        addWall(1,6,1,0,true);
-        addWall(1,6,0,1,true);
-        addWall(4,6,1,0,true);
-        addWall(5,6,0,1,true);
-        addWall(7,6,0,1,true);
-        addWall(8,6,0,1,true);
-        addWall(15,6,0,-1,true);
-        addWall(6,7,1,0,true);
-        addWall(9,7,-1,0,true);
-        addWall(2,8,0,1,true);
-        addWall(6,8,1,0,true);
-        addWall(9,8,-1,0,true);
-        addWall(2,9,1,0,true);
-        addWall(7,9,0,-1,true);
-        addWall(8,9,0,-1,true);
-        addWall(9,9,0,1,true);
-        addWall(11,9,0,1,true);
-        addWall(11,9,1,0,true);
-        addWall(6,10,0,1,true);
-        addWall(9,10,1,0,true);
-        addWall(15,10,0,1,true);
-        addWall(0,11,0,1,true);
-        addWall(6,11,1,0,true);
-        addWall(8,11,0,1,true);
-        addWall(1,12,0,1,true);
-        addWall(7,12,1,0,true);
-        addWall(14,12,0,1,true);
-        addWall(0,13,1,0,true);
-        addWall(13,13,1,0,true);
-        addWall(5,14,1,0,true);
-        addWall(5,14,0,1,true);
-        addWall(11,14,1,0,true);
-        addWall(12,14,0,1,true);
-        addWall(3,15,1,0,true);
-        addWall(10,15,1,0,true);
-        */
 
         //Robots
         System.Random rnd = new System.Random();
@@ -113,13 +62,13 @@ public class Game : MonoBehaviour
         }
 
         //Goals
-        goals = new GameObject[]{
-            InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
-        };
+        // goals = new GameObject[]{
+        //     InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
+        // };
 
         pileGoals = new Stack<GameObject>(goals);
-
         currentGoal = pileGoals.Pop();
+        //print("goal init = "+ currentGoal);
         currentGoalText.text = currentGoal.name;
         currentRobotGoal = GetCurrentRobotGoal();
 
@@ -130,9 +79,10 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
     }
 
+
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
-            //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
+            addWallBis(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
             //Debug.Log("at position " + wall.Key + " walls " + wall.Value);
         }
         int i, j;
@@ -140,13 +90,13 @@ public class Game : MonoBehaviour
         for(j = 0; j<16; j++){
             for(i=0; i<16; i++){
                 if(i==15 && j==15){
-                    //addWall(i, j, 1, -1, true);
+                    addWallBis(i, 15-j, 1, -1, true);
                 }
                 else if(i==15){
-                    //addWall(i, j, 1, 0, true);
+                    addWallBis(i, 15-j, 1, 0, true);
                 }
                 else if(j==15){
-                    //addWall(i, j, 0, -1, true);
+                    addWallBis(i, 15-j, 0, -1, true);
                 }
             }
         }
@@ -154,8 +104,27 @@ public class Game : MonoBehaviour
     private void addGoals(){
         foreach (var goal in board.getGoalDict()){
             //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
-            Debug.Log("at position " + goal.Key + " walls " + goal.Value);
+            switch (goal.Value)
+            {
+                case 1 : addGoal("goal_bleue", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 2 : addGoal("goal_vert", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 3 : addGoal("goal_rouge", goal.Key.Item1, 15-goal.Key.Item2);break;
+                case 4 : addGoal("goal_jaune", goal.Key.Item1, 15-goal.Key.Item2);break;
+            }
+            //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
+    }
+
+    private void addGoal(string name, int x, int y){
+        GameObject[] newListe = new GameObject[goals.Length+1];
+        
+        for (int i = 0 ; i<=goals.Length-1;i++)
+        {
+            newListe[i] = goals[i];
+
+        }
+        newListe[newListe.Length-1] = InstantiateGoal(name,x,y);
+        goals=newListe;
     }
 
     public GameObject getRobot(int p){
@@ -184,7 +153,7 @@ public class Game : MonoBehaviour
             robots[i].GetComponent<RobotMan>().SetXBoard(x);
             robots[i].GetComponent<RobotMan>().SetYBoard(y);
         }
-    }    
+    }
 
     public GameObject CreateRobot(string name, int x, int y)
     {
@@ -198,6 +167,19 @@ public class Game : MonoBehaviour
         rm.Activate();
         return obj;
 
+    }
+
+    public GameObject CreateWall(int xPos,int yPos, int xDir, int yDir)
+    {
+        GameObject obj = Instantiate(wallPhys, new Vector3(0,0,-1),Quaternion.identity);
+        WallMan wm = obj.GetComponent<WallMan>();
+        wm.SetXBoard(xPos);
+        wm.SetYBoard(yPos);
+        wm.SetxDir(xDir);
+        wm.SetyDir(yDir);
+        wm.Activate();
+        return obj;
+        
     }
 
     public GameObject InstantiateGoal(string name, int x, int y)
@@ -328,10 +310,11 @@ public class Game : MonoBehaviour
     {
         try
         {
-            IDictionary<(int i, int j),(int right, int top)> li = board.getWallDict();
-            foreach (var item in li)
+            (int,int)[] li = walls[(x,y)];
+            //IDictionary<(int i, int j),(int right, int top)> li = board.getWallDict();
+            foreach ((int,int) item in li)
             {
-                if (item.Key==(dirX,dirY)){
+                if (item==(dirX,dirY)){
                     return true;
                 }
             }
@@ -346,23 +329,51 @@ public class Game : MonoBehaviour
 
     /*private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
-        if ((board.getWallDict()).ContainsKey((x,y)))
+        if (walls.ContainsKey((x,y)))
         {
-            (int,int)[] newListe = new (int,int)[board.getWallDict()[(x,y)].Length + 1];
+            (int,int)[] newListe = new (int,int)[walls[(x,y)].Length + 1];
             for (int i = 0; i<newListe.Length-1; i++)
             {
-                newListe[i] = board.getWallDict()[(x,y)][i];
+                newListe[i] = walls[(x,y)][i];
             }
             newListe[newListe.Length -1] = (dirX,dirY);
-            board.getWallDict()[(x,y)] = newListe;
-            if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            walls[(x,y)] = newListe;
+            if (newWall)
+            {
+                CreateWall(x, y, dirX,dirY);
+                addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            }
         }
         else
         {
-            board.getWallDict().Add((x, y), new (int, int)[] {(dirX, dirY)});
-            if (newWall) addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            walls.Add((x, y), new (int, int)[] {(dirX, dirY)});
+            if (newWall)
+            {
+                CreateWall(x, y, dirX,dirY);
+                addWall(x+dirX,y+dirY,-dirX,-dirY,false);
+            }
         }
     }*/
+
+    private void addWallBis(int x, int y){
+        if(board.isWallInPos(x,y,3)){
+            CreateWall(x, y, -1, 0);
+        }
+        if(board.isWallInPos(x,y,0)){
+            CreateWall(x, y, 0, 1);
+        }
+    }
+
+    private void addWallBis(int x, int y, int dirX,int dirY,bool newWall){
+        if(dirX==0 || dirY==0){
+            CreateWall(x, y, dirX, dirY);
+        }
+        else{
+            CreateWall(x, y, dirX, 0);
+            CreateWall(x, y, 0, dirY);
+        }
+    }
+
 
     public void addCoups()
     {
@@ -377,6 +388,13 @@ public class Game : MonoBehaviour
             Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
             currentGoalText.text = currentGoal.name;
+            /*switch(currentGoal.name){
+                case "goal_bleue": currentGoalText.color = Color.blue; break;
+                case "goal_jaune": currentGoalText.color = Color.yellow; break;
+                case "goal_vert": currentGoalText.color = Color.green; break;
+                case "goal_rouge": currentGoalText.color = Color.red; break;
+
+            }*/
             nbrCoups = 0;
             coupText.text = nbrCoups.ToString();
             currentRobotGoal = GetCurrentRobotGoal();
@@ -442,8 +460,11 @@ public class Game : MonoBehaviour
                 {
                     if (Yrob==Yobj && Xrob==Xobj)
                     {
+                        print("gagné 1!");
                         if (!solverRunning){
+                            print("gagné 2!");
                             updateGoal();
+
                         }
                         return true;
                     }

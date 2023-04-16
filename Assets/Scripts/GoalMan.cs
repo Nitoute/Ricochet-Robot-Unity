@@ -11,20 +11,21 @@ public class GoalMan : MonoBehaviour
     private int yBoard = -1;
 
     //Sprite de tout les robots
-    public Sprite goal_bleue, goal_jaune, goal_rouge, goal_vert;
+    public Sprite goal_star,goal_bleue, goal_jaune, goal_rouge, goal_vert;
 
     public void Activate()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
+        this.GetComponent<SpriteRenderer>().sprite = goal_star;
 
         SetCoords();
 
         switch (this.name)
         {
-            case "goal_bleue": this.GetComponent<SpriteRenderer>().sprite = goal_bleue; break;
-            case "goal_jaune": this.GetComponent<SpriteRenderer>().sprite = goal_jaune; break;
-            case "goal_rouge": this.GetComponent<SpriteRenderer>().sprite = goal_rouge; break;
-            case "goal_vert": this.GetComponent<SpriteRenderer>().sprite = goal_vert; break;
+            case "goal_bleue": this.GetComponent<SpriteRenderer>().sprite = goal_star;this.GetComponent<SpriteRenderer>().color = Color.blue; break;
+            case "goal_jaune": this.GetComponent<SpriteRenderer>().sprite = goal_star; this.GetComponent<SpriteRenderer>().color = Color.yellow;break;
+            case "goal_rouge": this.GetComponent<SpriteRenderer>().sprite = goal_star; this.GetComponent<SpriteRenderer>().color = Color.red;break;
+            case "goal_vert": this.GetComponent<SpriteRenderer>().sprite = goal_star;this.GetComponent<SpriteRenderer>().color = Color.green; break;
         }
     }
 

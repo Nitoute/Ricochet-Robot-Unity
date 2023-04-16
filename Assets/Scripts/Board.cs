@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Random=System.Random;
+using System.Linq;
 
 
 public class Board{
@@ -10,6 +12,7 @@ public class Board{
     // later implementation.
     private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
     private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int >();
+    //private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int, int >();
 
     public Board(){
         //creates random board.
@@ -33,20 +36,27 @@ public class Board{
         string bottomRightFileName;
         /*randomize*/
         if(topleft ==0 || topright == 0 || bottomleft ==0 || bottomright ==0){
-            topLeftFileName = path + "top_left/board4_flip";
-            topRightFileName = path + "top_right/board3_flip";
-            bottomLeftFileName = path + "bottom_left/board1_flip";
-            bottomRightFileName = path + "bottom_right/board2_flip";
+            string flip;
+            int[] numberBoards = new int[]{1,2,3,4};
+            Random random = new Random();
+            numberBoards = numberBoards.OrderBy(x => random.Next()).ToArray();
+            Random rand = new Random();
+            if(rand.Next(0, 2) == 0){flip = "_flip";}
+            else{ flip= "";}
+            topLeftFileName = path + "top_left/board" + numberBoards[0] + flip;
+            topRightFileName = path + "top_right/board" + numberBoards[1] + flip;
+            bottomLeftFileName = path + "bottom_left/board" + numberBoards[2] + flip;
+            bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
         }
         else{
             if(topleft>4){topLeftFileName = path + "top_left/board"+ (topleft-4).ToString()+"_flip";}
             else{topLeftFileName = path + "top_left/board"+ topleft.ToString();}
             if(topright>4){topRightFileName = path + "top_right/board"+ (topright-4).ToString()+"_flip";}
-            else{topRightFileName = path + "top_right/board"+ topleft.ToString();}
+            else{topRightFileName = path + "top_right/board"+ topright.ToString();}
             if(bottomleft>4){bottomLeftFileName = path + "bottom_left/board"+ (bottomleft-4).ToString()+"_flip";}
             else{bottomLeftFileName = path + "bottom_left/board"+ bottomleft.ToString();}
             if(bottomright>4){bottomRightFileName = path + "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
-            else{bottomRightFileName = path + "bottom_right/board"+ bottomleft.ToString();}
+            else{bottomRightFileName = path + "bottom_right/board"+ bottomright.ToString();}
         }
         boardList.Add(topLeftFileName);
         boardList.Add(topRightFileName);
@@ -54,6 +64,7 @@ public class Board{
         boardList.Add(bottomRightFileName);
         return boardList;
     }
+
 
     private void assembleGoalsBoards(int topleft, int topright, int bottomleft, int bottomright){
         string path = "Assets/Scripts/goals/";
@@ -135,29 +146,47 @@ public class Board{
     */
     private (int, int) readWalls(int i, int j, string[] file_str){
     //Updates
+        string which_board ="";
         int x, y;
-        if(i>=8){x=i-8;} else{x=i;}
-        if(j>=8){y =j-8;} else{y=j;}
-        int position = x+8*y;
+        if(i>=8){
+            x=i-8;
+            which_board += "right ";
+            }
+            else{
+                x=i;
+            which_board += "left ";
+            }
+        if(j>=8){
+            y =j-8;
+            which_board += "bottom";
+            }
+            else{
+                y=j;
+            which_board += "top";
+            }
+        int position = x+(8*y);
     //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
+        //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
         if (file_str[position].StartsWith("1")) // top wall : (,1)
         {
-            if (file_str[position].EndsWith("1")) // left wall : (-1,) -> TODO delete goals from files
+            if (file_str[position].EndsWith("1")) // left wall : (-1,)
             {
+                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,1);
             }
             else{
+                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (0,1);
             }
         }
         else{
         if (file_str[position].EndsWith("1")) // mur à gauche : (-1,)
             {
+                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,0);
             }
         }
         return (0,0);
-
     }
 
     private int readGoals(int i, int j, string[] file_str){
@@ -203,10 +232,16 @@ public class Board{
         return wallsDict;
     }
 
+
     private void addToGoalDict((int, int) pos, int color){
         goalsDict.Add((pos.Item1,pos.Item2), color);
     }
 
+    /* Surchage temp
+     * private void addToGoalDict((int, int) pos, int color, int shape){
+        goalsDict.Add((pos.Item1,pos.Item2), color, shape);
+    }
+    */
     public IDictionary<(int i, int j), int> getGoalDict(){
         return goalsDict;
     }
@@ -215,29 +250,35 @@ public class Board{
     /**
     * For a position, returns if there is a wall in corresponding direction (0->3 : top,right,bottom,left)
     */
-    public bool isWallInDir(int x, int y, int dir)
+    public bool isWallInPos(int x, int y, int dir)
     {
-        if(dir==0){
-                if (wallsDict[(x,y)].Item2==1){
-                    return true;
-                }
+        try{
+            if(dir==0){
+                    if (wallsDict[(x,y)].Item2==1){
+                        return true;
+                    }
+            }
+            if(dir==1){
+                    if (wallsDict[(x+1,y)].Item1==-1){
+                        return true;
+                    }
+            }
+            if(dir==2){
+                    if (wallsDict[(x,y+1)].Item2==1){
+                        return true;
+                    }
+            }
+            if(dir==3){
+                    if (wallsDict[(x,y)].Item1==-1){
+                        return true;
+                    }
+            }
+            return false;
         }
-        if(dir==1){
-                if (wallsDict[(x+1,y)].Item1==-1){
-                    return true;
-                }
+        catch (KeyNotFoundException)
+        {
+            return false;
         }
-        if(dir==2){
-                if (wallsDict[(x,y+1)].Item2==1){
-                    return true;
-                }
-        }
-        if(dir==3){
-                if (wallsDict[(x,y)].Item1==-1){
-                    return true;
-                }
-        }
-        return false;
     }
 
 }

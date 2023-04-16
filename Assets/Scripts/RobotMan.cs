@@ -100,42 +100,43 @@ public class RobotMan : MonoBehaviour
 
     public void InitiateMovePlates()
     {
+        //Pour la nouvelle version : 0->3 : top,right,bottom,left
         switch (this.name)
         {
-            case "robot_bleue": 
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
+            case "robot_bleue":
+                LineMovePlate(1,1, 0);
+                LineMovePlate(0,0, 1);
 
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
+                LineMovePlate(3 ,-1, 0);
+                LineMovePlate(2 ,0, -1);
                 break;
-            case "robot_jaune": 
-                LineMovePlate(1, 0); //Droite
-                LineMovePlate(0, 1); //Haut
+            case "robot_jaune":
+                LineMovePlate(1 ,1, 0); //Droite
+                LineMovePlate(0 ,0, 1); //Haut
 
-                LineMovePlate(-1, 0); //Gauche
-                LineMovePlate(0, -1); //Bas
+                LineMovePlate(3 ,-1, 0); //Gauche
+                LineMovePlate(2 ,0, -1); //Bas
                 break;
-            case "robot_rouge": 
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
+            case "robot_rouge":
+                LineMovePlate(1 ,1, 0);
+                LineMovePlate(0 ,0, 1);
 
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
+                LineMovePlate(3 ,-1, 0);
+                LineMovePlate(2 ,0, -1);
                 break;
-            case "robot_vert": 
-                LineMovePlate(1, 0);
-                LineMovePlate(0, 1);
-                
-                LineMovePlate(-1, 0);
-                LineMovePlate(0, -1);
-               
+            case "robot_vert":
+                LineMovePlate(1 ,1, 0);
+                LineMovePlate(0 ,0, 1);
+
+                LineMovePlate(3 ,-1, 0);
+                LineMovePlate(2 ,0, -1);
+
                 break;
         }
     }
 
     //Déplace le pions sur la ligne + colonne
-    public void LineMovePlate(int xIncrement, int yIncrement)
+    public void LineMovePlate(int dir,int xIncrement, int yIncrement)
     {
         Game sc = controller.GetComponent<Game>();
         int oldx = xBoard;
@@ -144,21 +145,21 @@ public class RobotMan : MonoBehaviour
         int x = oldx;
         int y = oldy;
         bool mur=false;
+
         //Si il y a un mur directement dans notre case + direction on ne bouge pas !
-        if (!sc.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
+        if (!sc.board.isWallInPos(oldx,15-oldy,dir)){
             x = xBoard + xIncrement;
             y = yBoard + yIncrement;
 
             while (sc.PositionOnBoard(x,y) && sc.GetPosition(x,y) == null)
             {
-                if (sc.isWallInDir(x,y,xIncrement,yIncrement)){
+                if (sc.board.isWallInPos(x,15-y,dir)){
                     mur = true;
                     break;
                 }
                 x += xIncrement;
                 y += yIncrement;
 
-                
             }
             if(!mur){
                 x-=xIncrement;
@@ -179,7 +180,7 @@ public class RobotMan : MonoBehaviour
         PointMovePlate(xBoard - 1, yBoard -2);
         PointMovePlate(xBoard - 2, yBoard +1);
         PointMovePlate(xBoard - 2, yBoard -1);
-    }    
+    }
 
     //Déplace le pions tout autour de lui (roi aux échec)
     public void SurroundMovePlate()
@@ -223,6 +224,15 @@ public class RobotMan : MonoBehaviour
         MovePlate mpScipt = mp.GetComponent<MovePlate>();
         mpScipt.SetReference(gameObject);
         mpScipt.SetCoords(matrixX,matrixY);
+        SpriteRenderer mpSprite = mp.GetComponent<SpriteRenderer>();
+        switch (this.name)
+        {
+            case "robot_bleue": mpSprite.color = Color.blue; break;
+            case "robot_jaune": mpSprite.color = Color.yellow; break;
+            case "robot_rouge": mpSprite.color = Color.red; break;
+            case "robot_vert": mpSprite.color = Color.green;break;
+        }
+
     }
 
     //Pour VINCENT : Les fonctions suivantes permettent de bouger le robot dans une direction donné par ligne de commande !
