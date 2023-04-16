@@ -179,7 +179,7 @@ public class Board{
         string wall= file_str[position];
     //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
         //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
-        if (wall.EndsWith("X")){
+        if (wall.EndsWith("M") || wall.EndsWith("P")|| wall.EndsWith("C") || wall.EndsWith("X") ){
             wall = wall.Remove(wall.Length-2);
             Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
         }
