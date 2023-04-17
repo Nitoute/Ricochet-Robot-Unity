@@ -1,9 +1,13 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading;
+using System.Diagnostics;
 
 public class Solver : MonoBehaviour
 {
+    static Stopwatch stopwatch = new Stopwatch();
+
     public GameObject controller;
     private GameObject currentRobot;
 
@@ -216,18 +220,61 @@ public class Solver : MonoBehaviour
         print(result);
     }
 
+    // Créer le signal de démarrage
+    public void sendSignalStart(int numero_Solver)
+    {
+        TimerCallback startCallback = new TimerCallback(StartTimer);
+        Timer startTimer = new Timer(startCallback, null, 0, Timeout.Infinite);
+        switch(numero_Solver)
+        {
+            
+            case 1: game.switchContinueSolveV1(); break;
+            case 2: game.switchContinueSolveV2(); break;
+            case 3: game.switchContinueSolveV3(); break;
+            case 31: game.switchContinueSolveV31(); break;
+            case 4: game.switchContinueSolveV4();break;
+            case 5: game.switchContinueSolveV5(); break;
+        }
+    }
+
+    public void sendSignalStop()
+    {
+        TimerCallback stopCallback = new TimerCallback(StopTimer);
+        Timer stopTimer = new Timer(stopCallback, null, Timeout.Infinite, Timeout.Infinite);
+        stopTimer.Change(50, Timeout.Infinite);
+    }
+
+    static void StartTimer(object state)
+    {
+        //print("HEEEEYYYY");
+        print("Début du chrono...");
+        stopwatch.Reset();
+        stopwatch.Start();
+        
+    }
+
+    static void StopTimer(object state)
+    {
+        print("on arrête le chrono !");
+        stopwatch.Stop();
+        TimeSpan elapsedTime = stopwatch.Elapsed;
+        print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
+    }
+
     // Update is called once per frame
     void Update()
     {
         if(game.getContinueSolveV1()){
             game.restartPosition();
             makeSeq(seq,len);
-            print(game.GetActiveRobot());
+            //  print(game.GetActiveRobot());
             if(game.hasWin(game.GetActiveRobot())){
                 printSeq(seq,len);
                 print(len);
+                sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV1();
+                // Créer le signal d'arrêt
                 //return (seq,len);
             }
             //yield return null;
@@ -241,6 +288,7 @@ public class Solver : MonoBehaviour
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
+                sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV2();
                 //return (seq,len);
@@ -271,6 +319,7 @@ public class Solver : MonoBehaviour
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
+                sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV31();
                 //return (seq,len);
