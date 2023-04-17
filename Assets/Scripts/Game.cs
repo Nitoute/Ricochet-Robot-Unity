@@ -288,16 +288,16 @@ public class Game : MonoBehaviour
     }
 
     public void switchContinueSolveV31(){
-        continueSolveV3=!continueSolveV31;
+        continueSolveV31=!continueSolveV31;
         solverRunning=!solverRunning;
     }
 
     public void switchContinueSolveV4(){
-        continueSolveV3=!continueSolveV4;
+        continueSolveV4=!continueSolveV4;
         solverRunning=!solverRunning;
     }
     public void switchContinueSolveV5(){
-        continueSolveV3=!continueSolveV5;
+        continueSolveV5=!continueSolveV5;
         solverRunning=!solverRunning;
     }
 
@@ -329,7 +329,8 @@ public class Game : MonoBehaviour
     }
 
     //Privilégier isWallInDir depuis classe board.
-    /*public bool isWallInDir(int x, int y,int dirX, int dirY)
+    /*
+    public bool isWallInDir(int x, int y,int dirX, int dirY)
     {
         try
         {
@@ -347,8 +348,7 @@ public class Game : MonoBehaviour
         {
             return false;
         }
-    }
-
+    }*/
 
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {

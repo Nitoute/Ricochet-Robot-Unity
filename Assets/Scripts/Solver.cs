@@ -87,6 +87,7 @@ public class Solver : MonoBehaviour
     }
 
     public int makeSeq31(int seq, int len){
+        print(seq);
         int tmp=seq;
         if (len==1){
             makeMove1(tmp%16);
@@ -119,19 +120,18 @@ public class Solver : MonoBehaviour
     }
 
      public int makeSeq4(int seq, int len){
-        int tmp=seq;
+        int tmp=seq%16;
         int pion=tmp/4;
         int dir= tmp%4;
         if (len==1){
-            makeMove1(tmp%16);
+            makeMove1(tmp);
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-
-        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))&& !(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),dir))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (!((seq/16)%16==tmp|| (pion==((seq/16)%16)/4 && dir==(((seq/16)%16)+2)%4 ))&& !(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),dir))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
-                game.setPositionRobot(posMap[(tmp/16,len-1)]);
-                makeMove1(tmp%16);
+                game.setPositionRobot(posMap[(seq/16,len-1)]);
+                makeMove1(tmp);
                 posMap[(seq,len)]=game.getPositionRobots();
                 return seq;
             }
@@ -202,16 +202,16 @@ public class Solver : MonoBehaviour
                     break;
             }
             switch (dir){
-                case 0:
+                case 1:
                 result+="Right";
                     break;
-                case 2:
+                case 3:
                 result+="Left";
                     break;
-                case 1:
+                case 0:
                 result+="Up";
                     break;
-                case 3:
+                case 2:
                 result+="Down";
                     break;
             }
@@ -344,27 +344,30 @@ public class Solver : MonoBehaviour
             game.restartPosition();
         }
         else if(game.getContinueSolveV5()){
+            currentRobot = game.GetActiveRobot();
             if (finishMove.Count==0){
 // faire le calcul des dernier move
+                print("début");
                 for (int i=0;i<4;i++){
                     if (!(game.board.isWallInPos(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard(),game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard(),i))){
-                        finishMove.Add(game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+i);
+                        finishMove.Add(game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+((i+2)%4));
                     }
                 }
-            List<(int,int)> pos1 = game.getPositionRobots();
-            foreach(int a in finishMove){
-                game.setPositionRobot(pos1);
-                makeMove1(a);
-                if(game.hasWin(currentRobot)){
-                    printSeq(a,1);
-                    print(1);
+                foreach(int a in finishMove){
                     game.restartPosition();
-                    game.switchContinueSolveV5();
-                    //return (seq,len);
+                print(a);
+                    makeMove1(a);
+                    if(game.hasWin(currentRobot)){
+                        printSeq(a,1);
+                        print(1);
+                        game.restartPosition();
+                        game.switchContinueSolveV5();
+                        //return (seq,len);
+                    }
                 }
             }
-            }
-            currentRobot = game.GetActiveRobot();
+
+
             game.restartPosition();
             seq=makeSeq4(seq,len);
             //ajouté les mouv finaux a la fin
@@ -372,12 +375,14 @@ public class Solver : MonoBehaviour
             foreach(int a in finishMove){
                 game.setPositionRobot(pos);
                 makeMove1(a);
+                    printSeq(seq*16+a,len+1);
                 if(game.hasWin(currentRobot)){
-                    printSeq(seq+a,len+1);
+                    printSeq(seq*16+a,len+1);
                     print(len+1);
                     game.restartPosition();
                     game.switchContinueSolveV5();
                     //return (seq,len);
+                    break;
                 }
             }
             //yield return null;
