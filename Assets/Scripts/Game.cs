@@ -37,7 +37,7 @@ public class Game : MonoBehaviour
     private bool continueSolveV4 = false;
     private bool continueSolveV5 = false;
 
-    Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
+    //Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +46,6 @@ public class Game : MonoBehaviour
         //Recupération de l'objet Solver + script
         solver = GameObject.FindGameObjectWithTag("SolverObject");
         solverScript = solver.GetComponent<Solver>();
-
         addWalls();
         addGoals();
 
@@ -60,11 +59,6 @@ public class Game : MonoBehaviour
         for(int i = 0; i < robots.Length;i++){
             SetPositionRobot(robots[i]);
         }
-
-        //Goals
-        // goals = new GameObject[]{
-        //     InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
-        // };
 
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
@@ -356,7 +350,7 @@ public class Game : MonoBehaviour
         }
     }*/
 
-    /*private void addWall(int x, int y, int dirX,int dirY,bool newWall)
+    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
         if (walls.ContainsKey((x,y)))
         {
@@ -579,6 +573,36 @@ public class Game : MonoBehaviour
 
         return false;
     }*/
+
+    private void changeBoard(int i, int j, int x, int y)
+    {
+        DestroyAllWalls();
+        DestroyAllGoals();
+        goals = new GameObject[0];
+        board = new Board(i,j,x,y);
+        addWalls();
+        addGoals();
+    }
+
+    private void DestroyAllWalls()
+    {
+        GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
+
+        for (int i =0; i<walls.Length;i++)
+        {
+            Destroy(walls[i]);
+        } 
+    }
+    
+    private void DestroyAllGoals()
+    {
+        GameObject[] goalsObject = GameObject.FindGameObjectsWithTag("Goal");
+
+        for (int i =0; i<goalsObject.Length;i++)
+        {
+            Destroy(goalsObject[i]);
+        } 
+    }
 
 
 }
