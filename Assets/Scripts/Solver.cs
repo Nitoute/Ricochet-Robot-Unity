@@ -27,16 +27,16 @@ public class Solver : MonoBehaviour
         int dir=val%4;
         switch (dir){
             case 0:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,1);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(dir,0,1);
                 break;
             case 1:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(1,0);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(dir,1,0);
                 break;
             case 2:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(0,-1);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(dir,0,-1);
                 break;
             case 3:
-                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(-1,0);
+                game.getRobot(pion).GetComponent<RobotMan>().MoveRobot(dir,-1,0);
                 break;
         }
     }
@@ -220,10 +220,10 @@ public class Solver : MonoBehaviour
     void Update()
     {
         if(game.getContinueSolveV1()){
-            currentRobot = game.GetActiveRobot();
             game.restartPosition();
             makeSeq(seq,len);
-            if(game.hasWin(currentRobot)){
+            print(game.GetActiveRobot());
+            if(game.hasWin(game.GetActiveRobot())){
                 printSeq(seq,len);
                 print(len);
                 game.restartPosition();
