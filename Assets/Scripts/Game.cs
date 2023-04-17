@@ -37,7 +37,7 @@ public class Game : MonoBehaviour
     private bool continueSolveV4 = false;
     private bool continueSolveV5 = false;
 
-    Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
+    //Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     // Start is called before the first frame update
     void Start()
@@ -46,25 +46,19 @@ public class Game : MonoBehaviour
         //Recupération de l'objet Solver + script
         solver = GameObject.FindGameObjectWithTag("SolverObject");
         solverScript = solver.GetComponent<Solver>();
-
         addWalls();
         addGoals();
 
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
+            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",5,1), CreateRobot("robot_jaune",5,2)
         };
 
         //Met les robots dans leur cases
         for(int i = 0; i < robots.Length;i++){
             SetPositionRobot(robots[i]);
         }
-
-        //Goals
-        // goals = new GameObject[]{
-        //     InstantiateGoal("goal_rouge",14,1), InstantiateGoal("goal_bleue",5,14), InstantiateGoal("goal_vert",2,1), InstantiateGoal("goal_jaune",11,9)
-        // };
 
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
@@ -78,7 +72,6 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
     }
-
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
@@ -186,6 +179,12 @@ public class Game : MonoBehaviour
 
     public GameObject CreateRobot(string name, int x, int y)
     {
+        System.Random rnd = new System.Random();
+        while ((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8))
+        {
+            x = rnd.Next(0, 16);
+            y = rnd.Next(0, 16);
+        }
         GameObject obj = Instantiate(robot, new Vector3(0,0,-1),Quaternion.identity);
         RobotMan rm = obj.GetComponent<RobotMan>();
         rm.name = name;
@@ -295,16 +294,16 @@ public class Game : MonoBehaviour
     }
 
     public void switchContinueSolveV31(){
-        continueSolveV3=!continueSolveV31;
+        continueSolveV31=!continueSolveV31;
         solverRunning=!solverRunning;
     }
 
     public void switchContinueSolveV4(){
-        continueSolveV3=!continueSolveV4;
+        continueSolveV4=!continueSolveV4;
         solverRunning=!solverRunning;
     }
     public void switchContinueSolveV5(){
-        continueSolveV3=!continueSolveV5;
+        continueSolveV5=!continueSolveV5;
         solverRunning=!solverRunning;
     }
 
@@ -336,6 +335,7 @@ public class Game : MonoBehaviour
     }
 
     //Privilégier isWallInDir depuis classe board.
+    /*
     public bool isWallInDir(int x, int y,int dirX, int dirY)
     {
         try
@@ -356,8 +356,7 @@ public class Game : MonoBehaviour
         }
     }
 
-
-    /*private void addWall(int x, int y, int dirX,int dirY,bool newWall)
+    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
         if (walls.ContainsKey((x,y)))
         {
@@ -580,6 +579,36 @@ public class Game : MonoBehaviour
 
         return false;
     }*/
+
+    private void changeBoard(int i, int j, int x, int y)
+    {
+        DestroyAllWalls();
+        DestroyAllGoals();
+        goals = new GameObject[0];
+        board = new Board(i,j,x,y);
+        addWalls();
+        addGoals();
+    }
+
+    private void DestroyAllWalls()
+    {
+        GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
+
+        for (int i =0; i<walls.Length;i++)
+        {
+            Destroy(walls[i]);
+        } 
+    }
+    
+    private void DestroyAllGoals()
+    {
+        GameObject[] goalsObject = GameObject.FindGameObjectsWithTag("Goal");
+
+        for (int i =0; i<goalsObject.Length;i++)
+        {
+            Destroy(goalsObject[i]);
+        } 
+    }
 
 
 }
