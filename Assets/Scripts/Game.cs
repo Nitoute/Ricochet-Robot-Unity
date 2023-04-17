@@ -348,7 +348,7 @@ public class Game : MonoBehaviour
         {
             return false;
         }
-    }*/
+    }
 
     private void addWall(int x, int y, int dirX,int dirY,bool newWall)
     {
