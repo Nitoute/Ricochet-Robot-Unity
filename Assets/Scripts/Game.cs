@@ -52,7 +52,7 @@ public class Game : MonoBehaviour
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
+            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",5,1), CreateRobot("robot_jaune",5,2)
         };
 
         //Met les robots dans leur cases
@@ -72,7 +72,6 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
     }
-
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
@@ -180,6 +179,12 @@ public class Game : MonoBehaviour
 
     public GameObject CreateRobot(string name, int x, int y)
     {
+        System.Random rnd = new System.Random();
+        while ((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8))
+        {
+            x = rnd.Next(0, 16);
+            y = rnd.Next(0, 16);
+        }
         GameObject obj = Instantiate(robot, new Vector3(0,0,-1),Quaternion.identity);
         RobotMan rm = obj.GetComponent<RobotMan>();
         rm.name = name;
