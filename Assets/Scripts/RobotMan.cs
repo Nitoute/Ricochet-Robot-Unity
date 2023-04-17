@@ -238,9 +238,9 @@ public class RobotMan : MonoBehaviour
     //Pour VINCENT : Les fonctions suivantes permettent de bouger le robot dans une direction donné par ligne de commande !
     // Tu n'a théoriquement rien à changé pour les déplacer mais si tu voit des bugs ou quoi envoi un message sur discord
 
-    public void MoveRobot(int xIncrement, int yIncrement)
+    public void MoveRobot(int dir,int xIncrement, int yIncrement)
     {
-        //Game sc = controller.GetComponent<Game>();
+        Game sc = controller.GetComponent<Game>();
         int oldx = xBoard;
         int oldy = yBoard;
 
@@ -248,13 +248,13 @@ public class RobotMan : MonoBehaviour
         int y = oldy;
         bool mur=false;
         //Si il y a un mur directement dans notre case + direction on ne bouge pas !
-        if (!game.isWallInDir(oldx,oldy,xIncrement,yIncrement)){
+        if (!sc.board.isWallInPos(oldx,15-oldy,dir)){
             x = xBoard + xIncrement;
             y = yBoard + yIncrement;
 
             while (game.PositionOnBoard(x,y) && game.GetPosition(x,y) == null)
             {
-                if (game.isWallInDir(x,y,xIncrement,yIncrement)){
+                if (sc.board.isWallInPos(x,15-y,dir)){
                     mur = true;
                     break;
                 }
