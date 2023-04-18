@@ -444,6 +444,7 @@ public class Game : MonoBehaviour
     {
         for(int i = 0; i < robots.Length;i++){
             SetPositionDefaultRobot(robots[i]);
+            robots[i].GetComponent<RobotMan>().DestroyMovePlates();
         }
 
         nbrCoups = 0;
@@ -464,11 +465,13 @@ public class Game : MonoBehaviour
 
     public bool hasWin(GameObject rob)
     {
+        RobotMan rm = rob.GetComponent<RobotMan>();
         int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
         int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
 
         int Yrob = rob.GetComponent<RobotMan>().GetYBoard();
         int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
+
         switch (rob.name)
         {
             case "robot_bleue":
@@ -478,6 +481,10 @@ public class Game : MonoBehaviour
                     {
                         if (!solverRunning){
                             updateGoal();
+                            foreach(GameObject robo in robots)
+                            {
+                            robo.GetComponent<RobotMan>().switchPositionInit();
+                            }
                         }
                         return true;
                     }
@@ -492,6 +499,10 @@ public class Game : MonoBehaviour
                         if (!solverRunning){
                             print("gagné 2!");
                             updateGoal();
+                            foreach(GameObject robo in robots)
+                            {
+                            robo.GetComponent<RobotMan>().switchPositionInit();
+                            }
 
                         }
                         return true;
@@ -505,6 +516,10 @@ public class Game : MonoBehaviour
                     {
                         if (!solverRunning){
                             updateGoal();
+                            foreach(GameObject robo in robots)
+                            {
+                            robo.GetComponent<RobotMan>().switchPositionInit();
+                            }
                         }
                         return true;
                     }
@@ -517,6 +532,10 @@ public class Game : MonoBehaviour
                     {
                         if (!solverRunning){
                             updateGoal();
+                            foreach(GameObject robo in robots)
+                            {
+                            robo.GetComponent<RobotMan>().switchPositionInit();
+                            }
                         }
                         return true;
                     }
