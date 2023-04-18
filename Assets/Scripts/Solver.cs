@@ -18,6 +18,8 @@ public class Solver : MonoBehaviour
     IDictionary<(int,int), List<(int,int)>> posMap =
             new Dictionary<(int,int), List<(int,int)>>();
     List<int> finishMove = new List<int>();
+    int finalSeq=-1;
+    int finalLen=-1;
 
     // Start is called before the first frame update
     void Start()
@@ -187,7 +189,6 @@ public class Solver : MonoBehaviour
             seq = seq % (int)Math.Pow(16, i);
             int pion=a/4;
             int dir=a%4;
-            //print("pion="+pion+"  dir="+dir);
             result+="(";
             switch (pion){
                 case 0:
@@ -267,12 +268,16 @@ public class Solver : MonoBehaviour
     void Update()
     {
         if(game.getContinueSolveV1()){
+            finalSeq=-1;
+            finalLen=-1;
             game.restartPosition();
             makeSeq(seq,len);
             //  print(game.GetActiveRobot());
             if(game.hasWin(game.GetActiveRobot())){
                 printSeq(seq,len);
                 print(len);
+                finalSeq=seq;
+                finalLen=len;
                 sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV1();
@@ -284,12 +289,16 @@ public class Solver : MonoBehaviour
             game.restartPosition();
         }
         else if(game.getContinueSolveV2()){
+            finalSeq=-1;
+            finalLen=-1;
             currentRobot = game.GetActiveRobot();
             game.restartPosition();
             seq=makeSeq2(seq,len);
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
+                finalSeq=seq;
+                finalLen=len;
                 sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV2();
@@ -300,12 +309,17 @@ public class Solver : MonoBehaviour
             game.restartPosition();
         }
         else if(game.getContinueSolveV3()){
+            finalSeq=-1;
+            finalLen=-1;
             currentRobot = game.GetActiveRobot();
             game.restartPosition();
             makeSeq3(seq,len);
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
+                finalSeq=seq;
+                finalLen=len;
+                sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV3();
                 //return (seq,len);
@@ -315,12 +329,16 @@ public class Solver : MonoBehaviour
             game.restartPosition();
         }
         else if(game.getContinueSolveV31()){
+            finalSeq=-1;
+            finalLen=-1;
             currentRobot = game.GetActiveRobot();
             game.restartPosition();
             seq=makeSeq31(seq,len);
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
+                finalSeq=seq;
+                finalLen=len;
                 sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV31();
@@ -331,12 +349,17 @@ public class Solver : MonoBehaviour
             game.restartPosition();
         }
         else if(game.getContinueSolveV4()){
+            finalSeq=-1;
+            finalLen=-1;
             currentRobot = game.GetActiveRobot();
             game.restartPosition();
             seq=makeSeq4(seq,len);
             if(game.hasWin(currentRobot)){
                 printSeq(seq,len);
                 print(len);
+                finalSeq=seq;
+                finalLen=len;
+                sendSignalStop();
                 game.restartPosition();
                 game.switchContinueSolveV4();
                 //return (seq,len);
@@ -346,25 +369,27 @@ public class Solver : MonoBehaviour
             game.restartPosition();
         }
         else if(game.getContinueSolveV5()){
+            finalSeq=-1;
+            finalLen=-1;
             currentRobot = game.GetActiveRobot();
             if (finishMove.Count==0){
 // faire le calcul des dernier move
                 print("début");
-                        print(game.GetCurrentGoal().GetComponent<GoalMan>().getColor());
-                        print(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard()+""+game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard());
                 for (int i=0;i<4;i++){
+
                     if (game.board.isWallInPos(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard(),game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard(),i)){
                         finishMove.Add(game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+i);
-                        printSeq((game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+i),i);
                     }
                 }
                 foreach(int a in finishMove){
                     game.restartPosition();
-                    print(a);
                     makeMove1(a);
                     if(game.hasWin(currentRobot)){
                         printSeq(a,1);
                         print(1);
+                        finalSeq=a;
+                        finalLen=1;
+                        sendSignalStop();
                         game.restartPosition();
                         game.switchContinueSolveV5();
                         //return (seq,len);
@@ -380,10 +405,12 @@ public class Solver : MonoBehaviour
             foreach(int a in finishMove){
                 game.setPositionRobot(pos);
                 makeMove1(a);
-                    printSeq(seq*16+a,len+1);
                 if(game.hasWin(currentRobot)){
                     printSeq(seq*16+a,len+1);
                     print(len+1);
+                    finalSeq=seq*16+a;
+                    finalLen=len+1;
+                    sendSignalStop();   
                     game.restartPosition();
                     game.switchContinueSolveV5();
                     //return (seq,len);
