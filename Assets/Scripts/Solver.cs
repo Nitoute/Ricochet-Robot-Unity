@@ -71,7 +71,6 @@ public class Solver : MonoBehaviour
 
 
     public void makeSeq3(int seq, int len){
-        printSeq(seq,len);
         int tmp=seq%16;
         int prec=(seq/16)%16;
         if (len==1){
@@ -81,11 +80,7 @@ public class Solver : MonoBehaviour
         else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
-                List<(int,int)> pos =game.getPositionRobots();
-                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 makeMove1(tmp);
-                pos =game.getPositionRobots();
-                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 posMap[(seq,len)]=game.getPositionRobots();
             }
             catch (KeyNotFoundException){}
@@ -93,16 +88,17 @@ public class Solver : MonoBehaviour
     }
 
     public int makeSeq31(int seq, int len){
-        int tmp=seq;
+        int tmp=seq%16;
+        int prec=(seq/16)%16;
         if (len==1){
             makeMove1(tmp%16);
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
-                game.setPositionRobot(posMap[(tmp/16,len-1)]);
-                makeMove1(tmp%16);
+                game.setPositionRobot(posMap[(seq/16,len-1)]);
+                makeMove1(tmp);
                 posMap[(seq,len)]=game.getPositionRobots();
                 return seq;
             }
@@ -126,6 +122,7 @@ public class Solver : MonoBehaviour
 
      public int makeSeq4(int seq, int len){
         int tmp=seq%16;
+        int prec=(seq/16)%16;
         int pion=tmp/4;
         int dir= tmp%4;
         if (len==1){
@@ -133,7 +130,7 @@ public class Solver : MonoBehaviour
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!((seq/16)%16==tmp|| (pion==((seq/16)%16)/4 && dir==(((seq/16)%16)+2)%4 ))&& !(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),dir))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))&& (game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),dir))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
                 makeMove1(tmp);
@@ -161,7 +158,6 @@ public class Solver : MonoBehaviour
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
-            print(posMap.Count);
             return (0,len+1);
         }
         return (seq+1,len);
@@ -354,14 +350,17 @@ public class Solver : MonoBehaviour
             if (finishMove.Count==0){
 // faire le calcul des dernier move
                 print("début");
+                        print(game.GetCurrentGoal().GetComponent<GoalMan>().getColor());
+                        print(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard()+""+game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard());
                 for (int i=0;i<4;i++){
-                    if (!(game.board.isWallInPos(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard(),game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard(),i))){
-                        finishMove.Add(game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+((i+2)%4));
+                    if (game.board.isWallInPos(game.GetCurrentGoal().GetComponent<GoalMan>().GetXBoard(),game.GetCurrentGoal().GetComponent<GoalMan>().GetYBoard(),i)){
+                        finishMove.Add(game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+i);
+                        printSeq((game.GetCurrentGoal().GetComponent<GoalMan>().getColor()*4+i),i);
                     }
                 }
                 foreach(int a in finishMove){
                     game.restartPosition();
-                print(a);
+                    print(a);
                     makeMove1(a);
                     if(game.hasWin(currentRobot)){
                         printSeq(a,1);
