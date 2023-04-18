@@ -172,6 +172,10 @@ public class Game : MonoBehaviour
             (int x,int y)=pos[i];
             robots[i].GetComponent<RobotMan>().Teleport(x,y);
         }
+        for (int i=0;i<4;i++){
+            (int x,int y)=pos[i];
+            robots[i].GetComponent<RobotMan>().Teleport(x,y);
+        }
     }
 
     public GameObject CreateRobot(string name, int x, int y)
