@@ -99,16 +99,17 @@ public class Solver : MonoBehaviour
     }
 
     public int makeSeq31(int seq, int len){
-        int tmp=seq;
+        int tmp=seq%16;
+        int prec=(seq/16)%16;
         if (len==1){
             makeMove1(tmp%16);
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
-                game.setPositionRobot(posMap[(tmp/16,len-1)]);
-                makeMove1(tmp%16);
+                game.setPositionRobot(posMap[(seq/16,len-1)]);
+                makeMove1(tmp);
                 posMap[(seq,len)]=game.getPositionRobots();
                 return seq;
             }
@@ -132,6 +133,7 @@ public class Solver : MonoBehaviour
 
      public int makeSeq4(int seq, int len){
         int tmp=seq%16;
+        int prec=(seq/16)%16;
         int pion=tmp/4;
         int dir= tmp%4;
         if (len==1){
@@ -167,7 +169,6 @@ public class Solver : MonoBehaviour
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
-            print(posMap.Count);
             return (0,len+1);
         }
         return (seq+1,len);

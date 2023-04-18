@@ -28,7 +28,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(2,1,7,4);
+    public Board board = new Board(2,7,1,8);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;
@@ -53,12 +53,12 @@ public class Game : MonoBehaviour
         addGoals();
         //Robots
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",5,1), CreateRobot("robot_jaune",5,1)
+            CreateRobot("robot_bleue",0,0), CreateRobot("robot_rouge",0,1), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
         };
 
         //Met les robots dans leur cases
         for(int i = 0; i < robots.Length;i++){
-            SetPositionRobot(robots[i]);
+            SetPositionRobotInitial(robots[i]);
         }
 
         pileGoals = new Stack<GameObject>(goals);
@@ -90,23 +90,6 @@ public class Game : MonoBehaviour
                     addWallBis(i, 15-j, 0, -1, true);
                 }
             }
-        }
-        (int,int) wallsToComplete = board.wallsToComplete();
-        if(wallsToComplete.Item1 == 0){
-            if(wallsToComplete.Item2==0){
-                addWallBis(8, 10, -1, 0, true);
-            }
-            else{
-                addWallBis(3, 8, 0, -1, true);
-            }
-        }
-        else if(wallsToComplete.Item1 == 1){
-            //Debug.Log("true for item 1 = 1");
-            addWallBis(10, 7, 0, 1, true);
-        }
-        else if(wallsToComplete.Item1 == 2){
-            //Debug.Log("true for item 1 = 2");
-            addWallBis(8, 3, -1, 0, true);
         }
     }
     private void addGoals(){
@@ -172,6 +155,10 @@ public class Game : MonoBehaviour
             (int x,int y)=pos[i];
             robots[i].GetComponent<RobotMan>().Teleport(x,y);
         }
+        for (int i=0;i<4;i++){
+            (int x,int y)=pos[i];
+            robots[i].GetComponent<RobotMan>().Teleport(x,y);
+        }
     }
 
     public GameObject CreateRobot(string name, int x, int y)
@@ -218,7 +205,7 @@ public class Game : MonoBehaviour
         return obj;
     }
 
-    public void SetPositionRobot(GameObject obj)
+    public void SetPositionRobotInitial(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
         if (positions[rm.GetXBoard(),rm.GetYBoard()]==null)
@@ -234,6 +221,12 @@ public class Game : MonoBehaviour
             rm.Activate();
             SetPositionRobot(obj);
         }
+    }
+
+    public void SetPositionRobot(GameObject obj)
+    {
+        RobotMan rm = obj.GetComponent<RobotMan>();
+        positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
     }
 
     public void SetPositionGoal(GameObject obj)
@@ -452,8 +445,12 @@ public class Game : MonoBehaviour
     public void restartPosition()
     {
         for(int i = 0; i < robots.Length;i++){
-            SetPositionDefaultRobot(robots[i]);
+            robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
+            //SetPositionDefaultRobot(robots[i]);
             robots[i].GetComponent<RobotMan>().DestroyMovePlates();
+        }
+        for(int i = 0; i < robots.Length;i++){
+            robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
         }
 
         nbrCoups = 0;

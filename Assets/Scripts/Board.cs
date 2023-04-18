@@ -37,6 +37,7 @@ public class Board{
         string topRightFileName;
         string bottomLeftFileName;
         string bottomRightFileName;
+        board3 = (-1,-1);
         /*randomize*/
         if(topleft ==0 || topright == 0 || bottomleft ==0 || bottomright ==0){
             string flip;
@@ -173,6 +174,7 @@ public class Board{
                 }
             }
         }
+        wallsToComplete();
     }
 
     /*readWalls reads at corresponding i,j coordinates of files and returns
@@ -344,8 +346,52 @@ public class Board{
     }
 
 
-    public (int pos, int isFlipped) wallsToComplete(){
-        return board3;
+    private int wallsToComplete(){
+        (int posX, int posY) position = (-1,-1);
+        (int left, int top) wallsToAdd;
+        bool dictContainsKey = false;
+        if(board3.Item1 == 0){
+            if(board3.Item2==0){
+                position = (8,5);
+                wallsToAdd = (-1,0);
+            }
+            else{
+                position = (3,7);
+                wallsToAdd = (0,-1);
+            }
+        }
+        else if(board3.Item1 == 1){
+            //Debug.Log("true for item 1 = 1");
+            position = (10,8);
+            wallsToAdd = (0,1);
+        }
+        else if(board3.Item1 == 2){
+            //Debug.Log("true for item 1 = 2");
+            position = (8,12);
+            wallsToAdd = (-1,0);
+        }
+        else{
+            return -1;
+        }
+        if(wallsDict.ContainsKey(position)){
+            if(wallsDict[position].Item1==-1){
+                if(wallsDict[position].Item2==0){
+                    wallsDict[position] = (-1, wallsToAdd.Item2);
+                }
+            }
+            else{
+                if(wallsDict[position].Item2==1){
+                    wallsDict[position] = (wallsToAdd.Item1, 1);
+                }
+                else{
+                    wallsDict[position] = (wallsToAdd.Item1, wallsToAdd.Item2);
+                }
+            }
+        }
+        else{
+            addToWallDict(position, wallsToAdd);
+        }
+        return 0;
     }
     /**
     * For a position, returns if there is a wall in corresponding direction (0->3 : top,right,bottom,left)
