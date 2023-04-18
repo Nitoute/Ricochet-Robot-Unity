@@ -53,12 +53,12 @@ public class Game : MonoBehaviour
 
         //Robots
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",5,1), CreateRobot("robot_jaune",5,1)
+            CreateRobot("robot_bleue",0,0), CreateRobot("robot_rouge",0,1), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
         };
 
         //Met les robots dans leur cases
         for(int i = 0; i < robots.Length;i++){
-            SetPositionRobot(robots[i]);
+            SetPositionRobotInitial(robots[i]);
         }
 
         pileGoals = new Stack<GameObject>(goals);
@@ -216,7 +216,7 @@ public class Game : MonoBehaviour
         return obj;
     }
 
-    public void SetPositionRobot(GameObject obj)
+    public void SetPositionRobotInitial(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
         if (positions[rm.GetXBoard(),rm.GetYBoard()]==null)
@@ -232,6 +232,12 @@ public class Game : MonoBehaviour
             rm.Activate();
             SetPositionRobot(obj);
         }
+    }
+
+    public void SetPositionRobot(GameObject obj)
+    {
+        RobotMan rm = obj.GetComponent<RobotMan>();
+        positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
     }
 
     public void SetPositionGoal(GameObject obj)
@@ -450,8 +456,12 @@ public class Game : MonoBehaviour
     public void restartPosition()
     {
         for(int i = 0; i < robots.Length;i++){
-            SetPositionDefaultRobot(robots[i]);
+            robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
+            //SetPositionDefaultRobot(robots[i]);
             robots[i].GetComponent<RobotMan>().DestroyMovePlates();
+        }
+        for(int i = 0; i < robots.Length;i++){
+            robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
         }
 
         nbrCoups = 0;
