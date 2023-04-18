@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 public class Game : MonoBehaviour
 {
@@ -50,7 +51,6 @@ public class Game : MonoBehaviour
         solverScript = solver.GetComponent<Solver>();
         addWalls();
         addGoals();
-
         //Robots
         robots = new GameObject[]{
             CreateRobot("robot_bleue",0,0), CreateRobot("robot_rouge",0,1), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
@@ -69,6 +69,7 @@ public class Game : MonoBehaviour
 
 
     }
+
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
@@ -188,6 +189,7 @@ public class Game : MonoBehaviour
         rm.SetXInit(x);
         rm.SetYInit(y);
         rm.Activate();
+        //hasWin(obj);
         return obj;
 
     }

@@ -73,6 +73,7 @@ public class Solver : MonoBehaviour
 
 
     public void makeSeq3(int seq, int len){
+        printSeq(seq,len);
         int tmp=seq%16;
         int prec=(seq/16)%16;
         if (len==1){
@@ -82,7 +83,11 @@ public class Solver : MonoBehaviour
         else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
+                List<(int,int)> pos =game.getPositionRobots();
+                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 makeMove1(tmp);
+                pos =game.getPositionRobots();
+                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 posMap[(seq,len)]=game.getPositionRobots();
             }
             catch (KeyNotFoundException){}
@@ -90,17 +95,16 @@ public class Solver : MonoBehaviour
     }
 
     public int makeSeq31(int seq, int len){
-        int tmp=seq%16;
-        int prec=(seq/16)%16;
+        int tmp=seq;
         if (len==1){
             makeMove1(tmp%16);
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (!((tmp/16)%16==(tmp%16)|| ((tmp%16)/4==((tmp/16)%16)/4 && (tmp%16)%4==(((tmp/16)%16)+2)%4 ))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
-                game.setPositionRobot(posMap[(seq/16,len-1)]);
-                makeMove1(tmp);
+                game.setPositionRobot(posMap[(tmp/16,len-1)]);
+                makeMove1(tmp%16);
                 posMap[(seq,len)]=game.getPositionRobots();
                 return seq;
             }
@@ -124,7 +128,6 @@ public class Solver : MonoBehaviour
 
      public int makeSeq4(int seq, int len){
         int tmp=seq%16;
-        int prec=(seq/16)%16;
         int pion=tmp/4;
         int dir= tmp%4;
         if (len==1){
@@ -160,6 +163,7 @@ public class Solver : MonoBehaviour
     public (int,int) nextSeq(int seq,int len ){
         if (seq>=Math.Pow(16,len)-1){
             print("new len "+(len+1));
+            print(posMap.Count);
             return (0,len+1);
         }
         return (seq+1,len);
@@ -427,5 +431,32 @@ public class Solver : MonoBehaviour
             posMap.Clear();
             finishMove.Clear();
         }
+    }
+
+    private List<int[]> InitSeeds()
+    {
+        List<int[]> list = new List<int[]>();
+        list.Add(new int[] { 4, 5, 2, 3, 12, 9, 10, 6, 14, 13, 4, 12 });
+        list.Add(new int[] { 4, 1, 6, 7, 4, 13, 14, 15, 15, 5, 8, 9 });
+        list.Add(new int[] { 4, 1, 2, 3, 9, 10, 12, 10, 11, 6, 13, 5 });
+        list.Add(new int[] { 0, 5, 2, 7, 4, 11, 12, 4, 12, 8, 2, 11 });
+        list.Add(new int[] { 4, 1, 6, 7, 9, 5, 15, 2, 10, 13, 11, 0 });
+        list.Add(new int[] { 0, 5, 2, 3, 12, 4, 1, 6, 13, 2, 9, 3 });
+        list.Add(new int[] { 0, 1, 6, 7, 10, 3, 13, 13, 14, 6, 11, 14 });
+        list.Add(new int[] { 4, 1, 2, 3, 2, 13, 8, 9, 0, 12, 13, 3 });
+        list.Add(new int[] { 4, 1, 2, 7, 0, 8, 2, 10, 15, 0, 2, 15 });
+        list.Add(new int[] { 4, 1, 6, 3, 15, 1, 12, 12, 8, 4, 6, 10 });
+        list.Add(new int[] { 0, 1, 2, 7, 5, 10, 9, 7, 1, 9, 5, 4 });
+        list.Add(new int[] { 4, 5, 6, 3, 0, 11, 9, 5, 3, 9, 10, 5 });
+        list.Add(new int[] { 4, 1, 6, 3, 14, 2, 1, 2, 2, 6, 1, 15 });
+        list.Add(new int[] { 0, 1, 2, 3, 13, 9, 4, 10, 1, 0, 9, 11 });
+        list.Add(new int[] { 4, 5, 2, 7, 4, 0, 1, 6, 15, 13, 0, 0 });
+        list.Add(new int[] { 0, 1, 6, 7, 8, 15, 5, 6, 7, 9, 1, 10 });
+        list.Add(new int[] { 4, 5, 2, 7, 7, 15, 5, 11, 13, 4, 12, 5 });
+        list.Add(new int[] { 0, 5, 2, 3, 10, 1, 4, 14, 2, 3, 6, 8 });
+        list.Add(new int[] { 4, 1, 2, 7, 9, 13, 1, 1, 9, 13, 12, 5 });
+        list.Add(new int[] { 0, 5, 2, 7, 5, 5, 11, 5, 9, 15, 0, 10 });
+        list.Add(new int[] { 4, 5, 2, 3, 9, 13, 11, 8, 2, 6, 3, 7 });
+        return list;
     }
 }
