@@ -438,11 +438,12 @@ public class Solver : MonoBehaviour
         }
     }
 
-    private void PlaySeeds(int vSolveur)
+    public void PlaySeeds(int vSolveur)
     {
+        String fn = @"C:\Users\Moad M\Desktop\Ricochet-Robot-Unity\Assets\Scripts/goals/resultatV"+ vSolveur +".txt";
         StreamWriter sw = new StreamWriter("/result/resultatV"+ vSolveur + ".txt");
         List<int[]> seeds = InitSeeds();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             //Changing world according to seed
             game.changeBoard( seeds[i][0], seeds[i][1], seeds[i][2], seeds[i][3]);
             //Reseting robots' positions
@@ -451,7 +452,17 @@ public class Solver : MonoBehaviour
             sendSignalStart(vSolveur);
             sw.WriteLine("Seed : " + i + ", Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
             //sequence et longeur dans finalLen et finalSec
+            sw.Close();
         }
+    }
+
+    public void test()
+    {
+        String fn = @"C:\Users\Moad M\Desktop\Ricochet-Robot-Unity\Assets\Scripts/goals/resultatV.txt";
+        StreamWriter sw = new StreamWriter(fn);
+        sw.WriteLine("Seed");
+        sw.WriteLine("seed2");
+        sw.Close();
     }
 
     private List<int[]> InitSeeds()
