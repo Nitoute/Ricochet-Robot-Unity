@@ -28,7 +28,7 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(1,2,3,8);
+    public Board board = new Board(2,7,1,8);
     private bool gameOver = false;
     private bool solverRunning = false;
     private bool continueSolveV1 = false;

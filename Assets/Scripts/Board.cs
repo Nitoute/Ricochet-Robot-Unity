@@ -37,6 +37,7 @@ public class Board{
         string topRightFileName;
         string bottomLeftFileName;
         string bottomRightFileName;
+        board3 = (-1,-1);
         /*randomize*/
         if(topleft ==0 || topright == 0 || bottomleft ==0 || bottomright ==0){
             string flip;
