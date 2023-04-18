@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 public class Game : MonoBehaviour
 {
@@ -48,7 +49,6 @@ public class Game : MonoBehaviour
         solverScript = solver.GetComponent<Solver>();
         addWalls();
         addGoals();
-
         //Robots
         System.Random rnd = new System.Random();
         robots = new GameObject[]{
@@ -72,6 +72,7 @@ public class Game : MonoBehaviour
         // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
         // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
     }
+
 
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
