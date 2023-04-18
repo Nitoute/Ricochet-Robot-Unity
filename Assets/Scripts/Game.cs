@@ -172,8 +172,7 @@ public class Game : MonoBehaviour
     public void setPositionRobot( List<(int,int)> pos){
         for (int i=0;i<4;i++){
             (int x,int y)=pos[i];
-            robots[i].GetComponent<RobotMan>().SetXBoard(x);
-            robots[i].GetComponent<RobotMan>().SetYBoard(y);
+            robots[i].GetComponent<RobotMan>().Teleport(x,y);
         }
     }
 
