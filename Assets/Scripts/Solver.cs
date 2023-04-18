@@ -440,8 +440,8 @@ public class Solver : MonoBehaviour
 
     public void PlaySeeds(int vSolveur)
     {
-        String fn = @"C:\Users\Moad M\Desktop\Ricochet-Robot-Unity\Assets\Scripts/goals/resultatV"+ vSolveur +".txt";
-        StreamWriter sw = new StreamWriter("/result/resultatV"+ vSolveur + ".txt");
+        String fn = @"C:\Users\Moad M\Desktop\Ricochet-Robot-Unity\Assets\Scripts\goals\resultatV"+ vSolveur +".txt";
+        StreamWriter sw = new StreamWriter(fn);
         List<int[]> seeds = InitSeeds();
         for (int i = 0; i < 10; i++) {
             //Changing world according to seed
@@ -454,6 +454,7 @@ public class Solver : MonoBehaviour
             //sequence et longeur dans finalLen et finalSec
             sw.Close();
         }
+        sw.Close();
     }
 
     public void test()
