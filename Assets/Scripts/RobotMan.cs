@@ -283,4 +283,10 @@ public class RobotMan : MonoBehaviour
         game.addCoups();
         game.hasWin(gameObject);
     }
+
+    public void switchPositionInit()
+    {
+        this.SetXInit(xBoard);
+        this.SetYInit(yBoard);
+    }
 }
