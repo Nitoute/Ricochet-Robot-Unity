@@ -438,9 +438,9 @@ public class Solver : MonoBehaviour
         }
     }
 
-    private void PlaySeeds()
+    private void PlaySeeds(int vSolveur)
     {
-        StreamWriter sw = new StreamWriter("/result/resultatV1.txt");
+        StreamWriter sw = new StreamWriter("/result/resultatV"+ vSolveur + ".txt");
         List<int[]> seeds = InitSeeds();
         for (int i = 0; i < 20; i++) {
             //Changing world according to seed
@@ -448,7 +448,7 @@ public class Solver : MonoBehaviour
             //Reseting robots' positions
             List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
             game.setPositionRobot(positions);
-            sendSignalStart(1);
+            sendSignalStart(vSolveur);
             sw.WriteLine("Seed : " + i + ", Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
             //sequence et longeur dans finalLen et finalSec
         }
