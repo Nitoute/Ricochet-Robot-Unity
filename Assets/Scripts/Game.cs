@@ -38,6 +38,8 @@ public class Game : MonoBehaviour
     private bool continueSolveV4 = false;
     private bool continueSolveV5 = false;
 
+    private System.Random rnd = new System.Random();
+
     //Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     // Start is called before the first frame update
@@ -50,9 +52,8 @@ public class Game : MonoBehaviour
         addWalls();
         addGoals();
         //Robots
-        System.Random rnd = new System.Random();
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",5,1), CreateRobot("robot_jaune",5,2)
+            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_vert",5,1), CreateRobot("robot_jaune",5,1)
         };
 
         //Met les robots dans leur cases
@@ -66,11 +67,7 @@ public class Game : MonoBehaviour
         currentGoalText.text = currentGoal.name;
         currentRobotGoal = GetCurrentRobotGoal();
 
-        // Pour VINCENT : Un exemple de comment bouger le robot[0] (bleu) le "vecteur" en paramètre représente la direction selon l'axe
-        // x et l'axe y, (1,0) : droite | (-1,0) : gauche | (0,1) : haut | (0,-1) : bas
 
-        // robots[0].GetComponent<RobotMan>().MoveRobot(1,0);
-        // robots[0].GetComponent<RobotMan>().MoveRobot(0,1);
     }
 
 
@@ -179,7 +176,6 @@ public class Game : MonoBehaviour
 
     public GameObject CreateRobot(string name, int x, int y)
     {
-        System.Random rnd = new System.Random();
         while ((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8))
         {
             x = rnd.Next(0, 16);
@@ -225,8 +221,19 @@ public class Game : MonoBehaviour
     public void SetPositionRobot(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
-
-        positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
+        if (positions[rm.GetXBoard(),rm.GetYBoard()]==null)
+        {
+            positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
+        }else{
+            int newX = rnd.Next(0, 16);
+            int newY = rnd.Next(0, 16);
+            rm.SetXBoard(newX);
+            rm.SetYBoard(newY);
+            rm.SetXInit(newX);
+            rm.SetYInit(newY);
+            rm.Activate();
+            SetPositionRobot(obj);
+        }
     }
 
     public void SetPositionGoal(GameObject obj)
