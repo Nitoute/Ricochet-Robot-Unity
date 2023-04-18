@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
+using static UnityEditor.PlayerSettings;
+using System.IO;
 
 public class Solver : MonoBehaviour
 {
@@ -20,6 +22,8 @@ public class Solver : MonoBehaviour
     List<int> finishMove = new List<int>();
     int finalSeq=-1;
     int finalLen=-1;
+
+    TimeSpan elapsedTime;
 
     // Start is called before the first frame update
     void Start()
@@ -260,11 +264,11 @@ public class Solver : MonoBehaviour
         
     }
 
-    static void StopTimer(object state)
+     void StopTimer(object state)
     {
         print("on arrête le chrono !");
         stopwatch.Stop();
-        TimeSpan elapsedTime = stopwatch.Elapsed;
+        elapsedTime = stopwatch.Elapsed;
         print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
     }
 
@@ -430,6 +434,22 @@ public class Solver : MonoBehaviour
             len=0;
             posMap.Clear();
             finishMove.Clear();
+        }
+    }
+
+    private void PlaySeeds()
+    {
+        StreamWriter sw = new StreamWriter("/result/resultatV1.txt");
+        List<int[]> seeds = InitSeeds();
+        for (int i = 0; i < 20; i++) {
+            //Changing world according to seed
+            game.changeBoard( seeds[i][0], seeds[i][1], seeds[i][2], seeds[i][3]);
+            //Reseting robots' positions
+            List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
+            game.setPositionRobot(positions);
+            sendSignalStart(1);
+            sw.WriteLine("Seed : " + i + ", Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
+            //sequence et longeur dans finalLen et finalSec
         }
     }
 

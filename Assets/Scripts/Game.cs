@@ -606,7 +606,7 @@ public class Game : MonoBehaviour
         return false;
     }*/
 
-    private void changeBoard(int i, int j, int x, int y)
+    public void changeBoard(int i, int j, int x, int y)
     {
         DestroyAllWalls();
         DestroyAllGoals();
