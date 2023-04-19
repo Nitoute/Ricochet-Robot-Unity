@@ -280,7 +280,7 @@ public class Solver : MonoBehaviour
         elapsedTime = stopwatch.Elapsed;
         FileStream fappend = File.Open(@"D:\ProjetUnity/resultatV.txt", FileMode.Append); // will append to end of file
         StreamWriter sw = new StreamWriter(fappend);
-        sw.WriteLine("Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
+        sw.WriteLine("Plateau numéro : "+curSeed+ " Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
         print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
         sw.Close();
     }
