@@ -519,16 +519,18 @@ public class Solver : MonoBehaviour
     private List<int[]> InitSeeds()
     {
         List<int[]> list = new List<int[]>();
-        list.Add(new int[] { 0, 5, 2, 7, 4, 11, 12, 4, 12, 8, 2, 11 });
-        list.Add(new int[] { 5, 2, 4, 7, 6, 3, 1, 12, 3, 9, 3, 9});
+        //Moad
+        list.Add(new int[] { 1, 3, 2, 8, 5, 4, 14, 11, 9, 7, 6, 8 });
+        list.Add(new int[] { 6, 5, 7, 8, 13, 5, 14, 5, 6, 3, 10, 12 });
         list.Add(new int[] { 1, 2, 3, 8, 7, 2, 11, 8, 7, 6, 4, 9});
         list.Add(new int[] { 5, 8, 6, 7, 4, 11, 11, 13, 10, 12, 6, 7});
-        list.Add(new int[] { 6, 7, 5, 8, 1, 11, 3, 12, 1, 11, 12, 14});
+        list.Add(new int[] { 3, 5, 4, 2, 8, 14, 7, 5, 3, 11, 12, 6});
         list.Add(new int[] { 4, 2, 7, 1, 3, 10, 11, 7, 11, 10, 2, 4});
         list.Add(new int[] { 1, 2, 8, 7, 5, 2, 3, 5, 6, 5, 13, 7});
         list.Add(new int[] { 6, 1, 3, 8, 1, 15, 11, 8, 7, 0, 6, 2});
         list.Add(new int[] { 4, 3, 5, 2, 8, 12, 4, 7, 15, 4, 5, 13});
         list.Add(new int[] { 2, 8, 1, 3, 7, 15, 12, 0, 5, 0, 11, 5});
+        //Moad (2)
         list.Add(new int[] { 2, 4, 1, 7, 0, 10, 6, 3, 12, 2, 5, 9});
         list.Add(new int[] { 1, 2, 7, 4, 0, 13, 11, 5, 9, 5, 4, 2});
         list.Add(new int[] { 4, 7, 2, 5, 2, 6, 3, 4, 9, 12, 9, 6});
@@ -539,6 +541,7 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 8, 7, 2, 5, 5, 14, 7, 8, 10, 12, 5, 3});
         list.Add(new int[] { 3, 2, 5, 4, 13, 10, 6, 2, 11, 6, 5, 15});
         list.Add(new int[] { 4, 6, 7, 5, 8, 12, 8, 14, 11, 3, 1, 0});
+        //Hamza
         list.Add(new int[] { 6, 4, 1, 3, 0, 9, 12, 13, 9, 15, 4, 11});
         list.Add(new int[] { 5, 4, 7, 2, 0, 10, 12, 10, 8, 8, 8, 6});
         list.Add(new int[] { 1, 8, 2, 7, 5, 5, 7, 15, 2, 14, 5, 11});
@@ -549,9 +552,10 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 6, 8, 7, 1, 1, 2, 12, 2, 12, 0, 15, 11});
         list.Add(new int[] { 2, 1, 3, 8, 5, 11, 4, 4, 10, 10, 2, 1});
         list.Add(new int[] { 2, 8, 1, 7, 7, 11, 0, 10, 15, 3, 10, 6});
+        //Vincent
         list.Add(new int[] { 1, 6, 3, 4, 11, 10, 0, 3, 6, 1, 3, 15});
         list.Add(new int[] { 8, 2, 5, 7, 0, 14, 15, 0, 0, 13, 4, 2});
-        list.Add(new int[] { 4, 5, 6, 3, 14, 11, 14, 11, 2, 0, 2, 3});
+        list.Add(new int[] { 8, 3, 6, 5, 1, 5, 3, 1, 3, 0, 11, 2 });
         list.Add(new int[] { 2, 8, 7, 5, 0, 7, 13, 5, 13, 8, 0, 1});
         list.Add(new int[] { 5, 6, 4, 7, 9, 14, 0, 2, 14, 11, 3, 1});
         list.Add(new int[] { 5, 4, 6, 3, 12, 6, 0, 0, 1, 6, 15, 3});
@@ -559,6 +563,7 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 1, 2, 3, 4, 11, 10, 15, 3, 3, 0, 3, 6});
         list.Add(new int[] { 4, 3, 6, 5, 8, 1, 7, 1, 15, 2, 6, 4});
         list.Add(new int[] { 6, 1, 8, 7, 2, 0, 7, 1, 3, 2, 6, 11});
+        //Radja
         list.Add(new int[] { 5, 2, 7, 8, 7, 6, 1, 14, 0, 15, 4, 15});
         list.Add(new int[] { 2, 4, 1, 3, 13, 7, 7, 14, 5, 1, 13, 2});
         list.Add(new int[] { 6, 4, 3, 1, 7, 12, 14, 10, 2, 12, 3, 3});
@@ -569,7 +574,6 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 2, 1, 4, 7, 12, 13, 3, 15, 5, 8, 4, 3});
         list.Add(new int[] { 2, 3, 4, 1, 13, 1, 9, 10, 11, 7, 9, 9});
         list.Add(new int[] { 1, 2, 4, 7, 0, 6, 4, 8, 11, 13, 14, 2});
-        list.Add(new int[] { 1, 3, 2, 8, 5, 4, 14, 11, 9, 7, 6, 8});
         return list;
     }
 
