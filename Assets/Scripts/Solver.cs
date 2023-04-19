@@ -26,6 +26,8 @@ public class Solver : MonoBehaviour
 
     TimeSpan elapsedTime;
 
+    bool timerFinished;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,7 +77,6 @@ public class Solver : MonoBehaviour
         }
         return seq;
     }
-
 
     public void makeSeq3(int seq, int len){
         printSeq(seq,len);
@@ -237,7 +238,7 @@ public class Solver : MonoBehaviour
     public void sendSignalStart(int numero_Solver)
     {
         TimerCallback startCallback = new TimerCallback(StartTimer);
-        Timer startTimer = new Timer(startCallback, null, 0, Timeout.Infinite);/*
+        Timer startTimer = new Timer(startCallback, null, 0, Timeout.Infinite);
         switch(numero_Solver)
         {
             
@@ -247,7 +248,7 @@ public class Solver : MonoBehaviour
             case 31: game.switchContinueSolveV31(); break;
             case 4: game.switchContinueSolveV4();break;
             case 5: game.switchContinueSolveV5(); break;
-        }*/
+        }
     }
 
     public void sendSignalStop()
@@ -271,7 +272,11 @@ public class Solver : MonoBehaviour
         print("on arrête le chrono !");
         stopwatch.Stop();
         elapsedTime = stopwatch.Elapsed;
+        FileStream fappend = File.Open(@"D:\ProjetUnity/resultatV.txt", FileMode.Append); // will append to end of file
+        StreamWriter sw = new StreamWriter(fappend);
+        sw.WriteLine("Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
         print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
+        sw.Close();
     }
 
     // Update is called once per frame
@@ -289,6 +294,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV1();
                 // Créer le signal d'arrêt
@@ -310,6 +316,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV2();
                 //return (seq,len);
@@ -330,6 +337,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV3();
                 //return (seq,len);
@@ -350,6 +358,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV31();
                 //return (seq,len);
@@ -370,6 +379,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV4();
                 //return (seq,len);
@@ -400,6 +410,7 @@ public class Solver : MonoBehaviour
                         finalSeq=a;
                         finalLen=1;
                         sendSignalStop();
+                        timerFinished=true;
                         game.restartPosition();
                         game.switchContinueSolveV5();
                         //return (seq,len);
@@ -421,6 +432,7 @@ public class Solver : MonoBehaviour
                     finalSeq=seq*16+a;
                     finalLen=len+1;
                     sendSignalStop();   
+                    timerFinished=true;
                     game.restartPosition();
                     game.switchContinueSolveV5();
                     //return (seq,len);
@@ -443,21 +455,20 @@ public class Solver : MonoBehaviour
 
     public void PlaySeeds(int vSolveur)
     {
-        String fn = @"C:\Users\Lenovo\Desktop\pdp\Ricochet-Robot-Unity\Assets\Scripts/goals/resultatV.txt";
-        StreamWriter sw = new StreamWriter(fn);
         List<int[]> seeds = InitSeeds();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
+            timerFinished = false;
             //Changing world according to seed
             game.changeBoard( seeds[i][0], seeds[i][1], seeds[i][2], seeds[i][3]);
+            
             //Reseting robots' positions
             List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
-            game.setPositionRobot(positions);
+            game.SetPositionDefaultRobots(positions);
             sendSignalStart(vSolveur);
-            sw.WriteLine("Seed : " + i + ", Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
+            while (!timerFinished && stopwatch.Elapsed <= TimeSpan.FromMinutes(1)){}
+            sendSignalStop();
             //sequence et longeur dans finalLen et finalSec
-            sw.Close();
         }
-        sw.Close();
     }
 
     public void test()
@@ -472,6 +483,7 @@ public class Solver : MonoBehaviour
     private List<int[]> InitSeeds()
     {
         List<int[]> list = new List<int[]>();
+        list.Add(new int[] { 2, 7, 1, 8, 0, 0, 10, 0, 9, 0, 0, 1 });
         list.Add(new int[] { 4, 5, 2, 3, 12, 9, 10, 6, 14, 13, 4, 12 });
         list.Add(new int[] { 4, 1, 6, 7, 4, 13, 14, 15, 15, 5, 8, 9 });
         list.Add(new int[] { 4, 1, 2, 3, 9, 10, 12, 10, 11, 6, 13, 5 });

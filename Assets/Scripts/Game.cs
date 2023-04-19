@@ -114,6 +114,20 @@ public class Game : MonoBehaviour
             }
             //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
+        pileGoals = new Stack<GameObject>(goals);
+        currentGoal = pileGoals.Pop();
+        //print("goal init = "+ currentGoal);
+        currentGoalText.text = currentGoal.name;
+        currentRobotGoal = GetCurrentRobotGoal();
+
+        switch(currentGoal.GetComponent<GoalMan>().getColor())
+            {
+                case 0: currentGoalText.color = Color.blue; break;
+                case 3: currentGoalText.color = Color.yellow; break;
+                case 2: currentGoalText.color = Color.green; break;
+                case 1: currentGoalText.color = Color.red; break;
+
+            }
     }
 
     private void addGoal(string name, int x, int y){
@@ -455,6 +469,18 @@ public class Game : MonoBehaviour
         coupText.text = nbrCoups.ToString();
     }
 
+    public void SetPositionDefaultRobots(List<(int, int)> positions)
+    {
+        for(int i=0; i<4;i++)
+        {
+            (int x,int y) = positions[i];
+            robots[i].GetComponent<RobotMan>().SetXInit(x);
+            robots[i].GetComponent<RobotMan>().SetYInit(y);
+            SetPositionDefaultRobot(robots[i]);
+        }
+        
+    }
+
     public void SetPositionDefaultRobot(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
@@ -469,6 +495,7 @@ public class Game : MonoBehaviour
 
     public bool hasWin(GameObject rob)
     {
+
         RobotMan rm = rob.GetComponent<RobotMan>();
         int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
         int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
