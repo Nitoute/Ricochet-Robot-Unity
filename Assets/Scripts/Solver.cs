@@ -501,12 +501,10 @@ public class Solver : MonoBehaviour
     public void changeSeed()
     {
         int len = seeds.Count;
-        print(len + "prev cur = " + curSeed);
         if (curSeed < len-1)
         {
             
             curSeed = curSeed +1;
-            print(len + "new cur = " + curSeed);
         }else{
             curSeed = 0;
         }
