@@ -53,7 +53,7 @@ public class Game : MonoBehaviour
         addGoals();
         //Robots
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",10,0), CreateRobot("robot_vert",9,0), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
+            CreateRobot("robot_bleue",0,0), CreateRobot("robot_rouge",0,1), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
         };
 
         //Met les robots dans leur cases
@@ -61,8 +61,11 @@ public class Game : MonoBehaviour
             SetPositionRobotInitial(robots[i]);
         }
 
-        
-
+        pileGoals = new Stack<GameObject>(goals);
+        currentGoal = pileGoals.Pop();
+        //print("goal init = "+ currentGoal);
+        currentGoalText.text = currentGoal.name;
+        currentRobotGoal = GetCurrentRobotGoal();
     }
 
 
@@ -111,19 +114,6 @@ public class Game : MonoBehaviour
             }
             //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
-        pileGoals = new Stack<GameObject>(goals);
-        currentGoal = pileGoals.Pop();
-        //print("goal init = "+ currentGoal);
-        currentGoalText.text = currentGoal.name;
-        currentRobotGoal = GetCurrentRobotGoal();
-        switch(currentGoal.GetComponent<GoalMan>().getColor())
-            {
-                case 0: currentGoalText.color = Color.blue; break;
-                case 3: currentGoalText.color = Color.yellow; break;
-                case 2: currentGoalText.color = Color.green; break;
-                case 1: currentGoalText.color = Color.red; break;
-
-            }
     }
 
     private void addGoal(string name, int x, int y){
@@ -485,8 +475,6 @@ public class Game : MonoBehaviour
 
         int Yrob = rob.GetComponent<RobotMan>().GetYBoard();
         int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
-
-        print("robot en x = "+ Xrob + " y = " + Yrob + " Objectif en x = " + Xobj + " y = " + Yobj);
 
         switch (rob.name)
         {
