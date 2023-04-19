@@ -519,6 +519,7 @@ public class Solver : MonoBehaviour
     private List<int[]> InitSeeds()
     {
         List<int[]> list = new List<int[]>();
+        //Supprimez les seeds qui vous concernent pas, gardez que les 10 seeds qui sont à vous
         //Moad
         list.Add(new int[] { 1, 3, 2, 8, 5, 4, 14, 11, 9, 7, 6, 8 });
         list.Add(new int[] { 6, 5, 7, 8, 13, 5, 14, 5, 6, 3, 10, 12 });
