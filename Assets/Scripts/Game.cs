@@ -53,7 +53,7 @@ public class Game : MonoBehaviour
         addGoals();
         //Robots
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",0,0), CreateRobot("robot_rouge",0,1), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
+            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",10, 0), CreateRobot("robot_vert",9, 0), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
         };
 
         //Met les robots dans leur cases

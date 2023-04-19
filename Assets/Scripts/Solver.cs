@@ -85,7 +85,7 @@ public class Solver : MonoBehaviour
     }
 
     public void makeSeq3(int seq, int len){
-        printSeq(seq,len);
+        //printSeq(seq,len);
         int tmp=seq%16;
         int prec=(seq/16)%16;
         if (len==1){
@@ -96,10 +96,10 @@ public class Solver : MonoBehaviour
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
                 List<(int,int)> pos =game.getPositionRobots();
-                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
+                    //print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 makeMove1(tmp);
                 pos =game.getPositionRobots();
-                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
+                    //print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 posMap[(seq,len)]=game.getPositionRobots();
             }
             catch (KeyNotFoundException){}
@@ -508,6 +508,7 @@ public class Solver : MonoBehaviour
         }else{
             curSeed = 0;
         }
+        print(curSeed);
         game.changeBoard( seeds[curSeed][0], seeds[curSeed][1], seeds[curSeed][2], seeds[curSeed][3]);
 
         //Reseting robots' positions
