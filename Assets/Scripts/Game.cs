@@ -66,7 +66,6 @@ public class Game : MonoBehaviour
         //print("goal init = "+ currentGoal);
         currentGoalText.text = currentGoal.name;
         currentRobotGoal = GetCurrentRobotGoal();
-        //solverScript.PlaySeeds(5);
 
     }
 

@@ -9,6 +9,7 @@ using System.IO;
 public class Solver : MonoBehaviour
 {
     static Stopwatch stopwatch = new Stopwatch();
+    private static AutoResetEvent AutoEvent = new AutoResetEvent(false); 
 
     public GameObject controller;
     private GameObject currentRobot;
@@ -236,7 +237,7 @@ public class Solver : MonoBehaviour
     public void sendSignalStart(int numero_Solver)
     {
         TimerCallback startCallback = new TimerCallback(StartTimer);
-        Timer startTimer = new Timer(startCallback, null, 0, Timeout.Infinite);
+        Timer startTimer = new Timer(startCallback, null, 0, Timeout.Infinite);/*
         switch(numero_Solver)
         {
             
@@ -246,7 +247,7 @@ public class Solver : MonoBehaviour
             case 31: game.switchContinueSolveV31(); break;
             case 4: game.switchContinueSolveV4();break;
             case 5: game.switchContinueSolveV5(); break;
-        }
+        }*/
     }
 
     public void sendSignalStop()
@@ -439,7 +440,7 @@ public class Solver : MonoBehaviour
     }
 
     
-    public (int,int) SolveV1(){
+    public void SolveV1(){
         int LocalSeq=0;
         int LocalLen=0;
         game.SetSolverRunning(false);
@@ -451,10 +452,10 @@ public class Solver : MonoBehaviour
                 print(LocalLen);
                 finalSeq=LocalSeq;
                 finalLen=LocalLen;
-                sendSignalStop();
                 game.restartPosition();
                 game.SetSolverRunning(true);
-                return (LocalSeq,LocalLen);
+                AutoEvent.Set();
+                break;
             }
             (LocalSeq,LocalLen)=nextSeq(LocalSeq,LocalLen);
         }
@@ -641,6 +642,28 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 0, 5, 2, 7, 5, 5, 11, 5, 9, 15, 0, 10 });
         list.Add(new int[] { 4, 5, 2, 3, 9, 13, 11, 8, 2, 6, 3, 7 });
         return list;
+    }
+
+    public void PlaySeeds2(int vSolveur)
+    {   
+        String fn = @"C:\Users\Lenovo\Desktop\pdp\Ricochet-Robot-Unity\Assets\Scripts/goals/resultatV.txt";
+        StreamWriter sw = new StreamWriter(fn);
+        List<int[]> seeds = InitSeeds();
+        for (int i = 0; i < 1; i++) {
+            //Changing world according to seed
+            game.changeBoard( seeds[i][0], seeds[i][1], seeds[i][2], seeds[i][3]);
+            //Reseting robots' positions
+            List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
+            game.setPositionRobot(positions);
+            Thread t = new Thread(SolveV1);  
+            sendSignalStart(1);
+            t.Start();  
+            AutoEvent.WaitOne();  
+            sendSignalStop();
+            sw.WriteLine("Seed : " + i + ", Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
+            //sequence et longeur dans finalLen et finalSec
+        }
+        sw.Close();
     }
 
 }
