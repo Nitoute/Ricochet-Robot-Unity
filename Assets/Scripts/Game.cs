@@ -53,7 +53,7 @@ public class Game : MonoBehaviour
         addGoals();
         //Robots
         robots = new GameObject[]{
-            CreateRobot("robot_bleue",0,0), CreateRobot("robot_rouge",0,1), CreateRobot("robot_vert",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
+            CreateRobot("robot_bleue",rnd.Next(0, 16),rnd.Next(0, 16)), CreateRobot("robot_rouge",10, 0), CreateRobot("robot_vert",9, 0), CreateRobot("robot_jaune",rnd.Next(0, 16),rnd.Next(0, 16))
         };
 
         //Met les robots dans leur cases
@@ -66,8 +66,6 @@ public class Game : MonoBehaviour
         //print("goal init = "+ currentGoal);
         currentGoalText.text = currentGoal.name;
         currentRobotGoal = GetCurrentRobotGoal();
-
-
     }
 
 
@@ -116,6 +114,20 @@ public class Game : MonoBehaviour
             }
             //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
+        pileGoals = new Stack<GameObject>(goals);
+        currentGoal = pileGoals.Pop();
+        //print("goal init = "+ currentGoal);
+        currentGoalText.text = currentGoal.name;
+        currentRobotGoal = GetCurrentRobotGoal();
+
+        switch(currentGoal.GetComponent<GoalMan>().getColor())
+            {
+                case 0: currentGoalText.color = Color.blue; break;
+                case 3: currentGoalText.color = Color.yellow; break;
+                case 2: currentGoalText.color = Color.green; break;
+                case 1: currentGoalText.color = Color.red; break;
+
+            }
     }
 
     private void addGoal(string name, int x, int y){
@@ -457,6 +469,18 @@ public class Game : MonoBehaviour
         coupText.text = nbrCoups.ToString();
     }
 
+    public void SetPositionDefaultRobots(List<(int, int)> positions)
+    {
+        for(int i=0; i<4;i++)
+        {
+            (int x,int y) = positions[i];
+            robots[i].GetComponent<RobotMan>().SetXInit(x);
+            robots[i].GetComponent<RobotMan>().SetYInit(y);
+            SetPositionDefaultRobot(robots[i]);
+        }
+        
+    }
+
     public void SetPositionDefaultRobot(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
@@ -471,6 +495,7 @@ public class Game : MonoBehaviour
 
     public bool hasWin(GameObject rob)
     {
+
         RobotMan rm = rob.GetComponent<RobotMan>();
         int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
         int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
@@ -603,7 +628,7 @@ public class Game : MonoBehaviour
         return false;
     }*/
 
-    private void changeBoard(int i, int j, int x, int y)
+    public void changeBoard(int i, int j, int x, int y)
     {
         DestroyAllWalls();
         DestroyAllGoals();

@@ -3,10 +3,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
+using static UnityEditor.PlayerSettings;
+using System.IO;
+using System.Threading.Tasks;
 
 public class Solver : MonoBehaviour
 {
     static Stopwatch stopwatch = new Stopwatch();
+    private static AutoResetEvent AutoEvent = new AutoResetEvent(false); 
 
     public GameObject controller;
     private GameObject currentRobot;
@@ -21,9 +25,18 @@ public class Solver : MonoBehaviour
     int finalSeq=-1;
     int finalLen=-1;
 
+    TimeSpan elapsedTime;
+
+    bool timerFinished;
+
+    //pour les seeds :
+    List<int[]> seeds;
+    int curSeed = 0;
+
     // Start is called before the first frame update
     void Start()
     {
+        seeds = InitSeeds();
         controller = GameObject.FindGameObjectWithTag("GameController");
         game = controller.GetComponent<Game>();
     }
@@ -71,23 +84,22 @@ public class Solver : MonoBehaviour
         return seq;
     }
 
-
     public void makeSeq3(int seq, int len){
-        printSeq(seq,len);
+        //printSeq(seq,len);
         int tmp=seq%16;
         int prec=(seq/16)%16;
         if (len==1){
             makeMove1(tmp%16);
             posMap[(seq,len)]=game.getPositionRobots();
         }
-        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
+        else if (len!=0 && !(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
                 List<(int,int)> pos =game.getPositionRobots();
-                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
+                    //print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 makeMove1(tmp);
                 pos =game.getPositionRobots();
-                    print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
+                    //print(pos[0]+","+pos[1]+","+pos[2]+","+pos[3]);
                 posMap[(seq,len)]=game.getPositionRobots();
             }
             catch (KeyNotFoundException){}
@@ -102,7 +114,7 @@ public class Solver : MonoBehaviour
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (len!=0 && !(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
                 makeMove1(tmp);
@@ -137,7 +149,7 @@ public class Solver : MonoBehaviour
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (!(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))&& !(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),15-game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),(dir+2)%4))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (len!=0 && !(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))&& !(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),15-game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),(dir+2)%4))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
                 makeMove1(tmp);
@@ -261,12 +273,16 @@ public class Solver : MonoBehaviour
         
     }
 
-    static void StopTimer(object state)
+     void StopTimer(object state)
     {
         print("on arrête le chrono !");
         stopwatch.Stop();
-        TimeSpan elapsedTime = stopwatch.Elapsed;
+        elapsedTime = stopwatch.Elapsed;
+        FileStream fappend = File.Open(@"D:\ProjetUnity/resultatV.txt", FileMode.Append); // will append to end of file
+        StreamWriter sw = new StreamWriter(fappend);
+        sw.WriteLine("Plateau numéro : "+curSeed+ " Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
         print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
+        sw.Close();
     }
 
     // Update is called once per frame
@@ -284,6 +300,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV1();
                 // Créer le signal d'arrêt
@@ -305,6 +322,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV2();
                 //return (seq,len);
@@ -325,6 +343,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV3();
                 //return (seq,len);
@@ -345,6 +364,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV31();
                 //return (seq,len);
@@ -365,6 +385,7 @@ public class Solver : MonoBehaviour
                 finalSeq=seq;
                 finalLen=len;
                 sendSignalStop();
+                timerFinished=true;
                 game.restartPosition();
                 game.switchContinueSolveV4();
                 //return (seq,len);
@@ -395,6 +416,7 @@ public class Solver : MonoBehaviour
                         finalSeq=a;
                         finalLen=1;
                         sendSignalStop();
+                        timerFinished=true;
                         game.restartPosition();
                         game.switchContinueSolveV5();
                         //return (seq,len);
@@ -416,6 +438,7 @@ public class Solver : MonoBehaviour
                     finalSeq=seq*16+a;
                     finalLen=len+1;
                     sendSignalStop();   
+                    timerFinished=true;
                     game.restartPosition();
                     game.switchContinueSolveV5();
                     //return (seq,len);
@@ -434,30 +457,125 @@ public class Solver : MonoBehaviour
         }
     }
 
+    public async void WaitFor15Minutes()
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromMinutes(1), new CancellationTokenSource().Token);
+        }
+        catch (TaskCanceledException)
+        {
+            timerFinished = false;
+            sendSignalStop();
+        }
+    }
+
+    public void PlaySeeds(int vSolveur)
+    {
+        List<int[]> seeds = InitSeeds();
+        for (int i = 0; i < 2; i++) {
+            timerFinished = false;
+            //Changing world according to seed
+            game.changeBoard( seeds[i][0], seeds[i][1], seeds[i][2], seeds[i][3]);
+            
+            //Reseting robots' positions
+            List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
+            game.SetPositionDefaultRobots(positions);
+            sendSignalStart(vSolveur);
+            WaitFor15Minutes();
+            while (!timerFinished){}
+            sendSignalStop();
+            //sequence et longeur dans finalLen et finalSec
+        }
+    }
+
+    public void test()
+    {
+        String fn = @"C:\Users\Lenovo\Desktop\pdp\Ricochet-Robot-Unity\Assets\Scripts/goals/resultatV.txt";
+        StreamWriter sw = new StreamWriter(fn);
+        sw.WriteLine("Seed");
+        sw.WriteLine("seed2");
+        sw.Close();
+    }
+    
+    public void changeSeed()
+    {
+        int len = seeds.Count;
+        if (curSeed < len-1)
+        {
+            
+            curSeed = curSeed +1;
+        }else{
+            curSeed = 0;
+        }
+        print(curSeed);
+        game.changeBoard( seeds[curSeed][0], seeds[curSeed][1], seeds[curSeed][2], seeds[curSeed][3]);
+
+        //Reseting robots' positions
+        List<(int, int)> positions = new List<(int, int)>() { (seeds[curSeed][4], seeds[curSeed][5]), (seeds[curSeed][6], seeds[curSeed][7]), (seeds[curSeed][8], seeds[curSeed][9]), (seeds[curSeed][10], seeds[curSeed][11])};
+        game.SetPositionDefaultRobots(positions);
+    }
+
     private List<int[]> InitSeeds()
     {
         List<int[]> list = new List<int[]>();
-        list.Add(new int[] { 4, 5, 2, 3, 12, 9, 10, 6, 14, 13, 4, 12 });
-        list.Add(new int[] { 4, 1, 6, 7, 4, 13, 14, 15, 15, 5, 8, 9 });
-        list.Add(new int[] { 4, 1, 2, 3, 9, 10, 12, 10, 11, 6, 13, 5 });
-        list.Add(new int[] { 0, 5, 2, 7, 4, 11, 12, 4, 12, 8, 2, 11 });
-        list.Add(new int[] { 4, 1, 6, 7, 9, 5, 15, 2, 10, 13, 11, 0 });
-        list.Add(new int[] { 0, 5, 2, 3, 12, 4, 1, 6, 13, 2, 9, 3 });
-        list.Add(new int[] { 0, 1, 6, 7, 10, 3, 13, 13, 14, 6, 11, 14 });
-        list.Add(new int[] { 4, 1, 2, 3, 2, 13, 8, 9, 0, 12, 13, 3 });
-        list.Add(new int[] { 4, 1, 2, 7, 0, 8, 2, 10, 15, 0, 2, 15 });
-        list.Add(new int[] { 4, 1, 6, 3, 15, 1, 12, 12, 8, 4, 6, 10 });
-        list.Add(new int[] { 0, 1, 2, 7, 5, 10, 9, 7, 1, 9, 5, 4 });
-        list.Add(new int[] { 4, 5, 6, 3, 0, 11, 9, 5, 3, 9, 10, 5 });
-        list.Add(new int[] { 4, 1, 6, 3, 14, 2, 1, 2, 2, 6, 1, 15 });
-        list.Add(new int[] { 0, 1, 2, 3, 13, 9, 4, 10, 1, 0, 9, 11 });
-        list.Add(new int[] { 4, 5, 2, 7, 4, 0, 1, 6, 15, 13, 0, 0 });
-        list.Add(new int[] { 0, 1, 6, 7, 8, 15, 5, 6, 7, 9, 1, 10 });
-        list.Add(new int[] { 4, 5, 2, 7, 7, 15, 5, 11, 13, 4, 12, 5 });
-        list.Add(new int[] { 0, 5, 2, 3, 10, 1, 4, 14, 2, 3, 6, 8 });
-        list.Add(new int[] { 4, 1, 2, 7, 9, 13, 1, 1, 9, 13, 12, 5 });
-        list.Add(new int[] { 0, 5, 2, 7, 5, 5, 11, 5, 9, 15, 0, 10 });
-        list.Add(new int[] { 4, 5, 2, 3, 9, 13, 11, 8, 2, 6, 3, 7 });
+        //Supprimez les seeds qui vous concernent pas, gardez que les 10 seeds qui sont à vous
+        //Moad
+        list.Add(new int[] { 1, 3, 2, 8, 5, 4, 14, 11, 9, 7, 6, 8 });
+        list.Add(new int[] { 6, 5, 7, 8, 13, 5, 14, 5, 6, 3, 10, 12 });
+        list.Add(new int[] { 1, 2, 3, 8, 7, 2, 11, 8, 7, 6, 4, 9});
+        list.Add(new int[] { 5, 8, 6, 7, 4, 11, 11, 13, 10, 12, 6, 7});
+        list.Add(new int[] { 3, 5, 4, 2, 8, 14, 7, 5, 3, 11, 12, 6});
+        list.Add(new int[] { 4, 2, 7, 1, 3, 10, 11, 7, 11, 10, 2, 4});
+        list.Add(new int[] { 1, 2, 8, 7, 5, 2, 3, 5, 6, 5, 13, 7});
+        list.Add(new int[] { 6, 1, 3, 8, 1, 15, 11, 8, 7, 0, 6, 2});
+        list.Add(new int[] { 4, 3, 5, 2, 8, 12, 4, 7, 15, 4, 5, 13});
+        list.Add(new int[] { 2, 8, 1, 3, 7, 15, 12, 0, 5, 0, 11, 5});
+        //Moad (2)
+        list.Add(new int[] { 2, 4, 1, 7, 0, 10, 6, 3, 12, 2, 5, 9});
+        list.Add(new int[] { 1, 2, 7, 4, 0, 13, 11, 5, 9, 5, 4, 2});
+        list.Add(new int[] { 4, 7, 2, 5, 2, 6, 3, 4, 9, 12, 9, 6});
+        list.Add(new int[] { 1, 8, 2, 3, 3, 6, 13, 9, 13, 12, 2, 9});
+        list.Add(new int[] { 1, 7, 2, 4, 12, 13, 9, 12, 12, 5, 12, 7});
+        list.Add(new int[] { 8, 6, 7, 5, 3, 1, 2, 11, 2, 14, 3, 6});
+        list.Add(new int[] { 2, 3, 5, 8, 2, 5, 13, 0, 9, 10, 13, 11});
+        list.Add(new int[] { 8, 7, 2, 5, 5, 14, 7, 8, 10, 12, 5, 3});
+        list.Add(new int[] { 3, 2, 5, 4, 13, 10, 6, 2, 11, 6, 5, 15});
+        list.Add(new int[] { 4, 6, 7, 5, 8, 12, 8, 14, 11, 3, 1, 0});
+        //Hamza
+        list.Add(new int[] { 6, 4, 1, 3, 0, 9, 12, 13, 9, 15, 4, 11});
+        list.Add(new int[] { 5, 4, 7, 2, 0, 10, 12, 10, 8, 8, 8, 6});
+        list.Add(new int[] { 1, 8, 2, 7, 5, 5, 7, 15, 2, 14, 5, 11});
+        list.Add(new int[] { 3, 2, 1, 4, 11, 15, 13, 11, 2, 13, 11, 2});
+        list.Add(new int[] { 3, 5, 2, 8, 2, 15, 6, 12, 8, 5, 11, 11});
+        list.Add(new int[] { 8, 2, 7, 5, 4, 0, 1, 1, 14, 5, 0, 14});
+        list.Add(new int[] { 5, 4, 2, 3, 11, 3, 6, 0, 13, 6, 1, 3});
+        list.Add(new int[] { 6, 8, 7, 1, 1, 2, 12, 2, 12, 0, 15, 11});
+        list.Add(new int[] { 2, 1, 3, 8, 5, 11, 4, 4, 10, 10, 2, 1});
+        list.Add(new int[] { 2, 8, 1, 7, 7, 11, 0, 10, 15, 3, 10, 6});
+        //Vincent
+        list.Add(new int[] { 1, 6, 3, 4, 11, 10, 0, 3, 6, 1, 3, 15});
+        list.Add(new int[] { 8, 2, 5, 7, 0, 14, 15, 0, 0, 13, 4, 2});
+        list.Add(new int[] { 8, 3, 6, 5, 1, 5, 3, 1, 3, 0, 11, 2 });
+        list.Add(new int[] { 2, 8, 7, 5, 0, 7, 13, 5, 13, 8, 0, 1});
+        list.Add(new int[] { 5, 6, 4, 7, 9, 14, 0, 2, 14, 11, 3, 1});
+        list.Add(new int[] { 5, 4, 6, 3, 12, 6, 0, 0, 1, 6, 15, 3});
+        list.Add(new int[] { 2, 4, 5, 3, 4, 13, 2, 0, 2, 13, 15, 0});
+        list.Add(new int[] { 1, 2, 3, 4, 11, 10, 15, 3, 3, 0, 3, 6});
+        list.Add(new int[] { 4, 3, 6, 5, 8, 1, 7, 1, 15, 2, 6, 4});
+        list.Add(new int[] { 6, 1, 8, 7, 2, 0, 7, 1, 3, 2, 6, 11});
+        //Radja
+        list.Add(new int[] { 5, 2, 7, 8, 7, 6, 1, 14, 0, 15, 4, 15});
+        list.Add(new int[] { 2, 4, 1, 3, 13, 7, 7, 14, 5, 1, 13, 2});
+        list.Add(new int[] { 6, 4, 3, 1, 7, 12, 14, 10, 2, 12, 3, 3});
+        list.Add(new int[] { 8, 3, 6, 5, 2, 12, 2, 1, 6, 9, 5, 2});
+        list.Add(new int[] { 1, 4, 2, 7, 8, 7, 10, 1, 15, 10, 7, 0});
+        list.Add(new int[] { 2, 1, 3, 4, 6, 1, 9, 9, 5, 9, 14, 2});
+        list.Add(new int[] { 4, 2, 5, 7, 7, 7, 10, 9, 13, 10, 7, 1});
+        list.Add(new int[] { 2, 1, 4, 7, 12, 13, 3, 15, 5, 8, 4, 3});
+        list.Add(new int[] { 2, 3, 4, 1, 13, 1, 9, 10, 11, 7, 9, 9});
+        list.Add(new int[] { 1, 2, 4, 7, 0, 6, 4, 8, 11, 13, 14, 2});
         return list;
     }
+
 }
