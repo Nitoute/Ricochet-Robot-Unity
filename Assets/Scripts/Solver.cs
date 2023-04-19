@@ -5,6 +5,7 @@ using System.Threading;
 using System.Diagnostics;
 using static UnityEditor.PlayerSettings;
 using System.IO;
+using System.Threading.Tasks;
 
 public class Solver : MonoBehaviour
 {
@@ -28,9 +29,14 @@ public class Solver : MonoBehaviour
 
     bool timerFinished;
 
+    //pour les seeds :
+    List<int[]> seeds;
+    int curSeed = 0;
+
     // Start is called before the first frame update
     void Start()
     {
+        seeds = InitSeeds();
         controller = GameObject.FindGameObjectWithTag("GameController");
         game = controller.GetComponent<Game>();
     }
@@ -451,12 +457,23 @@ public class Solver : MonoBehaviour
         }
     }
 
-
+    public async void WaitFor15Minutes()
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromMinutes(1), new CancellationTokenSource().Token);
+        }
+        catch (TaskCanceledException)
+        {
+            timerFinished = false;
+            sendSignalStop();
+        }
+    }
 
     public void PlaySeeds(int vSolveur)
     {
         List<int[]> seeds = InitSeeds();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
             timerFinished = false;
             //Changing world according to seed
             game.changeBoard( seeds[i][0], seeds[i][1], seeds[i][2], seeds[i][3]);
@@ -465,7 +482,8 @@ public class Solver : MonoBehaviour
             List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
             game.SetPositionDefaultRobots(positions);
             sendSignalStart(vSolveur);
-            while (!timerFinished && stopwatch.Elapsed <= TimeSpan.FromMinutes(1)){}
+            WaitFor15Minutes();
+            while (!timerFinished){}
             sendSignalStop();
             //sequence et longeur dans finalLen et finalSec
         }
@@ -478,6 +496,25 @@ public class Solver : MonoBehaviour
         sw.WriteLine("Seed");
         sw.WriteLine("seed2");
         sw.Close();
+    }
+    
+    public void changeSeed()
+    {
+        int len = seeds.Count;
+        print(len + "prev cur = " + curSeed);
+        if (curSeed < len-1)
+        {
+            
+            curSeed = curSeed +1;
+            print(len + "new cur = " + curSeed);
+        }else{
+            curSeed = 0;
+        }
+        game.changeBoard( seeds[curSeed][0], seeds[curSeed][1], seeds[curSeed][2], seeds[curSeed][3]);
+
+        //Reseting robots' positions
+        List<(int, int)> positions = new List<(int, int)>() { (seeds[curSeed][4], seeds[curSeed][5]), (seeds[curSeed][6], seeds[curSeed][7]), (seeds[curSeed][8], seeds[curSeed][9]), (seeds[curSeed][10], seeds[curSeed][11])};
+        game.SetPositionDefaultRobots(positions);
     }
 
     private List<int[]> InitSeeds()
