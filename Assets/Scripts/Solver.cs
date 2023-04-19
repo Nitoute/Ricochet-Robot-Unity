@@ -559,6 +559,16 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 4, 3, 6, 5, 8, 1, 7, 1, 15, 2, 6, 4});
         list.Add(new int[] { 6, 1, 8, 7, 2, 0, 7, 1, 3, 2, 6, 11});
         list.Add(new int[] { 5, 2, 7, 8, 7, 6, 1, 14, 0, 15, 4, 15});
+        list.Add(new int[] { 2, 4, 1, 3, 13, 7, 7, 14, 5, 1, 13, 2});
+        list.Add(new int[] { 6, 4, 3, 1, 7, 12, 14, 10, 2, 12, 3, 3});
+        list.Add(new int[] { 8, 3, 6, 5, 2, 12, 2, 1, 6, 9, 5, 2});
+        list.Add(new int[] { 1, 4, 2, 7, 8, 7, 10, 1, 15, 10, 7, 0});
+        list.Add(new int[] { 2, 1, 3, 4, 6, 1, 9, 9, 5, 9, 14, 2});
+        list.Add(new int[] { 4, 2, 5, 7, 7, 7, 10, 9, 13, 10, 7, 1});
+        list.Add(new int[] { 2, 1, 4, 7, 12, 13, 3, 15, 5, 8, 4, 3});
+        list.Add(new int[] { 2, 3, 4, 1, 13, 1, 9, 10, 11, 7, 9, 9});
+        list.Add(new int[] { 1, 2, 4, 7, 0, 6, 4, 8, 11, 13, 14, 2});
+        list.Add(new int[] { 1, 3, 2, 8, 5, 4, 14, 11, 9, 7, 6, 8});
         return list;
     }
 
