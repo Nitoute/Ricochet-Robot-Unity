@@ -140,6 +140,7 @@ public class Solver : MonoBehaviour
     }
 
      public int makeSeq4(int seq, int len){
+        
         int tmp=seq%16;
         int prec=(seq/16)%16;
         int pion=tmp/4;
@@ -149,12 +150,14 @@ public class Solver : MonoBehaviour
             posMap[(seq,len)]=game.getPositionRobots();
             return seq;
         }
-        else if (len!=0 && !(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))&& !(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),15-game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),(dir+2)%4))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
+        else if (len!=0 && !(prec==tmp|| (prec/4==tmp/4 && tmp%4==((prec+2)%4 )))){ // le coup que l'on souhaite ajouté n'est pas le meme ( ou l'opposé) que le coup précédent
             try {
                 game.setPositionRobot(posMap[(seq/16,len-1)]);
-                makeMove1(tmp);
-                posMap[(seq,len)]=game.getPositionRobots();
-                return seq;
+                if (!(game.board.isWallInPos(game.getRobot(pion).GetComponent<RobotMan>().GetXBoard(),15-game.getRobot(pion).GetComponent<RobotMan>().GetYBoard(),dir))){
+                    makeMove1(tmp);
+                    posMap[(seq,len)]=game.getPositionRobots();
+                    return seq;
+                }
             }
             catch (KeyNotFoundException){
                 int i=2;
@@ -278,7 +281,7 @@ public class Solver : MonoBehaviour
         print("on arrête le chrono !");
         stopwatch.Stop();
         elapsedTime = stopwatch.Elapsed;
-        FileStream fappend = File.Open(@"D:\ProjetUnity/resultatV.txt", FileMode.Append); // will append to end of file
+        FileStream fappend = File.Open(@"C:\Users\Lenovo\Desktop\pdp\Ricochet-Robot-Unity\resultatV4.txt", FileMode.Append); // will append to end of file
         StreamWriter sw = new StreamWriter(fappend);
         sw.WriteLine("Plateau numéro : "+curSeed+ " Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
         print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
@@ -306,9 +309,9 @@ public class Solver : MonoBehaviour
                 // Créer le signal d'arrêt
                 //return (seq,len);
             }
-            //yield return null;
+            else{
             (seq,len)=nextSeq(seq,len);
-            game.restartPosition();
+            game.restartPosition();}
         }
         else if(game.getContinueSolveV2()){
             finalSeq=-1;
@@ -327,9 +330,10 @@ public class Solver : MonoBehaviour
                 game.switchContinueSolveV2();
                 //return (seq,len);
             }
-            //yield return null;
+            
+            else{
             (seq,len)=nextSeq(seq,len);
-            game.restartPosition();
+            game.restartPosition();}
         }
         else if(game.getContinueSolveV3()){
             finalSeq=-1;
@@ -348,9 +352,10 @@ public class Solver : MonoBehaviour
                 game.switchContinueSolveV3();
                 //return (seq,len);
             }
-            //yield return null;
+            
+            else{
             (seq,len)=nextSeq(seq,len);
-            game.restartPosition();
+            game.restartPosition();}
         }
         else if(game.getContinueSolveV31()){
             finalSeq=-1;
@@ -369,9 +374,10 @@ public class Solver : MonoBehaviour
                 game.switchContinueSolveV31();
                 //return (seq,len);
             }
-            //yield return null;
+            
+            else{
             (seq,len)=nextSeq(seq,len);
-            game.restartPosition();
+            game.restartPosition();}
         }
         else if(game.getContinueSolveV4()){
             finalSeq=-1;
@@ -390,13 +396,15 @@ public class Solver : MonoBehaviour
                 game.switchContinueSolveV4();
                 //return (seq,len);
             }
-            //yield return null;
+            
+            else{
             (seq,len)=nextSeq(seq,len);
-            game.restartPosition();
+            game.restartPosition();}
         }
         else if(game.getContinueSolveV5()){
             finalSeq=-1;
             finalLen=-1;
+            bool stop=false;
             currentRobot = game.GetActiveRobot();
             if (finishMove.Count==0){
 // faire le calcul des dernier move
@@ -419,35 +427,38 @@ public class Solver : MonoBehaviour
                         timerFinished=true;
                         game.restartPosition();
                         game.switchContinueSolveV5();
+                        stop=true;
                         //return (seq,len);
                     }
                 }
             }
 
-
-            game.restartPosition();
-            seq=makeSeq4(seq,len);
-            //ajouté les mouv finaux a la fin
-            List<(int,int)> pos = game.getPositionRobots();
-            foreach(int a in finishMove){
-                game.setPositionRobot(pos);
-                makeMove1(a);
-                if(game.hasWin(currentRobot)){
-                    printSeq(seq*16+a,len+1);
-                    print(len+1);
-                    finalSeq=seq*16+a;
-                    finalLen=len+1;
-                    sendSignalStop();   
-                    timerFinished=true;
+                if (!stop){
+                game.restartPosition();
+                seq=makeSeq4(seq,len);
+                //ajouté les mouv finaux a la fin
+                List<(int,int)> pos = game.getPositionRobots();
+                foreach(int a in finishMove){
+                    game.setPositionRobot(pos);
+                    makeMove1(a);
+                    if(game.hasWin(currentRobot)){
+                        printSeq(seq*16+a,len+1);
+                        print(len+1);
+                        finalSeq=seq*16+a;
+                        finalLen=len+1;
+                        sendSignalStop();   
+                        timerFinished=true;
+                        game.restartPosition();
+                        game.switchContinueSolveV5();
+                        stop=true;
+                        break;
+                    }
+                }
+                if (!stop){
+                    (seq,len)=nextSeq(seq,len);
                     game.restartPosition();
-                    game.switchContinueSolveV5();
-                    //return (seq,len);
-                    break;
                 }
             }
-            //yield return null;
-            (seq,len)=nextSeq(seq,len);
-            game.restartPosition();
         }
         else{
             seq=0;
@@ -509,6 +520,7 @@ public class Solver : MonoBehaviour
             curSeed = 0;
         }
         print(curSeed);
+        print("("+seeds[curSeed][0]+","+seeds[curSeed][1]+","+seeds[curSeed][2]+","+seeds[curSeed][3]+","+seeds[curSeed][4]+","+seeds[curSeed][5]+","+seeds[curSeed][6]+","+seeds[curSeed][7]+","+seeds[curSeed][7]+","+seeds[curSeed][8]+","+seeds[curSeed][9]+","+seeds[curSeed][10]+","+seeds[curSeed][11]+")");
         game.changeBoard( seeds[curSeed][0], seeds[curSeed][1], seeds[curSeed][2], seeds[curSeed][3]);
 
         //Reseting robots' positions
@@ -520,7 +532,7 @@ public class Solver : MonoBehaviour
     {
         List<int[]> list = new List<int[]>();
         //Supprimez les seeds qui vous concernent pas, gardez que les 10 seeds qui sont à vous
-        //Moad
+        /*//Moad
         list.Add(new int[] { 1, 3, 2, 8, 5, 4, 14, 11, 9, 7, 6, 8 });
         list.Add(new int[] { 6, 5, 7, 8, 13, 5, 14, 5, 6, 3, 10, 12 });
         list.Add(new int[] { 1, 2, 3, 8, 7, 2, 11, 8, 7, 6, 4, 9});
@@ -552,7 +564,7 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 5, 4, 2, 3, 11, 3, 6, 0, 13, 6, 1, 3});
         list.Add(new int[] { 6, 8, 7, 1, 1, 2, 12, 2, 12, 0, 15, 11});
         list.Add(new int[] { 2, 1, 3, 8, 5, 11, 4, 4, 10, 10, 2, 1});
-        list.Add(new int[] { 2, 8, 1, 7, 7, 11, 0, 10, 15, 3, 10, 6});
+        list.Add(new int[] { 2, 8, 1, 7, 7, 11, 0, 10, 15, 3, 10, 6});*/
         //Vincent
         list.Add(new int[] { 1, 6, 3, 4, 11, 10, 0, 3, 6, 1, 3, 15});
         list.Add(new int[] { 8, 2, 5, 7, 0, 14, 15, 0, 0, 13, 4, 2});
@@ -563,7 +575,7 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 2, 4, 5, 3, 4, 13, 2, 0, 2, 13, 15, 0});
         list.Add(new int[] { 1, 2, 3, 4, 11, 10, 15, 3, 3, 0, 3, 6});
         list.Add(new int[] { 4, 3, 6, 5, 8, 1, 7, 1, 15, 2, 6, 4});
-        list.Add(new int[] { 6, 1, 8, 7, 2, 0, 7, 1, 3, 2, 6, 11});
+        list.Add(new int[] { 6, 1, 8, 7, 2, 0, 7, 1, 3, 2, 6, 11});/*
         //Radja
         list.Add(new int[] { 5, 2, 7, 8, 7, 6, 1, 14, 0, 15, 4, 15});
         list.Add(new int[] { 2, 4, 1, 3, 13, 7, 7, 14, 5, 1, 13, 2});
@@ -574,7 +586,28 @@ public class Solver : MonoBehaviour
         list.Add(new int[] { 4, 2, 5, 7, 7, 7, 10, 9, 13, 10, 7, 1});
         list.Add(new int[] { 2, 1, 4, 7, 12, 13, 3, 15, 5, 8, 4, 3});
         list.Add(new int[] { 2, 3, 4, 1, 13, 1, 9, 10, 11, 7, 9, 9});
-        list.Add(new int[] { 1, 2, 4, 7, 0, 6, 4, 8, 11, 13, 14, 2});
+        list.Add(new int[] { 1, 2, 4, 7, 0, 6, 4, 8, 11, 13, 14, 2});*/
+        list.Add(new int[] {  8, 7, 6, 1, 13, 3, 6, 5, 15, 0, 11, 12});
+        list.Add(new int[] {  7, 2, 5, 4, 0, 14, 0, 12, 12, 15, 5, 6});
+        list.Add(new int[] {  2, 3, 1, 4, 0, 3, 1, 3, 15, 8, 1, 12});
+        list.Add(new int[] {  1, 7, 8, 2, 3, 4, 1, 6, 14, 15, 2, 2});
+        list.Add(new int[] {  4, 2, 5, 7, 12, 7, 0, 1, 11, 8, 1, 8});
+        list.Add(new int[] {  5, 4, 7, 6, 2, 7, 2, 3, 2, 7, 2, 0});
+        list.Add(new int[] {  2, 5, 4, 7, 1, 3, 14, 0, 3, 5, 6, 2});
+        list.Add(new int[] {  5, 7, 4, 2, 5, 8, 10, 8, 5, 2, 11, 14});
+        list.Add(new int[] {  4, 2, 1, 3, 14, 6, 12, 12, 6, 11, 15, 12});
+        list.Add(new int[] {  3, 1, 8, 6, 1, 0, 4, 6, 11, 11, 15, 15});
+        list.Add(new int[] {  3, 4, 2, 5, 9, 10, 14, 3, 4, 5, 10, 6});
+        list.Add(new int[] {  5, 6, 3, 8, 7, 2, 2, 7, 11, 14, 12, 8});
+        list.Add(new int[] {  1, 4, 2, 3, 13, 8, 9, 4, 12, 5, 11, 1});
+        list.Add(new int[] {  7, 4, 2, 5, 5, 14, 15, 7, 14, 0, 6, 4});
+        list.Add(new int[] {  5, 7, 4, 2, 6, 11, 11, 8, 6, 8, 12, 9});
+        list.Add(new int[] {  2, 5, 7, 4, 9, 9, 13, 13, 13, 11, 14, 7});
+        list.Add(new int[] {  6, 3, 8, 5, 2, 4, 12, 13, 8, 15, 7, 2});
+        list.Add(new int[] {  5, 3, 4, 6, 1, 4, 13, 1, 0, 15, 10, 8});
+        list.Add(new int[] {  6, 3, 5, 8, 12, 13, 11, 1, 9, 4, 10, 0});
+        list.Add(new int[] {  4, 5, 6, 3, 15, 11, 14, 2, 11, 6, 11, 14});
+        list.Add(new int[] { 8,2,1,3,4,3,3,0,13,11,0,0});
         return list;
     }
 
