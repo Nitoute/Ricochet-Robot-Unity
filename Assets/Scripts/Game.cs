@@ -12,7 +12,9 @@ public class Game : MonoBehaviour
     public GameObject wallPhys;
     public GameObject goal;
     public GameObject solver;
+    public Dropdown dropdown;
     private Solver solverScript;
+    
 
     private GameObject[,] positions = new GameObject[16,16];
     private GameObject[] robots = new GameObject[4];
@@ -335,6 +337,45 @@ public class Game : MonoBehaviour
     public void switchContinueSolveV6(){
         continueSolveV6=!continueSolveV6;
         solverRunning=!solverRunning;
+    }
+
+    public void switchSolver()
+    {
+        int choiceSolver = dropdown.value+1;
+        print("Choice solver = " + choiceSolver);
+        switch (choiceSolver)
+        {
+            case 1:
+                continueSolveV1 = !continueSolveV1;
+                solverRunning = !solverRunning;
+                break;
+
+            case 2:
+                continueSolveV1 = !continueSolveV1;
+                solverRunning = !solverRunning;
+                break;
+
+            case 3:
+                continueSolveV1 = !continueSolveV1;
+                solverRunning = !solverRunning;
+                break;
+
+            case 4:
+                continueSolveV1 = !continueSolveV1;
+                solverRunning = !solverRunning;
+                break;
+
+            case 5:
+                continueSolveV1 = !continueSolveV1;
+                solverRunning = !solverRunning;
+                break;
+
+            case 6:
+                continueSolveV1 = !continueSolveV1;
+                solverRunning = !solverRunning;
+                break;
+
+        }
     }
 
     public bool getContinueSolveV1(){
