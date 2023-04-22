@@ -178,6 +178,10 @@ public class Game : MonoBehaviour
         return pos;
     }
 
+    public bool getSolverRunning(){
+        return solverRunning;
+    }
+
     public void setPositionRobot( List<(int,int)> pos){
         for (int i=0;i<4;i++){
             (int x,int y)=pos[i];
@@ -308,41 +312,9 @@ public class Game : MonoBehaviour
 
     public void switchSolver()
     {
-        int choiceSolver = dropdown.value+1;
+        int choiceSolver = dropdown.value;
         print("Choice solver = " + choiceSolver);
-        switch (choiceSolver)
-        {
-            case 1:
-                continueSolveV1 = !continueSolveV1;
-                solverRunning = !solverRunning;
-                break;
-
-            case 2:
-                continueSolveV1 = !continueSolveV1;
-                solverRunning = !solverRunning;
-                break;
-
-            case 3:
-                continueSolveV1 = !continueSolveV1;
-                solverRunning = !solverRunning;
-                break;
-
-            case 4:
-                continueSolveV1 = !continueSolveV1;
-                solverRunning = !solverRunning;
-                break;
-
-            case 5:
-                continueSolveV1 = !continueSolveV1;
-                solverRunning = !solverRunning;
-                break;
-
-            case 6:
-                continueSolveV1 = !continueSolveV1;
-                solverRunning = !solverRunning;
-                break;
-
-        }
+        SetSolverRunning(true);
     }
 
     public bool getContinueSolveV1(){
