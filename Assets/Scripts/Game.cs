@@ -22,6 +22,7 @@ public class Game : MonoBehaviour
     private int nbrCoups;
     public Text coupText;
     public Text currentGoalText;
+    public Image currentGoalImage;
     public GameObject gameOverScreen;
     public GameObject UIScreen;
 
@@ -65,7 +66,18 @@ public class Game : MonoBehaviour
         currentGoal = pileGoals.Pop();
         //print("goal init = "+ currentGoal);
         currentGoalText.text = currentGoal.name;
+        changeImageGoal();
         currentRobotGoal = GetCurrentRobotGoal();
+    }
+
+    private void changeImageGoal()
+    {
+        SpriteRenderer spriteRenderer = currentGoal.GetComponent<SpriteRenderer>();
+        // Copier le sprite
+        currentGoalImage.sprite = spriteRenderer.sprite;
+
+        // Copier la couleur
+        currentGoalImage.color = spriteRenderer.color;
     }
 
 
@@ -128,6 +140,7 @@ public class Game : MonoBehaviour
                 case 1: currentGoalText.color = Color.red; break;
 
             }
+        changeImageGoal();
     }
 
     private void addGoal(string name, int x, int y){
@@ -440,6 +453,7 @@ public class Game : MonoBehaviour
             nbrCoups = 0;
             coupText.text = nbrCoups.ToString();
             currentRobotGoal = GetCurrentRobotGoal();
+            changeImageGoal();
         }
         else
         {

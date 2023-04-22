@@ -3940,6 +3940,7 @@ MonoBehaviour:
   solver: {fileID: 0}
   coupText: {fileID: 1832528992}
   currentGoalText: {fileID: 463181180}
+  currentGoalImage: {fileID: 0}
   gameOverScreen: {fileID: 1704204712}
   UIScreen: {fileID: 1124257081}
 --- !u!4 &2137978035
