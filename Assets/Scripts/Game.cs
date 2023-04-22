@@ -34,14 +34,6 @@ public class Game : MonoBehaviour
     public Board board = new Board(2,7,1,8);
     private bool gameOver = false;
     private bool solverRunning = false;
-    private bool continueSolveV1 = false;
-    private bool continueSolveV2 = false;
-    private bool continueSolveV3 = false;
-    private bool continueSolveV31 = false;
-    private bool continueSolveV4 = false;
-    private bool continueSolveV5 = false;
-    private bool continueSolveV6 = false;
-
     private System.Random rnd = new System.Random();
 
     //Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
@@ -315,30 +307,6 @@ public class Game : MonoBehaviour
         int choiceSolver = dropdown.value;
         print("Choice solver = " + choiceSolver);
         solverRunning=!solverRunning;
-    }
-
-    public bool getContinueSolveV1(){
-        return continueSolveV1;
-    }
-
-    public bool getContinueSolveV2(){
-        return continueSolveV2;
-    }
-
-    public bool getContinueSolveV3(){
-        return continueSolveV3;
-    }
-    public bool getContinueSolveV31(){
-        return continueSolveV31;
-    }
-    public bool getContinueSolveV4(){
-        return continueSolveV4;
-    }
-    public bool getContinueSolveV5(){
-        return continueSolveV5;
-    }
-    public bool getContinueSolveV6(){
-        return continueSolveV6;
     }
 
     public bool PositionOnBoard(int x, int y)
