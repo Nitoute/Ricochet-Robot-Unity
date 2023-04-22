@@ -314,7 +314,7 @@ public class Game : MonoBehaviour
     {
         int choiceSolver = dropdown.value;
         print("Choice solver = " + choiceSolver);
-        SetSolverRunning(true);
+        solverRunning=!solverRunning;
     }
 
     public bool getContinueSolveV1(){
