@@ -601,22 +601,22 @@ public class Game : MonoBehaviour
     public bool isPionInDir(int x,int y, int dir){
         switch(dir){
             case 0:
-                if (y==15 && GetPosition(x,y+1)==null){
+                if (y==15 || GetPosition(x,y+1)==null){
                     return false;
                 }
             break;
             case 1:
-                if (x==15 && GetPosition(x+1,y)==null){
+                if (x==15 || GetPosition(x+1,y)==null){
                     return false;
                 }
             break;
             case 2:
-                if (y==0 && GetPosition(x,y-1)==null){
+                if (y==0 || GetPosition(x,y-1)==null){
                     return false;
                 }
             break;
             case 3:
-                if (x==0 && GetPosition(x-1,y)==null){
+                if (x==0 || GetPosition(x-1,y)==null){
                     return false;
                 }
             break;
