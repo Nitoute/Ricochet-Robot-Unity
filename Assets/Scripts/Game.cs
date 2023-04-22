@@ -38,6 +38,7 @@ public class Game : MonoBehaviour
     private bool continueSolveV31 = false;
     private bool continueSolveV4 = false;
     private bool continueSolveV5 = false;
+    private bool continueSolveV6 = false;
 
     private System.Random rnd = new System.Random();
 
@@ -331,6 +332,10 @@ public class Game : MonoBehaviour
         continueSolveV5=!continueSolveV5;
         solverRunning=!solverRunning;
     }
+    public void switchContinueSolveV6(){
+        continueSolveV6=!continueSolveV6;
+        solverRunning=!solverRunning;
+    }
 
     public bool getContinueSolveV1(){
         return continueSolveV1;
@@ -351,6 +356,9 @@ public class Game : MonoBehaviour
     }
     public bool getContinueSolveV5(){
         return continueSolveV5;
+    }
+    public bool getContinueSolveV6(){
+        return continueSolveV6;
     }
 
     public bool PositionOnBoard(int x, int y)
@@ -590,6 +598,31 @@ public class Game : MonoBehaviour
         return false;
     }
 
+    public bool isPionInDir(int x,int y, int dir){
+        switch(dir){
+            case 0:
+                if (y==15 && GetPosition(x,y+1)==null){
+                    return false;
+                }
+            break;
+            case 1:
+                if (x==15 && GetPosition(x+1,y)==null){
+                    return false;
+                }
+            break;
+            case 2:
+                if (y==0 && GetPosition(x,y-1)==null){
+                    return false;
+                }
+            break;
+            case 3:
+                if (x==0 && GetPosition(x-1,y)==null){
+                    return false;
+                }
+            break;
+        }
+        return true;
+    }
     //SOLVER V1 (VINCENT)
 
     /*public bool touchGoal(GameObject rob)
