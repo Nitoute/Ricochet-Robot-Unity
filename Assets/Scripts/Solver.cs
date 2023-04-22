@@ -282,21 +282,11 @@ public class Solver : MonoBehaviour
     }
 
     // Créer le signal de démarrage
-    public void sendSignalStart(int numero_Solver)
+    /*public void sendSignalStart(int numero_Solver)
     {
         TimerCallback startCallback = new TimerCallback(StartTimer);
         Timer startTimer = new Timer(startCallback, null, 0, Timeout.Infinite);
-        switch(numero_Solver)
-        {
-            
-            case 1: game.switchContinueSolveV1(); break;
-            case 2: game.switchContinueSolveV2(); break;
-            case 3: game.switchContinueSolveV3(); break;
-            case 31: game.switchContinueSolveV31(); break;
-            case 4: game.switchContinueSolveV4();break;
-            case 5: game.switchContinueSolveV5(); break;
-            case 6: game.switchContinueSolveV6(); break;
-        }
+        game.switchSolver(numero_Solver);
     }
 
     public void sendSignalStop()
@@ -304,18 +294,18 @@ public class Solver : MonoBehaviour
         TimerCallback stopCallback = new TimerCallback(StopTimer);
         Timer stopTimer = new Timer(stopCallback, null, Timeout.Infinite, Timeout.Infinite);
         stopTimer.Change(50, Timeout.Infinite);
-    }
+    }*/
 
-    static void StartTimer(object state)
+    /*static void StartTimer(object state)
     {
         //print("HEEEEYYYY");
         print("Début du chrono...");
         stopwatch.Reset();
         stopwatch.Start();
         
-    }
+    }*/
 
-     void StopTimer(object state)
+     /*void StopTimer(object state)
     {
         print("on arrête le chrono !");
         stopwatch.Stop();
@@ -325,7 +315,7 @@ public class Solver : MonoBehaviour
         sw.WriteLine("Plateau numéro : "+curSeed+ " Time : " + elapsedTime + ", nbMove : " + finalLen + ", Seq : " + finalSeq);
         print("Fin du chrono. Temps écoulé : " + elapsedTime.ToString());
         sw.Close();
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
@@ -341,10 +331,10 @@ public class Solver : MonoBehaviour
                 print(len);
                 finalSeq=seq;
                 finalLen=len;
-                sendSignalStop();
+                //sendSignalStop();
                 timerFinished=true;
                 game.restartPosition();
-                game.switchContinueSolveV1();
+                game.switchSolver();
                 // Créer le signal d'arrêt
                 //return (seq,len);
             }
@@ -363,10 +353,10 @@ public class Solver : MonoBehaviour
                 print(len);
                 finalSeq=seq;
                 finalLen=len;
-                sendSignalStop();
+                //sendSignalStop();
                 timerFinished=true;
-                game.restartPosition();
-                game.switchContinueSolveV2();
+                game.restartPosition(); 
+                game.switchSolver();
                 //return (seq,len);
             }
             
@@ -385,10 +375,10 @@ public class Solver : MonoBehaviour
                 print(len);
                 finalSeq=seq;
                 finalLen=len;
-                sendSignalStop();
+                //sendSignalStop();
                 timerFinished=true;
                 game.restartPosition();
-                game.switchContinueSolveV3();
+                game.switchSolver();
                 //return (seq,len);
             }
             
@@ -407,10 +397,10 @@ public class Solver : MonoBehaviour
                 print(len);
                 finalSeq=seq;
                 finalLen=len;
-                sendSignalStop();
+                //sendSignalStop();
                 timerFinished=true;
                 game.restartPosition();
-                game.switchContinueSolveV31();
+                game.switchSolver();
                 //return (seq,len);
             }
             
@@ -429,10 +419,10 @@ public class Solver : MonoBehaviour
                 print(len);
                 finalSeq=seq;
                 finalLen=len;
-                sendSignalStop();
+                //sendSignalStop();
                 timerFinished=true;
                 game.restartPosition();
-                game.switchContinueSolveV4();
+                game.switchSolver();
                 //return (seq,len);
             }
             
@@ -462,11 +452,11 @@ public class Solver : MonoBehaviour
                         print(1);
                         finalSeq=a;
                         finalLen=1;
-                        sendSignalStop();
+                        //sendSignalStop();
                         timerFinished=true;
                         game.restartPosition();
-                        game.switchContinueSolveV5();
-                        stop=true;
+                        game.switchSolver();
+                        stop =true;
                         //return (seq,len);
                     }
                 }
@@ -485,11 +475,11 @@ public class Solver : MonoBehaviour
                         print(len+1);
                         finalSeq=seq*16+a;
                         finalLen=len+1;
-                        sendSignalStop();   
+                        //sendSignalStop();   
                         timerFinished=true;
                         game.restartPosition();
-                        game.switchContinueSolveV5();
-                        stop=true;
+                        game.switchSolver();
+                        stop =true;
                         break;
                     }
                 }
@@ -521,11 +511,11 @@ public class Solver : MonoBehaviour
                         print(1);
                         finalSeq=a;
                         finalLen=1;
-                        sendSignalStop();
+                        //sendSignalStop();
                         timerFinished=true;
                         game.restartPosition();
-                        game.switchContinueSolveV6();
-                        stop=true;
+                        game.switchSolver();
+                        stop =true;
                         //return (seq,len);
                     }
                 }
@@ -544,11 +534,11 @@ public class Solver : MonoBehaviour
                         print(len+1);
                         finalSeq=seq*16+a;
                         finalLen=len+1;
-                        sendSignalStop();   
+                        //sendSignalStop();   
                         timerFinished=true;
                         game.restartPosition();
-                        game.switchContinueSolveV6();
-                        stop=true;
+                        game.switchSolver();
+                        stop =true;
                         break;
                     }
                 }
@@ -575,7 +565,7 @@ public class Solver : MonoBehaviour
         catch (TaskCanceledException)
         {
             timerFinished = false;
-            sendSignalStop();
+            //sendSignalStop();
         }
     }
 
@@ -590,10 +580,10 @@ public class Solver : MonoBehaviour
             //Reseting robots' positions
             List<(int, int)> positions = new List<(int, int)>() { (seeds[i][4], seeds[i][5]), (seeds[i][6], seeds[i][7]), (seeds[i][8], seeds[i][9]), (seeds[i][10], seeds[i][11])};
             game.SetPositionDefaultRobots(positions);
-            sendSignalStart(vSolveur);
+            //sendSignalStart(vSolveur);
             WaitFor15Minutes();
             while (!timerFinished){}
-            sendSignalStop();
+            //sendSignalStop();
             //sequence et longeur dans finalLen et finalSec
         }
     }

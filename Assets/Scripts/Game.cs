@@ -306,39 +306,6 @@ public class Game : MonoBehaviour
         return null;
     }
 
-    public void switchContinueSolveV1(){
-        continueSolveV1=!continueSolveV1;
-        solverRunning=!solverRunning;
-    }
-
-    public void switchContinueSolveV2(){
-        continueSolveV2=!continueSolveV2;
-        solverRunning=!solverRunning;
-    }
-
-    public void switchContinueSolveV3(){
-        continueSolveV3=!continueSolveV3;
-        solverRunning=!solverRunning;
-    }
-
-    public void switchContinueSolveV31(){
-        continueSolveV31=!continueSolveV31;
-        solverRunning=!solverRunning;
-    }
-
-    public void switchContinueSolveV4(){
-        continueSolveV4=!continueSolveV4;
-        solverRunning=!solverRunning;
-    }
-    public void switchContinueSolveV5(){
-        continueSolveV5=!continueSolveV5;
-        solverRunning=!solverRunning;
-    }
-    public void switchContinueSolveV6(){
-        continueSolveV6=!continueSolveV6;
-        solverRunning=!solverRunning;
-    }
-
     public void switchSolver()
     {
         int choiceSolver = dropdown.value+1;
@@ -407,56 +374,6 @@ public class Game : MonoBehaviour
         if (x<0 || y<0 || x>= positions.GetLength(0) || y>=positions.GetLength(1)) return false;
         return true;
     }
-
-    //Privilégier isWallInDir depuis classe board.
-    /*
-    public bool isWallInDir(int x, int y,int dirX, int dirY)
-    {
-        try
-        {
-            (int,int)[] li = walls[(x,y)];
-            //IDictionary<(int i, int j),(int right, int top)> li = board.getWallDict();
-            foreach ((int,int) item in li)
-            {
-                if (item==(dirX,dirY)){
-                    return true;
-                }
-            }
-            return false;
-        }
-        catch (KeyNotFoundException)
-        {
-            return false;
-        }
-    }
-
-    private void addWall(int x, int y, int dirX,int dirY,bool newWall)
-    {
-        if (walls.ContainsKey((x,y)))
-        {
-            (int,int)[] newListe = new (int,int)[walls[(x,y)].Length + 1];
-            for (int i = 0; i<newListe.Length-1; i++)
-            {
-                newListe[i] = walls[(x,y)][i];
-            }
-            newListe[newListe.Length -1] = (dirX,dirY);
-            walls[(x,y)] = newListe;
-            if (newWall)
-            {
-                CreateWall(x, y, dirX,dirY);
-                addWall(x+dirX,y+dirY,-dirX,-dirY,false);
-            }
-        }
-        else
-        {
-            walls.Add((x, y), new (int, int)[] {(dirX, dirY)});
-            if (newWall)
-            {
-                CreateWall(x, y, dirX,dirY);
-                addWall(x+dirX,y+dirY,-dirX,-dirY,false);
-            }
-        }
-    }*/
 
     private void addWallBis(int x, int y){
         if(board.isWallInPos(x,y,3)){
@@ -664,58 +581,6 @@ public class Game : MonoBehaviour
         }
         return true;
     }
-    //SOLVER V1 (VINCENT)
-
-    /*public bool touchGoal(GameObject rob)
-    {
-        int Yobj = currentGoal.GetComponent<GoalMan>().GetYBoard();
-        int Xobj = currentGoal.GetComponent<GoalMan>().GetXBoard();
-
-        int Yrob = rob.GetComponent<RobotMan>().GetYBoard();
-        int Xrob = rob.GetComponent<RobotMan>().GetXBoard();
-        switch (rob.name)
-        {
-            case "robot_bleue":
-                if (currentGoal.name == "goal_bleue")
-                {
-                    if (Yrob==Yobj && Xrob==Xobj)
-                    {
-                        return true;
-                    }
-                }
-                break;
-            case "robot_jaune":
-                if (currentGoal.name == "goal_jaune")
-                {
-                    if (Yrob==Yobj && Xrob==Xobj)
-                    {
-                        return true;
-                    }
-                }
-                break;
-            case "robot_rouge":
-                if (currentGoal.name == "goal_rouge")
-                {
-                    if (Yrob==Yobj && Xrob==Xobj)
-                    {
-                        return true;
-                    }
-                }
-                break;
-            case "robot_vert":
-               if (currentGoal.name == "goal_vert")
-                {
-                    if (Yrob==Yobj && Xrob==Xobj)
-                    {
-                        return true;
-                    }
-                }
-                break;
-        }
-
-        return false;
-    }*/
-
     public void changeBoard(int i, int j, int x, int y)
     {
         DestroyAllWalls();
