@@ -295,6 +295,7 @@ public class Solver : MonoBehaviour
             case 31: game.switchContinueSolveV31(); break;
             case 4: game.switchContinueSolveV4();break;
             case 5: game.switchContinueSolveV5(); break;
+            case 6: game.switchContinueSolveV6(); break;
         }
     }
 
