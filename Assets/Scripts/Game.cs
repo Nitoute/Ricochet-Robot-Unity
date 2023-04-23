@@ -76,128 +76,6 @@ public class Game : MonoBehaviour
     }
 
 
-    private void addWalls(){
-        foreach (var wall in board.getWallDict()){
-            addWallBis(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
-        }
-        int i, j;
-        //Ajouter des murs physiques à droite si la position x==15 et ou en bas si y==15
-        for(j = 0; j<16; j++){
-            for(i=0; i<16; i++){
-                if(i==15 && j==15){
-                    addWallBis(i, 15-j, 1, -1, true);
-                }
-                else if(i==15){
-                    addWallBis(i, 15-j, 1, 0, true);
-                }
-                else if(j==15){
-                    addWallBis(i, 15-j, 0, -1, true);
-                }
-            }
-        }
-    }
-
-    //créer les murs en haut et à gauche
-    private void addWallBis(int x, int y){
-        if(board.isWallInPos(x,y,3)){
-            CreateWall(x, y, -1, 0);
-        }
-        if(board.isWallInPos(x,y,0)){
-            CreateWall(x, y, 0, 1);
-        }
-    }
-
-    //créer les murs à droite et en bas
-    private void addWallBis(int x, int y, int dirX,int dirY,bool newWall){
-        if(dirX==0 || dirY==0){
-            CreateWall(x, y, dirX, dirY);
-        }
-        else{
-            CreateWall(x, y, dirX, 0);
-            CreateWall(x, y, 0, dirY);
-        }
-    }
-
-    //Récupération des différents goals dans board
-    //Switch pour récupérer tout les goals possible
-    //Met a jour la pile et le currentgoal
-    private void addGoals(){
-        foreach (var goal in board.getGoalDict()){
-            switch (goal.Value)
-            {
-                case 11: addGoal("goal_moon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 12: addGoal("goal_moon_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 13: addGoal("goal_moon_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 14: addGoal("goal_moon_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 21: addGoal("goal_pentagon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 22: addGoal("goal_pentagon_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 23: addGoal("goal_pentagon_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 24: addGoal("goal_pentagon_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 31: addGoal("goal_circle_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 32: addGoal("goal_circle_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 33: addGoal("goal_circle_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 34: addGoal("goal_circle_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 41: addGoal("goal_star_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 42: addGoal("goal_star_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 43: addGoal("goal_star_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
-                case 44: addGoal("goal_star_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
-            }
-        }
-        pileGoals = new Stack<GameObject>(goals);
-        currentGoal = pileGoals.Pop();
-        string[] goalname = currentGoal.name.Split('_');
-        currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
-        currentRobotGoal = GetCurrentRobotGoal();
-
-        switch(currentGoal.GetComponent<GoalMan>().getColor())
-            {
-                case 0: currentGoalText.color = Color.blue; break;
-                case 3: currentGoalText.color = Color.yellow; break;
-                case 2: currentGoalText.color = Color.green; break;
-                case 1: currentGoalText.color = Color.red; break;
-
-            }
-        changeImageGoal();
-    }
-
-    //Rajoute le goal dans la liste
-    private void addGoal(string name, int x, int y){
-        GameObject[] newListe = new GameObject[goals.Length+1]; //Crée une nouvelle liste 1 taille plus grande
-        
-        for (int i = 0 ; i<=goals.Length-1;i++)
-        {
-            newListe[i] = goals[i];
-
-        }
-        newListe[newListe.Length-1] = InstantiateGoal(name,x,y);
-        goals=newListe;
-    }
-
-    //Différents getter et setter :
-
-    public GameObject getRobot(int p){
-        return robots[p];
-    }
-
-    public List<(int,int)> getPositionRobots(){
-        List<(int,int)> pos=new List<(int,int)>();
-        for (int i=0;i<4;i++){
-            pos.Add((robots[i].GetComponent<RobotMan>().GetXBoard(),robots[i].GetComponent<RobotMan>().GetYBoard()));
-        }
-        return pos;
-    }
-
-    public List<(int,int)> getPositionInitRobot(){
-        List<(int,int)> pos=new List<(int,int)>();
-        for (int i=0;i<4;i++){
-            pos.Add((robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit()));
-        }
-        return pos;
-    }
-
-    public bool getSolverRunning(){
-        return solverRunning;
-    }
 
     public void setPositionRobot( List<(int,int)> pos){
         for (int i=0;i<4;i++){
@@ -293,11 +171,6 @@ public class Game : MonoBehaviour
         positions[x,y]= null;
     }
 
-    public GameObject GetPosition(int x, int y)
-    {
-        return positions[x,y];
-    }
-
     public void SetSolverRunning(bool cond)
     {
         solverRunning = cond;
@@ -330,12 +203,6 @@ public class Game : MonoBehaviour
         return null;
     }
 
-    public void switchSolver()
-    {
-        int choiceSolver = dropdown.value;
-        solverRunning=!solverRunning;
-    }
-
     //Vérifie si x et y sont toujours dans le plateau
     public bool PositionOnBoard(int x, int y)
     {
@@ -344,13 +211,6 @@ public class Game : MonoBehaviour
     }
 
     
-
-
-    public void addCoups()
-    {
-        nbrCoups = nbrCoups +1;
-        coupText.text = nbrCoups.ToString();
-    }
 
     //Met a jour le goal courrant et vérifie si il en reste pour la terminaison
     private void updateGoal()
@@ -592,4 +452,146 @@ public class Game : MonoBehaviour
     }
 
 
+    public void addCoups()
+    {
+        nbrCoups = nbrCoups +1;
+        coupText.text = nbrCoups.ToString();
+    }
+    
+    private void addWalls(){
+        foreach (var wall in board.getWallDict()){
+            addWallBis(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
+        }
+        int i, j;
+        //Ajouter des murs physiques à droite si la position x==15 et ou en bas si y==15
+        for(j = 0; j<16; j++){
+            for(i=0; i<16; i++){
+                if(i==15 && j==15){
+                    addWallBis(i, 15-j, 1, -1, true);
+                }
+                else if(i==15){
+                    addWallBis(i, 15-j, 1, 0, true);
+                }
+                else if(j==15){
+                    addWallBis(i, 15-j, 0, -1, true);
+                }
+            }
+        }
+    }
+
+    //créer les murs en haut et à gauche
+    private void addWallBis(int x, int y){
+        if(board.isWallInPos(x,y,3)){
+            CreateWall(x, y, -1, 0);
+        }
+        if(board.isWallInPos(x,y,0)){
+            CreateWall(x, y, 0, 1);
+        }
+    }
+
+    //créer les murs à droite et en bas
+    private void addWallBis(int x, int y, int dirX,int dirY,bool newWall){
+        if(dirX==0 || dirY==0){
+            CreateWall(x, y, dirX, dirY);
+        }
+        else{
+            CreateWall(x, y, dirX, 0);
+            CreateWall(x, y, 0, dirY);
+        }
+    }
+
+    //Récupération des différents goals dans board
+    //Switch pour récupérer tout les goals possible
+    //Met a jour la pile et le currentgoal
+    private void addGoals(){
+        foreach (var goal in board.getGoalDict()){
+            switch (goal.Value)
+            {
+                case 11: addGoal("goal_moon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 12: addGoal("goal_moon_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 13: addGoal("goal_moon_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 14: addGoal("goal_moon_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 21: addGoal("goal_pentagon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 22: addGoal("goal_pentagon_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 23: addGoal("goal_pentagon_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 24: addGoal("goal_pentagon_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 31: addGoal("goal_circle_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 32: addGoal("goal_circle_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 33: addGoal("goal_circle_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 34: addGoal("goal_circle_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 41: addGoal("goal_star_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 42: addGoal("goal_star_green", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 43: addGoal("goal_star_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
+                case 44: addGoal("goal_star_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
+            }
+        }
+        pileGoals = new Stack<GameObject>(goals);
+        currentGoal = pileGoals.Pop();
+        string[] goalname = currentGoal.name.Split('_');
+        currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
+        currentRobotGoal = GetCurrentRobotGoal();
+
+        switch(currentGoal.GetComponent<GoalMan>().getColor())
+            {
+                case 0: currentGoalText.color = Color.blue; break;
+                case 3: currentGoalText.color = Color.yellow; break;
+                case 2: currentGoalText.color = Color.green; break;
+                case 1: currentGoalText.color = Color.red; break;
+
+            }
+        changeImageGoal();
+    }
+
+    //Rajoute le goal dans la liste
+    private void addGoal(string name, int x, int y){
+        GameObject[] newListe = new GameObject[goals.Length+1]; //Crée une nouvelle liste 1 taille plus grande
+        
+        for (int i = 0 ; i<=goals.Length-1;i++)
+        {
+            newListe[i] = goals[i];
+
+        }
+        newListe[newListe.Length-1] = InstantiateGoal(name,x,y);
+        goals=newListe;
+    }
+    
+    public void switchSolver()
+    {
+        int choiceSolver = dropdown.value;
+        solverRunning=!solverRunning;
+    }
+
+    
+
+    //Différents getter et setter :
+
+    public GameObject getRobot(int p){
+        return robots[p];
+    }
+
+    public List<(int,int)> getPositionRobots(){
+        List<(int,int)> pos=new List<(int,int)>();
+        for (int i=0;i<4;i++){
+            pos.Add((robots[i].GetComponent<RobotMan>().GetXBoard(),robots[i].GetComponent<RobotMan>().GetYBoard()));
+        }
+        return pos;
+    }
+
+    public List<(int,int)> getPositionInitRobot(){
+        List<(int,int)> pos=new List<(int,int)>();
+        for (int i=0;i<4;i++){
+            pos.Add((robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit()));
+        }
+        return pos;
+    }
+
+    public bool getSolverRunning(){
+        return solverRunning;
+    }
+
+    
+    public GameObject GetPosition(int x, int y)
+    {
+        return positions[x,y];
+    }
 }

@@ -13,10 +13,14 @@ public class Solver : MonoBehaviour
 
     private Game game;
 
+    // sequence et longueur courrante
     private int seq=0;
     private int len=0;
+    // dictionnaire des séquences et des positions des pions
     private IDictionary<(int,int), List<(int,int)>> posMap =new Dictionary<(int,int), List<(int,int)>>();
+    //liste des coups finaux pour v5 et V6 
     private List<int> finishMove = new List<int>();
+    // séquences et longueur à la fin du solveur
     private int finalSeq=-1;
     private int finalLen=-1;
 
