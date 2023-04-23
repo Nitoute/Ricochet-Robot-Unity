@@ -305,7 +305,6 @@ public class Game : MonoBehaviour
     public void switchSolver()
     {
         int choiceSolver = dropdown.value;
-        print("Choice solver = " + choiceSolver);
         solverRunning=!solverRunning;
     }
 
