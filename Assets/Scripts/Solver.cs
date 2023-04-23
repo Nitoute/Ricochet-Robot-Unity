@@ -243,7 +243,7 @@ public class Solver : MonoBehaviour
         return (seq+1,len);
     }
 
-    public void printSeq(int seq,int len){
+    public String printSeq(int seq,int len){
         String result = "";
         for (int i=len-1;i>=0;i--){
             int a = seq/ (int)Math.Pow(16, i);
@@ -305,8 +305,6 @@ public class Solver : MonoBehaviour
                     makeSeq(seq,len);
                     //si les pions se trouve dans une situation gagnante
                     if(game.hasWin(game.GetActiveRobot())){
-                        printSeq(seq,len);
-                        print(len);
                         // on met à jour la séquence final
                         finalSeq=seq;
                         finalLen=len;
@@ -331,8 +329,6 @@ public class Solver : MonoBehaviour
                     game.restartPosition();
                     seq=makeSeq2(seq,len);
                     if(game.hasWin(currentRobot)){
-                        printSeq(seq,len);
-                        print(len);
                         finalSeq=seq;
                         finalLen=len;
                         game.restartPosition(); 
@@ -351,8 +347,6 @@ public class Solver : MonoBehaviour
                     game.restartPosition();
                     makeSeq3(seq,len);
                     if(game.hasWin(currentRobot)){
-                        printSeq(seq,len);
-                        print(len);
                         finalSeq=seq;
                         finalLen=len;
                         game.restartPosition();
@@ -371,8 +365,6 @@ public class Solver : MonoBehaviour
                     game.restartPosition();
                     seq=makeSeq31(seq,len);
                     if(game.hasWin(currentRobot)){
-                        printSeq(seq,len);
-                        print(len);
                         finalSeq=seq;
                         finalLen=len;
                         game.restartPosition();
@@ -392,8 +384,6 @@ public class Solver : MonoBehaviour
                     game.restartPosition();
                     seq=makeSeq4(seq,len);
                     if(game.hasWin(currentRobot)){
-                        printSeq(seq,len);
-                        print(len);
                         finalSeq=seq;
                         finalLen=len;
                         game.restartPosition();
@@ -425,8 +415,6 @@ public class Solver : MonoBehaviour
                             game.restartPosition();
                             makeMove1(a);
                             if(game.hasWin(currentRobot)){
-                                printSeq(a,1);
-                                print(1);
                                 finalSeq=a;
                                 finalLen=1;
                                 game.restartPosition();
@@ -450,8 +438,6 @@ public class Solver : MonoBehaviour
                             makeMove1(a);
                             //si les pions se trouve dans une situation gagnante
                             if(game.hasWin(currentRobot)){
-                                printSeq(seq*16+a,len+1);
-                                print(len+1);
                                 // on met à jour la séquence final en ajoutant le mouv final à la séquence
                                 finalSeq=seq*16+a;
                                 finalLen=len+1;
@@ -486,8 +472,6 @@ public class Solver : MonoBehaviour
                             game.restartPosition();
                             makeMove1(a);
                             if(game.hasWin(currentRobot)){
-                                printSeq(a,1);
-                                print(1);
                                 finalSeq=a;
                                 finalLen=1;
                                 game.restartPosition();
@@ -505,8 +489,6 @@ public class Solver : MonoBehaviour
                             game.setPositionRobot(pos);
                             makeMove1(a);
                             if(game.hasWin(currentRobot)){
-                                printSeq(seq*16+a,len+1);
-                                print(len+1);
                                 finalSeq=seq*16+a;
                                 finalLen=len+1;
                                 game.restartPosition();
