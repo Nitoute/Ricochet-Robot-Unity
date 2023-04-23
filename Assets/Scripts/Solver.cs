@@ -27,6 +27,14 @@ public class Solver : MonoBehaviour
         game = GameObject.FindGameObjectWithTag("GameController").GetComponent<Game>();
     }
 
+    public int getFinalLen() { 
+        return finalLen;
+    }
+
+    public int getFinalSeq()
+    {
+        return finalSeq;
+    }
     public void makeMove1(int val) {
         int pion=val/4;
         int dir=val%4;
