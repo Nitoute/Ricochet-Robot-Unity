@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
-using static UnityEditor.PlayerSettings;
 using System.IO;
 using System.Threading.Tasks;
 
