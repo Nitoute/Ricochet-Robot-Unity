@@ -1,18 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Solution : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Game game;
+    public Text text;
+    public void Update()
     {
-        
+        Solver solver = game.solver.GetComponent<Solver>();
+        if (game.getSolverRunning())
+        {
+            text.text = "En cours de calcul...";
+        }
+        else
+        {
+            if (solver.getFinalLen() == -1)
+            {
+                text.text = "Aucun calcul en cours";
+            }
+            else
+            {
+                string solution = solver.printSeq(solver.getFinalSeq(), solver.getFinalLen());
+                text.text = solution;
+            }
+        }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

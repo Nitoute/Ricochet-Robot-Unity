@@ -32,8 +32,8 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    //public Board board = new Board(2,7,1,8);
-    public Board board = new Board(0,0,0,0);
+    public Board board = new Board(2,7,1,8);
+    //public Board board = new Board(0,0,0,0);
     private bool gameOver = false;
     private bool solverRunning = false;
     private System.Random rnd = new System.Random();
