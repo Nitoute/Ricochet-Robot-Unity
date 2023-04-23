@@ -36,7 +36,7 @@ public class RobotMan : MonoBehaviour
     }
 
 
-
+    //A chaque clic sur un robot on détruit les plateau de déplacement existant et on en créer de nouveau pour le robot courant
     private void OnMouseUp()
     {
         DestroyMovePlates();
@@ -44,6 +44,7 @@ public class RobotMan : MonoBehaviour
         InitiateMovePlates();
     }
 
+    //Détruit les plateaux de déplacement courant
     public void DestroyMovePlates()
     {
         GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
@@ -54,6 +55,7 @@ public class RobotMan : MonoBehaviour
         } 
     }
 
+    //Affecte les règles de déplacement des différents pions
     public void InitiateMovePlates()
     {
         //Pour la nouvelle version : 0->3 : top,right,bottom,left
@@ -164,18 +166,19 @@ public class RobotMan : MonoBehaviour
         }
     }
 
+    //Fait apparaitre un plateau de déplacement
     public void MovePlateSpawn(int matrixX, int matrixY)
     {
         float x = matrixX;
         float y = matrixY;
-
+        //Même logique que pour les pions
         x *= 0.15f;
         y *= 0.15f;
 
         x += -0.12f;
         y += -2.12f;
 
-        GameObject mp = Instantiate(movePlate, new Vector3(x,y,-3.0f), Quaternion.identity);
+        GameObject mp = Instantiate(movePlate, new Vector3(x,y,-3.0f), Quaternion.identity); //Créer l'objet
 
         MovePlate mpScipt = mp.GetComponent<MovePlate>();
         mpScipt.SetReference(gameObject);
@@ -191,6 +194,7 @@ public class RobotMan : MonoBehaviour
 
     }
 
+    //Déplace le robot dans la direction (x,y)
     public void MoveRobot(int dir,int xIncrement, int yIncrement)
     {
         Game sc = controller.GetComponent<Game>();
@@ -224,6 +228,7 @@ public class RobotMan : MonoBehaviour
         if (x!=oldx || y!=oldy)Teleport(x,y);
     }
 
+    //Téléporte le robot en x,y
     public void Teleport(int x,int y)
     {
         game.SetPositionEmpty(this.GetXBoard(),this.GetYBoard());
