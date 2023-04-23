@@ -243,7 +243,8 @@ public class Solver : MonoBehaviour
         return (seq+1,len);
     }
 
-    public String printSeq(int seq,int len){
+    
+    public String Seq2String(int seq,int len){
         String result = "";
         for (int i=len-1;i>=0;i--){
             int a = seq/ (int)Math.Pow(16, i);

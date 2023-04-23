@@ -21,7 +21,7 @@ public class Solution : MonoBehaviour
             }
             else
             {
-                string solution = solver.printSeq(solver.getFinalSeq(), solver.getFinalLen());
+                string solution = solver.Seq2String(solver.getFinalSeq(), solver.getFinalLen());
                 text.text = solution;
             }
         }
