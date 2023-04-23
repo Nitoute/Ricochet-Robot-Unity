@@ -243,7 +243,6 @@ public class Solver : MonoBehaviour
         return (seq+1,len);
     }
 
-//printSeq écrire dans la console la sequence seq de longueur len
     public void printSeq(int seq,int len){
         String result = "";
         for (int i=len-1;i>=0;i--){
@@ -251,38 +250,36 @@ public class Solver : MonoBehaviour
             seq = seq % (int)Math.Pow(16, i);
             int pion=a/4;
             int dir=a%4;
-            result+="(";
             switch (pion){
                 case 0:
-                result+="Blue ";
+                result+="Bleu ";
                     break;
                 case 2:
-                result+="Green ";
+                result+="Vert ";
                     break;
                 case 1:
-                result+="Red ";
+                result+="Rouge ";
                     break;
                 case 3:
-                result+="Yellow ";
+                result+="Jaune ";
                     break;
             }
             switch (dir){
                 case 1:
-                result+="Right";
+                result+="Droite\n";
                     break;
                 case 3:
-                result+="Left";
+                result+="Gauche\n";
                     break;
                 case 0:
-                result+="Up";
+                result+="Haut\n";
                     break;
                 case 2:
-                result+="Down";
+                result+="Bas \n";
                     break;
             }
-            result+=") ";
         }
-        print(result);
+        return result;
     }
 
 
