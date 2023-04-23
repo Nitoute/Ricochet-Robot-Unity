@@ -8,6 +8,7 @@ TagManager:
   - SolverObject
   - Wall
   - Goal
+  - InputField
   layers:
   - Default
   - TransparentFX
