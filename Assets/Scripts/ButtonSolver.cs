@@ -31,7 +31,7 @@ public class ButtonSolver : MonoBehaviour
         }
         else
         {
-            game.switchSolver();
+            game.SetSolverRunning(true);
         }
     } 
 }

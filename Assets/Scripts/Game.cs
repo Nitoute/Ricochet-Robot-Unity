@@ -75,19 +75,6 @@ public class Game : MonoBehaviour
         currentGoalImage.color = spriteRenderer.color;
     }
 
-
-
-    public void setPositionRobot( List<(int,int)> pos){
-        for (int i=0;i<4;i++){
-            (int x,int y)=pos[i];
-            robots[i].GetComponent<RobotMan>().Teleport(x,y);
-        }
-        for (int i=0;i<4;i++){
-            (int x,int y)=pos[i];
-            robots[i].GetComponent<RobotMan>().Teleport(x,y);
-        }
-    }
-
     public GameObject CreateRobot(string name, int x, int y)
     {
         while ((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8)) // Vérifie si ils ne sont pas sur les cases du milieu
@@ -132,75 +119,6 @@ public class Game : MonoBehaviour
         gm.SetYBoard(y);
         gm.Activate();
         return obj;
-    }
-
-    //Remet le robot obj à sa position dans le board initial
-    public void SetPositionRobotInitial(GameObject obj)
-    {
-        RobotMan rm = obj.GetComponent<RobotMan>();
-        if (positions[rm.GetXBoard(),rm.GetYBoard()]==null) //Vérifie si il n'y a pas un autre pion sur x,y
-        {
-            positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
-        }else{
-            int newX = rnd.Next(0, 16);
-            int newY = rnd.Next(0, 16);
-            rm.SetXBoard(newX);
-            rm.SetYBoard(newY);
-            rm.SetXInit(newX);
-            rm.SetYInit(newY);
-            rm.Activate();
-            SetPositionRobot(obj);
-        }
-    }
-
-    public void SetPositionRobot(GameObject obj)
-    {
-        RobotMan rm = obj.GetComponent<RobotMan>();
-        positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
-    }
-
-    public void SetPositionGoal(GameObject obj)
-    {
-        GoalMan gm = obj.GetComponent<GoalMan>();
-
-        positions[gm.GetXBoard(),gm.GetYBoard()] = obj;
-    }
-
-    public void SetPositionEmpty(int x, int y)
-    {
-        positions[x,y]= null;
-    }
-
-    public void SetSolverRunning(bool cond)
-    {
-        solverRunning = cond;
-    }
-
-    public GameObject GetCurrentGoal()
-    {
-        return currentGoal;
-    }
-
-    public GameObject GetActiveRobot()
-    {
-        return currentRobotGoal;
-    }
-
-
-    public GameObject GetCurrentRobotGoal()
-    {
-        switch (currentGoal.GetComponent<GoalMan>().getColor())
-        {
-            case 0:
-                return robots[0];
-            case 1:
-                return robots[1];
-            case 2:
-                return robots[2];
-            case 3:
-                return robots[3];
-        }
-        return null;
     }
 
     //Vérifie si x et y sont toujours dans le plateau
@@ -269,31 +187,7 @@ public class Game : MonoBehaviour
         coupText.text = nbrCoups.ToString();
     }
 
-    //Met les position initiaux des robots à la liste de position positions
-    public void SetPositionDefaultRobots(List<(int, int)> positions)
-    {
-        for(int i=0; i<4;i++)
-        {
-            (int x,int y) = positions[i];
-            robots[i].GetComponent<RobotMan>().SetXInit(x);
-            robots[i].GetComponent<RobotMan>().SetYInit(y);
-            SetPositionDefaultRobot(robots[i]);
-        }
-        
-    }
-
-    //Remet le robot obj à sa position initial
-    public void SetPositionDefaultRobot(GameObject obj)
-    {
-        RobotMan rm = obj.GetComponent<RobotMan>();
-
-        SetPositionEmpty(rm.GetXBoard(),rm.GetYBoard());
-        rm.SetXBoard(rm.GetXInit());
-        rm.SetYBoard(rm.GetYInit());
-        rm.SetCoords();
-
-        SetPositionRobot(obj);
-    }
+    
     
     //Vérifie les conditions de victoire à chaque déplacement
     public bool hasWin(GameObject rob)
@@ -554,13 +448,7 @@ public class Game : MonoBehaviour
         newListe[newListe.Length-1] = InstantiateGoal(name,x,y);
         goals=newListe;
     }
-    
-    public void switchSolver()
-    {
-        int choiceSolver = dropdown.value;
-        solverRunning=!solverRunning;
-    }
-
+   
     
 
     //Différents getter et setter :
@@ -594,4 +482,111 @@ public class Game : MonoBehaviour
     {
         return positions[x,y];
     }
+    
+    public GameObject GetCurrentGoal()
+    {
+        return currentGoal;
+    }
+
+    public GameObject GetActiveRobot()
+    {
+        return currentRobotGoal;
+    }
+
+
+    public GameObject GetCurrentRobotGoal()
+    {
+        switch (currentGoal.GetComponent<GoalMan>().getColor())
+        {
+            case 0:
+                return robots[0];
+            case 1:
+                return robots[1];
+            case 2:
+                return robots[2];
+            case 3:
+                return robots[3];
+        }
+        return null;
+    }
+
+    public void setPositionRobot( List<(int,int)> pos){
+        for (int i=0;i<4;i++){
+            (int x,int y)=pos[i];
+            robots[i].GetComponent<RobotMan>().Teleport(x,y);
+        }
+        for (int i=0;i<4;i++){
+            (int x,int y)=pos[i];
+            robots[i].GetComponent<RobotMan>().Teleport(x,y);
+        }
+    }
+
+    //Met les position initiaux des robots à la liste de position positions
+    public void SetPositionDefaultRobots(List<(int, int)> positions)
+    {
+        for(int i=0; i<4;i++)
+        {
+            (int x,int y) = positions[i];
+            robots[i].GetComponent<RobotMan>().SetXInit(x);
+            robots[i].GetComponent<RobotMan>().SetYInit(y);
+            SetPositionDefaultRobot(robots[i]);
+        }
+        
+    }
+
+    //Remet le robot obj à sa position initial
+    public void SetPositionDefaultRobot(GameObject obj)
+    {
+        RobotMan rm = obj.GetComponent<RobotMan>();
+
+        SetPositionEmpty(rm.GetXBoard(),rm.GetYBoard());
+        rm.SetXBoard(rm.GetXInit());
+        rm.SetYBoard(rm.GetYInit());
+        rm.SetCoords();
+
+        SetPositionRobot(obj);
+    }
+    //Remet le robot obj à sa position dans le board initial
+    public void SetPositionRobotInitial(GameObject obj)
+    {
+        RobotMan rm = obj.GetComponent<RobotMan>();
+        if (positions[rm.GetXBoard(),rm.GetYBoard()]==null) //Vérifie si il n'y a pas un autre pion sur x,y
+        {
+            positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
+        }else{
+            int newX = rnd.Next(0, 16);
+            int newY = rnd.Next(0, 16);
+            rm.SetXBoard(newX);
+            rm.SetYBoard(newY);
+            rm.SetXInit(newX);
+            rm.SetYInit(newY);
+            rm.Activate();
+            SetPositionRobot(obj);
+        }
+    }
+
+    public void SetPositionRobot(GameObject obj)
+    {
+        RobotMan rm = obj.GetComponent<RobotMan>();
+        positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
+    }
+
+    public void SetPositionGoal(GameObject obj)
+    {
+        GoalMan gm = obj.GetComponent<GoalMan>();
+
+        positions[gm.GetXBoard(),gm.GetYBoard()] = obj;
+    }
+
+    public void SetPositionEmpty(int x, int y)
+    {
+        positions[x,y]= null;
+    }
+
+    public void SetSolverRunning(bool cond)
+    {
+        solverRunning = cond;
+    }
+
+
 }
