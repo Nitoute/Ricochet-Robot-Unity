@@ -70,20 +70,20 @@ public class WallMan : MonoBehaviour
         return yBoard;
     }
 
-    public void SetXBoard(int x){
-        xBoard = x;
-    }
-
-    public void SetYBoard(int y){
-        yBoard = y;
-    }
-
     public int GetxDir(){
         return xDir;
     }
 
     public int GetyDir(){
         return yDir;
+    }
+    
+    public void SetXBoard(int x){
+        xBoard = x;
+    }
+
+    public void SetYBoard(int y){
+        yBoard = y;
     }
 
     public void SetxDir(int x){

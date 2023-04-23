@@ -320,21 +320,6 @@ public class Board{
         return color;
     }
 
-    private void addToWallDict((int, int) pos, (int, int) walls){
-        wallsDict.Add((pos.Item1,pos.Item2),(walls.Item1, walls.Item2));
-    }
-
-    public IDictionary<(int i, int j),(int right, int top)> getWallDict(){
-        return wallsDict;
-    }
-
-    private void addToGoalDict((int, int) pos, int color){
-        goalsDict.Add((pos.Item1,pos.Item2), color);
-    }
-
-    public IDictionary<(int i, int j), int> getGoalDict(){
-        return goalsDict;
-    }
 
 
     private int wallsToComplete(){
@@ -415,6 +400,21 @@ public class Board{
         }
     }
 
+    private void addToWallDict((int, int) pos, (int, int) walls){
+        wallsDict.Add((pos.Item1,pos.Item2),(walls.Item1, walls.Item2));
+    }
+
+
+    private void addToGoalDict((int, int) pos, int color){
+        goalsDict.Add((pos.Item1,pos.Item2), color);
+    }
+
+    public IDictionary<(int i, int j), int> getGoalDict(){
+        return goalsDict;
+    }
+    public IDictionary<(int i, int j),(int right, int top)> getWallDict(){
+        return wallsDict;
+    }
     public int[] getSeed()
     {
         int[] seed = new int[4];

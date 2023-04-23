@@ -36,6 +36,12 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<RobotMan>().DestroyMovePlates();
     }
 
+
+    public GameObject GetReference()
+    {
+        return reference;
+    }
+
     public void SetCoords(int x, int y)
     {
         matrixX = x;
@@ -46,12 +52,6 @@ public class MovePlate : MonoBehaviour
     {
         reference = obj;
     }
-
-    public GameObject GetReference()
-    {
-        return reference;
-    }
-
     // Update is called once per frame
     void Update()
     {

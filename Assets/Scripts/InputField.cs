@@ -13,7 +13,6 @@ public class InputField : MonoBehaviour
 
     public string getInput()
     {
-        print("b");
         return input;
     }
 }

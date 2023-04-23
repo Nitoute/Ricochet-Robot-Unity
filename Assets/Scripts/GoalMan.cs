@@ -40,18 +40,6 @@ public class GoalMan : MonoBehaviour
         }
     }
 
-    public void SetCoords() {
-        float x = xBoard;
-        float y = yBoard;
-
-        x *= 0.15f;
-        y *= 0.15f;
-
-        x += -0.12f;
-        y += -2.12f;
-
-        this.transform.position = new Vector3(x,y,-1.0f);
-    }
 
     public int GetXBoard(){
         return xBoard;
@@ -61,13 +49,6 @@ public class GoalMan : MonoBehaviour
         return yBoard;
     }
 
-    public void SetXBoard(int x){
-        xBoard = x;
-    }
-
-    public void SetYBoard(int y){
-        yBoard = y;
-    }
     public int getColor()
     {
         switch (this.name)
@@ -90,5 +71,26 @@ public class GoalMan : MonoBehaviour
             case "goal_star_yellow": return 3; break;
         }
         return -1;
+    }
+    
+    public void SetCoords() {
+        float x = xBoard;
+        float y = yBoard;
+
+        x *= 0.15f;
+        y *= 0.15f;
+
+        x += -0.12f;
+        y += -2.12f;
+
+        this.transform.position = new Vector3(x,y,-1.0f);
+    }
+    
+    public void SetXBoard(int x){
+        xBoard = x;
+    }
+
+    public void SetYBoard(int y){
+        yBoard = y;
     }
 }

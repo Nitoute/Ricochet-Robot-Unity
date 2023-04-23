@@ -27,14 +27,6 @@ public class Solver : MonoBehaviour
         game = GameObject.FindGameObjectWithTag("GameController").GetComponent<Game>();
     }
 
-    public int getFinalLen() { 
-        return finalLen;
-    }
-
-    public int getFinalSeq()
-    {
-        return finalSeq;
-    }
 
     // joue le coup correspondant à val
     public void makeMove1(int val) {
@@ -514,5 +506,15 @@ public class Solver : MonoBehaviour
             posMap.Clear();
             finishMove.Clear();
         }
+    }
+
+
+    public int getFinalLen() { 
+        return finalLen;
+    }
+
+    public int getFinalSeq()
+    {
+        return finalSeq;
     }
 }

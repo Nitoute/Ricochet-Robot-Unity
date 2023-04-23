@@ -36,50 +36,6 @@ public class RobotMan : MonoBehaviour
     }
 
 
-    public void SetCoords() {
-        float x = xBoard;
-        float y = yBoard;
-
-        x *= 0.15f;
-        y *= 0.15f;
-
-        x += -0.12f;
-        y += -2.12f;
-
-        this.transform.position = new Vector3(x,y,-1.0f);
-    }
-
-    public int GetXBoard(){
-        return xBoard;
-    }
-
-    public int GetYBoard(){
-        return yBoard;
-    }
-
-    public int GetXInit(){
-        return xInit;
-    }
-
-    public int GetYInit(){
-        return yInit;
-    }
-
-    public void SetXBoard(int x){
-        xBoard = x;
-    }
-
-    public void SetYBoard(int y){
-        yBoard = y;
-    }
-
-    public void SetXInit(int x){
-        xInit = x;
-    }
-
-    public void SetYInit(int y){
-        yInit = y;
-    }
 
     private void OnMouseUp()
     {
@@ -285,5 +241,52 @@ public class RobotMan : MonoBehaviour
     {
         this.SetXInit(xBoard);
         this.SetYInit(yBoard);
+    }
+
+    public int GetXBoard(){
+        return xBoard;
+    }
+
+    public int GetYBoard(){
+        return yBoard;
+    }
+
+    public int GetXInit(){
+        return xInit;
+    }
+
+    public int GetYInit(){
+        return yInit;
+    }
+
+    
+    public void SetCoords() {
+        float x = xBoard;
+        float y = yBoard;
+
+        x *= 0.15f;
+        y *= 0.15f;
+
+        x += -0.12f;
+        y += -2.12f;
+
+        this.transform.position = new Vector3(x,y,-1.0f);
+    }
+
+
+    public void SetXBoard(int x){
+        xBoard = x;
+    }
+
+    public void SetYBoard(int y){
+        yBoard = y;
+    }
+
+    public void SetXInit(int x){
+        xInit = x;
+    }
+
+    public void SetYInit(int y){
+        yInit = y;
     }
 }
