@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
     private int nbrCoups;
     public Text coupText;
     public Text currentGoalText;
+    public Text currentSeedText;
     public Image currentGoalImage;
     public GameObject gameOverScreen;
     public GameObject UIScreen;
@@ -31,7 +32,8 @@ public class Game : MonoBehaviour
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
     /*initializing board*/
-    public Board board = new Board(2,7,1,8);
+    //public Board board = new Board(2,7,1,8);
+    public Board board = new Board(0,0,0,0);
     private bool gameOver = false;
     private bool solverRunning = false;
     private System.Random rnd = new System.Random();
@@ -62,6 +64,8 @@ public class Game : MonoBehaviour
         //print("goal init = "+ currentGoal);
         string[] goalname = currentGoal.name.Split('_');
         currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
+        int[] seed = board.getSeed();
+        currentSeedText.text = seed[0] + "," + seed[1] + "," + seed[2] + "," + seed[3];
         changeImageGoal();
         currentRobotGoal = GetCurrentRobotGoal();
     }
@@ -531,14 +535,27 @@ public class Game : MonoBehaviour
         }
         return true;
     }
+
     public void changeBoard(int i, int j, int x, int y)
     {
         DestroyAllWalls();
         DestroyAllGoals();
         goals = new GameObject[0];
         board = new Board(i,j,x,y);
+        int[] seed = board.getSeed();
+        currentSeedText.text = seed[0] + "," + seed[1] + "," + seed[2] + "," + seed[3];
         addWalls();
         addGoals();
+    }
+
+    public void changeSeed(int a, int b, int c, int d)
+    {
+       
+     
+        changeBoard(a, b, c, d);
+
+        //Reseting robots' positions
+        restartPosition();
     }
 
     private void DestroyAllWalls()

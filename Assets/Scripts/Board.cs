@@ -14,6 +14,7 @@ public class Board{
     private (int pos, int isFlipped) board3;
     private IDictionary<(int i, int j),(int right, int top)> wallsDict = new Dictionary<(int i, int j),(int right, int top)>();
     private IDictionary<(int i, int j), int > goalsDict = new Dictionary<(int i, int j), int >();
+    private int TopLeft, TopRight, BottomLeft, BottomRight;
 
     public Board(){
         //creates random board.
@@ -45,8 +46,8 @@ public class Board{
             Random random = new Random();
             numberBoards = numberBoards.OrderBy(x => random.Next()).ToArray();
             Random rand = new Random();
-            if(rand.Next(0, 2) == 0){flip = "_flip";}
-            else{ flip= "";}
+            if(rand.Next(0, 2) == 0){flip = "_flip"; TopLeft = numberBoards[0] + 4;}
+            else{ flip= ""; TopLeft = numberBoards[0];}
             if(numberBoards[0]==3){
                 if(flip==""){
                     board3 = (0, 0); //soucis -> mur droite
@@ -56,26 +57,25 @@ public class Board{
                 }
             }
             topLeftFileName = path + "top_left/board" + numberBoards[0] + flip;
-            if(rand.Next(0, 2) == 0){flip = "_flip";}
-            else{ flip= "";}
+            if(rand.Next(0, 2) == 0){flip = "_flip"; TopRight = numberBoards[1]+4;}
+            else{flip= ""; TopRight = numberBoards[1];}
             if(numberBoards[1]==3 && flip==""){
                     board3 = (1, 0); // soucis -> mur bas
                 }
             topRightFileName = path + "top_right/board" + numberBoards[1] + flip;
-            if(rand.Next(0, 2) == 0){flip = "_flip";}
-            else{ flip= "";}
-            if(numberBoards[2]==3 && flip=="_flip") {
+            if(rand.Next(0, 2) == 0){flip = "_flip"; BottomLeft = numberBoards[2] + 4;}
+            else{ flip= ""; BottomLeft = numberBoards[2]; }
+            if (numberBoards[2] == 3 && flip == "_flip") {
                 board3 = (2, 1); //soucis -> mur droite
                 }
             bottomLeftFileName = path + "bottom_left/board" + numberBoards[2] + flip;
-            if(rand.Next(0, 2) == 0){flip = "_flip";}
-            else{ flip= "";}
+            if(rand.Next(0, 2) == 0){flip = "_flip"; BottomRight = numberBoards[3] + 4;}
+            else{ flip= ""; BottomRight = numberBoards[3]; }
 
             bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
             for(int i=0; i<4; i++){
                 //Debug.Log("board " + numberBoards[i] + " at position " + i );
             }
-            
             }
         else{
             if(topleft==3){
@@ -98,12 +98,14 @@ public class Board{
             else{bottomLeftFileName = path + "bottom_left/board"+ bottomleft.ToString();}
             if(bottomright>4){bottomRightFileName = path + "bottom_right/board"+ (bottomright-4).ToString()+"_flip";}
             else{bottomRightFileName = path + "bottom_right/board"+ bottomright.ToString();}
+            TopLeft = topleft; TopRight = topright; BottomLeft = bottomleft; BottomRight = bottomright;
         } 
         
         boardList.Add(topLeftFileName);
         boardList.Add(topRightFileName);
         boardList.Add(bottomLeftFileName);
         boardList.Add(bottomRightFileName);
+        
         return boardList;
        
     }
@@ -425,6 +427,16 @@ public class Board{
         {
             return false;
         }
+    }
+
+    public int[] getSeed()
+    {
+        int[] seed = new int[4];
+        seed[0] = TopLeft;
+        seed[1] = TopRight;
+        seed[2] = BottomLeft;
+        seed[3] = BottomRight;
+        return seed;
     }
 
 }
