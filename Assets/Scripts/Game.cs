@@ -11,9 +11,7 @@ public class Game : MonoBehaviour
     public GameObject robot;
     public GameObject wallPhys;
     public GameObject goal;
-    public GameObject solver;
     public Dropdown dropdown;
-    private Solver solverScript;
     
 
     private GameObject[,] positions = new GameObject[16,16];
@@ -41,8 +39,6 @@ public class Game : MonoBehaviour
     {
         UIScreen.SetActive(true);
         //Recupération de l'objet Solver + script
-        solver = GameObject.FindGameObjectWithTag("SolverObject");
-        solverScript = solver.GetComponent<Solver>();
         addWalls();
         addGoals();
         //Robots

@@ -6,9 +6,12 @@ public class Solution : MonoBehaviour
 {
     public Game game;
     public Text text;
+    private Solver solver;
+    public void Start(){
+        solver = GameObject.FindGameObjectWithTag("SolverObject").GetComponent<Solver>();
+    }
     public void Update()
     {
-        Solver solver = game.solver.GetComponent<Solver>();
         if (game.getSolverRunning())
         {
             text.text = "En cours de calcul...";
