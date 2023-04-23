@@ -11,14 +11,15 @@ public class Game : MonoBehaviour
     public GameObject robot;
     public GameObject wallPhys;
     public GameObject goal;
-    public Dropdown dropdown;
     
+    
+    
+    private GameObject[,] positions = new GameObject[16,16];//matrice 16x16 de gameObject contenant des robots/goals si il y en a null sinon
+    private GameObject[] robots = new GameObject[4]; //liste de tout les robots présents dans le jeu
+    Stack<GameObject> pileGoals = new Stack<GameObject>(); //piles de goal utilisé pour récupérer un goal et vidé la liste goals
+    private GameObject[] goals = new GameObject[0]; //liste de goal récupérer depuis board
 
-    private GameObject[,] positions = new GameObject[16,16];
-    private GameObject[] robots = new GameObject[4];
-    Stack<GameObject> pileGoals = new Stack<GameObject>();
-    private GameObject[] goals = new GameObject[0];
-
+    //Partie UI
     private int nbrCoups;
     public Text coupText;
     public Text currentGoalText;
@@ -26,6 +27,7 @@ public class Game : MonoBehaviour
     public Image currentGoalImage;
     public GameObject gameOverScreen;
     public GameObject UIScreen;
+    public Dropdown dropdown;
 
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
@@ -49,12 +51,13 @@ public class Game : MonoBehaviour
         //Met les robots dans leur cases
         for(int i = 0; i < robots.Length;i++){
             SetPositionRobotInitial(robots[i]);
+            hasWin(robots[i]);
         }
 
-        pileGoals = new Stack<GameObject>(goals);
-        currentGoal = pileGoals.Pop();
+        pileGoals = new Stack<GameObject>(goals); //initialisation de la pile depuis la liste précédement récupérer
+        currentGoal = pileGoals.Pop(); //Récupère le premier élément de la pile et le retire de la liste
         string[] goalname = currentGoal.name.Split('_');
-        currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
+        currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]); //nom du goal + couleur
         int[] seed = board.getSeed();
         currentSeedText.text = seed[0] + "," + seed[1] + "," + seed[2] + "," + seed[3];
         changeImageGoal();
@@ -63,6 +66,7 @@ public class Game : MonoBehaviour
 
     private void changeImageGoal()
     {
+        // Récupére les paramètres du sprite de currentGoal
         SpriteRenderer spriteRenderer = currentGoal.GetComponent<SpriteRenderer>();
         // Copier le sprite
         currentGoalImage.sprite = spriteRenderer.sprite;
@@ -92,6 +96,31 @@ public class Game : MonoBehaviour
             }
         }
     }
+
+    //créer les murs en haut et à gauche
+    private void addWallBis(int x, int y){
+        if(board.isWallInPos(x,y,3)){
+            CreateWall(x, y, -1, 0);
+        }
+        if(board.isWallInPos(x,y,0)){
+            CreateWall(x, y, 0, 1);
+        }
+    }
+
+    //créer les murs à droite et en bas
+    private void addWallBis(int x, int y, int dirX,int dirY,bool newWall){
+        if(dirX==0 || dirY==0){
+            CreateWall(x, y, dirX, dirY);
+        }
+        else{
+            CreateWall(x, y, dirX, 0);
+            CreateWall(x, y, 0, dirY);
+        }
+    }
+
+    //Récupération des différents goals dans board
+    //Switch pour récupérer tout les goals possible
+    //Met a jour la pile et le currentgoal
     private void addGoals(){
         foreach (var goal in board.getGoalDict()){
             switch (goal.Value)
@@ -131,8 +160,9 @@ public class Game : MonoBehaviour
         changeImageGoal();
     }
 
+    //Rajoute le goal dans la liste
     private void addGoal(string name, int x, int y){
-        GameObject[] newListe = new GameObject[goals.Length+1];
+        GameObject[] newListe = new GameObject[goals.Length+1]; //Crée une nouvelle liste 1 taille plus grande
         
         for (int i = 0 ; i<=goals.Length-1;i++)
         {
@@ -142,6 +172,8 @@ public class Game : MonoBehaviour
         newListe[newListe.Length-1] = InstantiateGoal(name,x,y);
         goals=newListe;
     }
+
+    //Différents getter et setter :
 
     public GameObject getRobot(int p){
         return robots[p];
@@ -180,11 +212,12 @@ public class Game : MonoBehaviour
 
     public GameObject CreateRobot(string name, int x, int y)
     {
-        while ((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8))
+        while ((x==7 && y==7) || (x==7 && y==8) || (x==8 && y==7) || (x==8 && y==8)) // Vérifie si ils ne sont pas sur les cases du milieu
         {
             x = rnd.Next(0, 16);
             y = rnd.Next(0, 16);
         }
+        //Instantiation des différents paramètre de l'objet robot
         GameObject obj = Instantiate(robot, new Vector3(0,0,-1),Quaternion.identity);
         RobotMan rm = obj.GetComponent<RobotMan>();
         rm.name = name;
@@ -196,7 +229,8 @@ public class Game : MonoBehaviour
         return obj;
 
     }
-
+    
+    //Instantiation des différents paramètre de l'objet mur
     public GameObject CreateWall(int xPos,int yPos, int xDir, int yDir)
     {
         GameObject obj = Instantiate(wallPhys, new Vector3(0,0,-1),Quaternion.identity);
@@ -210,6 +244,7 @@ public class Game : MonoBehaviour
         
     }
 
+    //Instantiation des différents paramètre de l'objet goal
     public GameObject InstantiateGoal(string name, int x, int y)
     {
         GameObject obj = Instantiate(goal, new Vector3(0,0,-1),Quaternion.identity);
@@ -221,10 +256,11 @@ public class Game : MonoBehaviour
         return obj;
     }
 
+    //Remet le robot obj à sa position dans le board initial
     public void SetPositionRobotInitial(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
-        if (positions[rm.GetXBoard(),rm.GetYBoard()]==null)
+        if (positions[rm.GetXBoard(),rm.GetYBoard()]==null) //Vérifie si il n'y a pas un autre pion sur x,y
         {
             positions[rm.GetXBoard(),rm.GetYBoard()] = obj;
         }else{
@@ -300,30 +336,14 @@ public class Game : MonoBehaviour
         solverRunning=!solverRunning;
     }
 
+    //Vérifie si x et y sont toujours dans le plateau
     public bool PositionOnBoard(int x, int y)
     {
         if (x<0 || y<0 || x>= positions.GetLength(0) || y>=positions.GetLength(1)) return false;
         return true;
     }
 
-    private void addWallBis(int x, int y){
-        if(board.isWallInPos(x,y,3)){
-            CreateWall(x, y, -1, 0);
-        }
-        if(board.isWallInPos(x,y,0)){
-            CreateWall(x, y, 0, 1);
-        }
-    }
-
-    private void addWallBis(int x, int y, int dirX,int dirY,bool newWall){
-        if(dirX==0 || dirY==0){
-            CreateWall(x, y, dirX, dirY);
-        }
-        else{
-            CreateWall(x, y, dirX, 0);
-            CreateWall(x, y, 0, dirY);
-        }
-    }
+    
 
 
     public void addCoups()
@@ -332,6 +352,7 @@ public class Game : MonoBehaviour
         coupText.text = nbrCoups.ToString();
     }
 
+    //Met a jour le goal courrant et vérifie si il en reste pour la terminaison
     private void updateGoal()
     {
         if (pileGoals.Count!=0)
@@ -381,13 +402,14 @@ public class Game : MonoBehaviour
             robots[i].GetComponent<RobotMan>().DestroyMovePlates();
         }
         for(int i = 0; i < robots.Length;i++){
-            robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
+            robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit()); // Pour éviter que deux pions soit mal déplacer
         }
 
         nbrCoups = 0; 
         coupText.text = nbrCoups.ToString();
     }
 
+    //Met les position initiaux des robots à la liste de position positions
     public void SetPositionDefaultRobots(List<(int, int)> positions)
     {
         for(int i=0; i<4;i++)
@@ -400,6 +422,7 @@ public class Game : MonoBehaviour
         
     }
 
+    //Remet le robot obj à sa position initial
     public void SetPositionDefaultRobot(GameObject obj)
     {
         RobotMan rm = obj.GetComponent<RobotMan>();
@@ -411,7 +434,8 @@ public class Game : MonoBehaviour
 
         SetPositionRobot(obj);
     }
-
+    
+    //Vérifie les conditions de victoire à chaque déplacement
     public bool hasWin(GameObject rob)
     {
 
@@ -495,6 +519,7 @@ public class Game : MonoBehaviour
         return false;
     }
 
+    //Vérifie si un pion est sur la case contact à x,y dans la direction dir
     public bool isPionInDir(int x,int y, int dir){
         switch(dir){
             case 0:
@@ -521,6 +546,7 @@ public class Game : MonoBehaviour
         return true;
     }
 
+    //change le plateau en fonction de la seed (appeler changeSeed)
     public void changeBoard(int i, int j, int x, int y)
     {
         DestroyAllWalls();
@@ -533,6 +559,7 @@ public class Game : MonoBehaviour
         addGoals();
     }
 
+    //change le plateau en fonction de la seed et remet les robots à leur place
     public void changeSeed(int a, int b, int c, int d)
     {
        
@@ -543,6 +570,7 @@ public class Game : MonoBehaviour
         restartPosition();
     }
 
+    //détruit tout les murs
     private void DestroyAllWalls()
     {
         GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
@@ -552,7 +580,7 @@ public class Game : MonoBehaviour
             Destroy(walls[i]);
         } 
     }
-    
+    //détruit tout les goals
     private void DestroyAllGoals()
     {
         GameObject[] goalsObject = GameObject.FindGameObjectsWithTag("Goal");
