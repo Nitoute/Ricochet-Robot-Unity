@@ -590,8 +590,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 713, y: -384}
-  m_SizeDelta: {x: 395, y: 83.5}
+  m_AnchoredPosition: {x: 712.5, y: -384}
+  m_SizeDelta: {x: 500.7, y: 83.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &463181180
 MonoBehaviour:
@@ -1089,7 +1089,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -805.9, y: 182}
+  m_AnchoredPosition: {x: -795, y: 182}
   m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &900952493
@@ -2402,8 +2402,9 @@ GameObject:
   - component: {fileID: 1867810808}
   - component: {fileID: 1867810807}
   - component: {fileID: 1867810806}
+  - component: {fileID: 1867810809}
   m_Layer: 5
-  m_Name: ButtonSolve
+  m_Name: ButtonSolver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2519,6 +2520,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867810804}
   m_CullTransparentMesh: 0
+--- !u!114 &1867810809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867810804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76415309125ec344b8d03da3a05b3d71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  game: {fileID: 0}
 --- !u!1 &2007441570
 GameObject:
   m_ObjectHideFlags: 0
