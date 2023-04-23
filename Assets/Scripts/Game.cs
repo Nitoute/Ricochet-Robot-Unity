@@ -61,7 +61,7 @@ public class Game : MonoBehaviour
         currentGoal = pileGoals.Pop();
         //print("goal init = "+ currentGoal);
         string[] goalname = currentGoal.name.Split('_');
-        currentGoalText.text = goalname[2] + ' ' + goalname[1];
+        currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
         changeImageGoal();
         currentRobotGoal = GetCurrentRobotGoal();
     }
@@ -125,7 +125,7 @@ public class Game : MonoBehaviour
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
         string[] goalname = currentGoal.name.Split('_');
-        currentGoalText.text = goalname[2] + ' ' + goalname[1];
+        currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
         currentRobotGoal = GetCurrentRobotGoal();
 
         switch(currentGoal.GetComponent<GoalMan>().getColor())
@@ -348,7 +348,7 @@ public class Game : MonoBehaviour
             Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
             string[] goalname = currentGoal.name.Split('_');
-            currentGoalText.text = goalname[2] + ' ' + goalname[1];
+            currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
             switch (currentGoal.GetComponent<GoalMan>().getColor())
             {
                 case 0: currentGoalText.color = Color.blue; break;
@@ -368,6 +368,15 @@ public class Game : MonoBehaviour
             UIScreen.SetActive(false);
             gameOverScreen.SetActive(true);
         }
+    }
+
+    private string UppercaseFirst(string s)
+    {
+        if (string.IsNullOrEmpty(s))
+        {
+            return string.Empty;
+        }
+        return char.ToUpper(s[0]) + s.Substring(1);
     }
 
     public void restartGame()
