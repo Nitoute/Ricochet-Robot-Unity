@@ -41,8 +41,6 @@ public class WallMan : MonoBehaviour
             case var t when t == (0,-1):  x += -0.1f;y += -2.2f; this.transform.localScale = new Vector3(0.6f,0.03f,1.0f);break;
         }
         
-        // x += -0.04f;
-        // y += -2.12f;
 
         this.transform.position = new Vector3(x,y,-1.0f);
     }

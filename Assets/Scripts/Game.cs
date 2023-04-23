@@ -31,14 +31,10 @@ public class Game : MonoBehaviour
 
     private GameObject currentGoal;
     private GameObject currentRobotGoal;
-    /*initializing board*/
-    //public Board board = new Board(2,7,1,8);
     public Board board = new Board(0,0,0,0);
-    private bool gameOver = false;
     private bool solverRunning = false;
     private System.Random rnd = new System.Random();
 
-    //Dictionary<(int, int), (int, int)[]> walls = new Dictionary<(int, int), (int, int)[]>();
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +57,6 @@ public class Game : MonoBehaviour
 
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
-        //print("goal init = "+ currentGoal);
         string[] goalname = currentGoal.name.Split('_');
         currentGoalText.text = UppercaseFirst(goalname[2]) + ' ' + UppercaseFirst(goalname[1]);
         int[] seed = board.getSeed();
@@ -84,7 +79,6 @@ public class Game : MonoBehaviour
     private void addWalls(){
         foreach (var wall in board.getWallDict()){
             addWallBis(wall.Key.Item1, 15-(wall.Key.Item2), wall.Value.Item1, wall.Value.Item2, true);
-            //Debug.Log("at position " + wall.Key + " walls " + wall.Value);
         }
         int i, j;
         //Ajouter des murs physiques à droite si la position x==15 et ou en bas si y==15
@@ -104,7 +98,6 @@ public class Game : MonoBehaviour
     }
     private void addGoals(){
         foreach (var goal in board.getGoalDict()){
-            //addWall(wall.Key.Item1, wall.Key.Item2, wall.Value.Item1, wall.Value.Item2, true);
             switch (goal.Value)
             {
                 case 11: addGoal("goal_moon_blue", goal.Key.Item1, 15 - goal.Key.Item2); break;
@@ -124,7 +117,6 @@ public class Game : MonoBehaviour
                 case 43: addGoal("goal_star_red", goal.Key.Item1, 15 - goal.Key.Item2); break;
                 case 44: addGoal("goal_star_yellow", goal.Key.Item1, 15 - goal.Key.Item2); break;
             }
-            //Debug.Log("at position " + goal.Key + " goal " + goal.Value);
         }
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
@@ -205,7 +197,6 @@ public class Game : MonoBehaviour
         rm.SetXInit(x);
         rm.SetYInit(y);
         rm.Activate();
-        //hasWin(obj);
         return obj;
 
     }
@@ -368,7 +359,6 @@ public class Game : MonoBehaviour
         }
         else
         {
-            gameOver = true;
             UIScreen.SetActive(false);
             gameOverScreen.SetActive(true);
         }
@@ -392,14 +382,13 @@ public class Game : MonoBehaviour
     {
         for(int i = 0; i < robots.Length;i++){
             robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
-            //SetPositionDefaultRobot(robots[i]);
             robots[i].GetComponent<RobotMan>().DestroyMovePlates();
         }
         for(int i = 0; i < robots.Length;i++){
             robots[i].GetComponent<RobotMan>().Teleport(robots[i].GetComponent<RobotMan>().GetXInit(),robots[i].GetComponent<RobotMan>().GetYInit());
         }
 
-        nbrCoups = 0;
+        nbrCoups = 0; 
         coupText.text = nbrCoups.ToString();
     }
 
@@ -554,7 +543,7 @@ public class Game : MonoBehaviour
      
         changeBoard(a, b, c, d);
 
-        //Reseting robots' positions
+        //Reseting robots positions
         restartPosition();
     }
 

@@ -73,9 +73,6 @@ public class Board{
             else{ flip= ""; BottomRight = numberBoards[3]; }
 
             bottomRightFileName = path + "bottom_right/board" + numberBoards[3] + flip;
-            for(int i=0; i<4; i++){
-                //Debug.Log("board " + numberBoards[i] + " at position " + i );
-            }
             }
         else{
             if(topleft==3){
@@ -112,7 +109,6 @@ public class Board{
 
 
     private void assembleGoalsBoards(int topleft, int topright, int bottomleft, int bottomright, List<string> boardListe){
-        string path = "Assets/Scripts/goals/";
         List <string> boardList = boardListe;
         string[] topLeft = File.ReadAllText(boardList[0]).Split(' ');
         string[] topRight = File.ReadAllText(boardList[1]).Split(' ');
@@ -146,7 +142,6 @@ public class Board{
 
     ///assembly of boards if seed = 0, then random, else follow seed.
     private void assembleWallsBoards(int topleft, int topright, int bottomleft, int bottomright, List<string> boardListe){
-        string path = "Assets/Scripts/walls_only/";
         List <string> boardList = boardListe;
         string[] topLeft = File.ReadAllText(boardList[0]).Split(' ');
         string[] topRight = File.ReadAllText(boardList[1]).Split(' ');
@@ -197,42 +192,37 @@ public class Board{
         if(i>=8){
             x=i-8;
             which_board += "right ";
-            }
-            else{
-                x=i;
+        }
+        else{
+            x=i;
             which_board += "left ";
-            }
+        }
         if(j>=8){
             y =j-8;
             which_board += "bottom";
-            }
-            else{
-                y=j;
+        }
+        else{
+            y=j;
             which_board += "top";
-            }
+        }
         int position = x+(8*y);
         string wall= file_str[position];
-    //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
-        //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board);
+        //Takes first and last value of file_str[i+8*j(checker dans cahier)], translates it to int tuple.
         if (wall.EndsWith("M") || wall.EndsWith("P")|| wall.EndsWith("C") || wall.EndsWith("X") ){
             wall = wall.Remove(wall.Length-2);
-            //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + wall);
         }
         if (wall.StartsWith("1")) // top wall : (,1)
         {
             if (wall.EndsWith("1")) // left wall : (-1,)
             {
-                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (-1,1);
             }
             else{
-                //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                 return (0,1);
             }
         }
         else if (wall.EndsWith("1")) // mur à gauche : (-1,)
                 {
-                    //Debug.Log("position (" + i + "," + j + ") calculated " + position + " in board " + which_board + ", with walls: " + file_str[position]);
                     return (-1,0);
                 }
         return (0,0);
@@ -330,7 +320,6 @@ public class Board{
         return color;
     }
 
-    //TODO replace tuple (i,j) with class position
     private void addToWallDict((int, int) pos, (int, int) walls){
         wallsDict.Add((pos.Item1,pos.Item2),(walls.Item1, walls.Item2));
     }
@@ -351,7 +340,6 @@ public class Board{
     private int wallsToComplete(){
         (int posX, int posY) position = (-1,-1);
         (int left, int top) wallsToAdd;
-        bool dictContainsKey = false;
         if(board3.Item1 == 0){
             if(board3.Item2==0){
                 position = (8,5);
@@ -363,12 +351,10 @@ public class Board{
             }
         }
         else if(board3.Item1 == 1){
-            //Debug.Log("true for item 1 = 1");
             position = (10,8);
             wallsToAdd = (0,1);
         }
         else if(board3.Item1 == 2){
-            //Debug.Log("true for item 1 = 2");
             position = (8,12);
             wallsToAdd = (-1,0);
         }

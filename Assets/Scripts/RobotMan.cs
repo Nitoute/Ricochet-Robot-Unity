@@ -235,9 +235,6 @@ public class RobotMan : MonoBehaviour
 
     }
 
-    //Pour VINCENT : Les fonctions suivantes permettent de bouger le robot dans une direction donné par ligne de commande !
-    // Tu n'a théoriquement rien à changé pour les déplacer mais si tu voit des bugs ou quoi envoi un message sur discord
-
     public void MoveRobot(int dir,int xIncrement, int yIncrement)
     {
         Game sc = controller.GetComponent<Game>();

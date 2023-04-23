@@ -72,10 +72,6 @@ public class GoalMan : MonoBehaviour
     {
         switch (this.name)
         {
-            /*case "goal_bleue": return 0; break;
-            case "goal_jaune": return 3; break;
-            case "goal_rouge": return 1; break;
-            case "goal_vert": return 2; break;*/
             case "goal_moon_blue": return 0; break;
             case "goal_moon_green": return 2; break;
             case "goal_moon_red": return 1; break;
