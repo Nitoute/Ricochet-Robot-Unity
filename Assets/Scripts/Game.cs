@@ -60,7 +60,8 @@ public class Game : MonoBehaviour
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
         //print("goal init = "+ currentGoal);
-        currentGoalText.text = currentGoal.name;
+        string[] goalname = currentGoal.name.Split('_');
+        currentGoalText.text = goalname[2] + ' ' + goalname[1];
         changeImageGoal();
         currentRobotGoal = GetCurrentRobotGoal();
     }
@@ -123,8 +124,8 @@ public class Game : MonoBehaviour
         }
         pileGoals = new Stack<GameObject>(goals);
         currentGoal = pileGoals.Pop();
-        //print("goal init = "+ currentGoal);
-        currentGoalText.text = currentGoal.name;
+        string[] goalname = currentGoal.name.Split('_');
+        currentGoalText.text = goalname[2] + ' ' + goalname[1];
         currentRobotGoal = GetCurrentRobotGoal();
 
         switch(currentGoal.GetComponent<GoalMan>().getColor())
@@ -346,8 +347,9 @@ public class Game : MonoBehaviour
         {
             Destroy(currentGoal);
             currentGoal = pileGoals.Pop();
-            currentGoalText.text = currentGoal.name;
-            switch(currentGoal.GetComponent<GoalMan>().getColor())
+            string[] goalname = currentGoal.name.Split('_');
+            currentGoalText.text = goalname[2] + ' ' + goalname[1];
+            switch (currentGoal.GetComponent<GoalMan>().getColor())
             {
                 case 0: currentGoalText.color = Color.blue; break;
                 case 3: currentGoalText.color = Color.yellow; break;
